@@ -2,6 +2,7 @@ package uk.ac.ncl.csc8499.model;
 
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
+import com.google.gson.Gson;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -24,6 +25,9 @@ public class Base {
     private static final String DRIVER = "com.mysql.jdbc.Driver";
 
     private static final String DATABASE_TYPE = "mysql";
+
+    public Gson gson = new Gson();
+
 
     /**
      * @throws java.lang.Exception
@@ -51,7 +55,9 @@ public class Base {
         activeRecord = new ActiveRecordPlugin(dp);
         activeRecord.setDialect(new MysqlDialect());
 
-        activeRecord.addMapping("user", User.class)
+        activeRecord.addMapping(TableName.user, User.class)
+        .addMapping(TableName.question, Question.class)
+        .addMapping(TableName.question_choice, QuestionChoice.class)
 //                .addMapping("f_content", FContent.class)
 //                .addMapping("f_content_type", FContentType.class)
 //                .addMapping("f_column", FColumn.class)

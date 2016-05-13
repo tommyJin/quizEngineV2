@@ -5,4 +5,12 @@ package uk.ac.ncl.csc8499.model;
  */
 public class TableName {
     public static final String user = "user";
+    public static final String question = "question";
+    public static final String question_type = "question_type";
+    public static final String question_choice = "question_choice";
+    public static final String question_tag = "question_tag";
+    public static final String question_level = "question_level";
+    public static final String question_category = "question_category";
+
+
 }

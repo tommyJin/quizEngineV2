@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by tommy on 2016/5/9.
  */
 public class UserTest extends Base {
-    static final Logger logger = LoggerFactory.getLogger(HelloController.class);
+    static final Logger logger = LoggerFactory.getLogger(User.class);
     static final String tag = "userTest";
 
     User dao = User.dao;
