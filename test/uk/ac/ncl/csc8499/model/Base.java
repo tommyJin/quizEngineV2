@@ -56,9 +56,13 @@ public class Base {
         activeRecord.setDialect(new MysqlDialect());
 
         activeRecord.addMapping(TableName.user, User.class)
-        .addMapping(TableName.question, Question.class)
-        .addMapping(TableName.question_choice, QuestionChoice.class)
-//                .addMapping("f_content", FContent.class)
+                .addMapping(TableName.question, Question.class)
+                .addMapping(TableName.question_choice, QuestionChoice.class)
+                .addMapping(TableName.question_tag, QuestionTag.class)
+                .addMapping(TableName.question_level, QuestionLevel.class)
+                .addMapping(TableName.question_category, QuestionCategory.class)
+                .addMapping(TableName.question_type, QuestionType.class)
+        //                .addMapping("f_content", FContent.class)
 //                .addMapping("f_content_type", FContentType.class)
 //                .addMapping("f_column", FColumn.class)
 //                .addMapping("f_comment", FComment.class)

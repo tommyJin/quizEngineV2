@@ -5,31 +5,26 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by tommy on 2016/5/13.
+ * Created by tommy on 2016/5/15.
  */
-@TableBind(tableName = TableName.question)
-public class Question extends Model<Question> {
-    public static final Question dao = new Question();
+@TableBind(tableName = TableName.question_level)
+public class QuestionLevel extends Model<QuestionLevel> {
 
-    public Page<Question> query(Map<String, Object> filter){
+    public static final QuestionLevel dao = new QuestionLevel();
+
+    public Page<QuestionLevel> query(Map<String, Object> filter){
         int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
-        int type = filter.get("type")==null?ConstantParas.questiontype_null:Integer.parseInt(filter.get("type").toString());
 
         String select = "select * ";
-        String where = "from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = "from "+TableName.question_level+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
 
         if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
             String keyword = filter.get("keyword").toString();
-            where += " and ( name like '%"+keyword+"%' ";
-        }
-
-        if (type!=ConstantParas.questiontype_null){
-            where += " and question_type_id = "+type;
+            where += " and ( name like '%"+keyword+"%' ) ";
         }
 
         if (filter.get("id")!=null){
@@ -37,27 +32,26 @@ public class Question extends Model<Question> {
         }
 
         String order = " order by "+ (filter.get("orderby")==null?"  created desc":filter.get("orderby").toString());
-        System.out.println(select+where+order);
-        return Question.dao.paginate(page, size, select, where + order);
+        return QuestionLevel.dao.paginate(page, size, select, where + order);
     }
 
-    public Question getBy(Map<String,Object> filter){
+    public QuestionLevel getBy(Map<String,Object> filter){
         String select = "select * ";
-        String where = " from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = " from "+TableName.question_level+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
         if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
             where += " and name = '"+filter.get("name").toString()+"' ";
         }
-        if (!where.equals(" from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
-            return Question.dao.find(select + where).size()>0?Question.dao.find(select + where).get(0):null;
+        if (!where.equals(" from "+TableName.question_level+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
+            return QuestionLevel.dao.find(select + where).size()>0?QuestionLevel.dao.find(select + where).get(0):null;
         }else {
             return null;
         }
     }
 
-    public boolean add(Question question) {
+    public boolean add(QuestionLevel question) {
         Map<String, Object> filter = new HashMap<>();
         long timestamp = System.currentTimeMillis();
         question.set("created",timestamp);
@@ -66,7 +60,7 @@ public class Question extends Model<Question> {
         return question.save();
     }
 
-    public boolean update(Question question){
+    public boolean update(QuestionLevel question){
         Map<String, Object> filter = new HashMap<>();
         filter.put("id", question.get("id"));
         if (getBy(filter) != null) {
@@ -77,7 +71,7 @@ public class Question extends Model<Question> {
         }
     }
 
-    public boolean delete(Question question){
+    public boolean delete(QuestionLevel question){
         Map<String, Object> filter = new HashMap<>();
         filter.put("id", question.get("id"));
         if (getBy(filter) != null) {

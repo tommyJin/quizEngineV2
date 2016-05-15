@@ -30,7 +30,7 @@ public class UserController extends Controller {
     }
 
     public void add(){
-        User user = getModel(User.class,"user");
+        User user = getModel(User.class,"paras");
         String errormsg= "";
         boolean flag = true;
         if (user.get("username")==null || user.get("username").toString().trim().equals("")){
@@ -84,7 +84,7 @@ public class UserController extends Controller {
     }
 
     public void update(){
-        User user = getModel(User.class,"user");
+        User user = getModel(User.class,"paras");
         Long id = user.get("id")==null?0:Long.parseLong(user.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);

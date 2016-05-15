@@ -14,6 +14,9 @@ public class ConstantParas {
     public static final int usertype_teacher = 2;
     public static final int usertype_student = 3;
 
+    //question type
+    public static final int questiontype_null = 0;
+
     //delete status
     public static final int isDeleted_false = 0;
     public static final int isDeleted_true = 1;
@@ -34,6 +37,12 @@ public class ConstantParas {
     //error message
     public static final String error_username_exists = "Username already exists!";
     public static final String error_username_not_exist = "Username does not exist!";
+    public static final String error_question_not_exist = "Question does not exist!";
+    public static final String error_question_tag_not_exist = "QuestionTag does not exist!";
+    public static final String error_question_category_not_exist = "QuestionCategory does not exist!";
+    public static final String error_question_type_not_exist = "QuestionType does not exist!";
+    public static final String error_question_level_not_exist = "QuestionLevel does not exist!";
+    public static final String error_question_choice_not_exist = "QuestionChoice does not exist!";
     public static final String error_wrong_password = "Wrong password!";
     public static final String error_wrong_email_format = "Wrong email format!";
     public static final String error_confirm_password_does_not_match = "Confirm password does not match password!";
@@ -45,4 +54,5 @@ public class ConstantParas {
     public static final String hint_user_not_login = "Please login!";
     public static final String hint_repassword_null= "Confirm password can not be null!";
     public static final String hint_email_null= "Email can not be null!";
+    public static final String hint_object_null = "Object is null!";
 }

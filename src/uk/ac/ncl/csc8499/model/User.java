@@ -48,7 +48,7 @@ public class User extends Model<User>{
 
     public User getBy(Map<String,Object> filter){
         String select = "select * ";
-        String where = "from "+TableName.user+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = " from "+TableName.user+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
@@ -64,7 +64,7 @@ public class User extends Model<User>{
         if (filter.get("email")!=null && !filter.get("email").toString().equals("")){
             where += " and email = '"+filter.get("email").toString()+"' ";
         }
-        if (!where.equals("from "+TableName.user+" where 1=1")){
+        if (!where.equals(" from "+TableName.user+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
             return User.dao.find(select + where).size()>0?User.dao.find(select + where).get(0):null;
         }else {
             return null;

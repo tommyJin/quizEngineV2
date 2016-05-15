@@ -14,6 +14,7 @@ import java.util.Map;
 public class QuestionChoice extends Model<QuestionChoice> {
     public static final QuestionChoice dao = new QuestionChoice();
 
+/*
     public Page<QuestionChoice> query(Map<String, Object> filter){
         int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
@@ -35,17 +36,19 @@ public class QuestionChoice extends Model<QuestionChoice> {
         System.out.println(select+where+order);
         return QuestionChoice.dao.paginate(page, size, select, where + order);
     }
+    */
 
     public QuestionChoice getBy(Map<String,Object> filter){
         String select = "select * ";
-        String where = "from "+TableName.question_choice+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = " from "+TableName.question_choice+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
-        if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
-            where += " and name = '"+filter.get("name").toString()+"' ";
+        if (filter.get("question_id")!=null){
+            where += " and question_id = "+Integer.parseInt(filter.get("question_id").toString());
         }
-        if (!where.equals("from "+TableName.user+" where 1=1")){
+        if (!where.equals(" from "+TableName.question_choice+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
+            System.out.println(select + where);
             return QuestionChoice.dao.find(select + where).size()>0?QuestionChoice.dao.find(select + where).get(0):null;
         }else {
             return null;
@@ -58,7 +61,11 @@ public class QuestionChoice extends Model<QuestionChoice> {
         questionChoice.set("created",timestamp);
         questionChoice.set("modified",timestamp);
         questionChoice.set("isDeleted",ConstantParas.isDeleted_false);
-        return questionChoice.save();
+        try {
+            return questionChoice.save();
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public boolean update(QuestionChoice questionChoice){
@@ -72,9 +79,12 @@ public class QuestionChoice extends Model<QuestionChoice> {
         }
     }
 
+    /*
+    * not using at this moment
+    * */
     public boolean delete(QuestionChoice questionChoice){
         Map<String, Object> filter = new HashMap<>();
-        filter.put("id", questionChoice.get("id"));
+        filter.put("question_id", questionChoice.get("question_id"));
         if (getBy(filter) != null) {
             questionChoice.set("isDeleted",ConstantParas.isDeleted_true);
             questionChoice.set("modified",System.currentTimeMillis());
