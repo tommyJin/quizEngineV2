@@ -1,6 +1,7 @@
 package uk.ac.ncl.csc8499.model;
 
 import com.google.gson.Gson;
+import com.jfinal.plugin.activerecord.Page;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class QuestionCategoryTest extends Base{
     public void testQuery() throws Exception {
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",1);
-        QuestionCategory qc = QuestionCategory.dao.getBy(filter);
+        Page<QuestionCategory> qc = QuestionCategory.dao.query(filter);
         if (qc!=null){
             logger.info("qc:{}",qc);
         }else {
@@ -48,13 +49,16 @@ public class QuestionCategoryTest extends Base{
 //    @Ignore
     @Test
     public void testAdd() throws Exception {
-        QuestionCategory qc = new QuestionCategory();
-        qc.set("name","tag1");
-        qc.set("content","tag1 content");
-        if (QuestionCategory.dao.add(qc)){
-            logger.info("qc:{}",qc);
-        }else {
-            logger.info("qc:{}",ConstantParas.failure_add);
+        String[] names = {"CSC8487","CSC8488","CSC8489","CSC8490"};
+        for (int i=0;i<names.length;i++) {
+            QuestionCategory qc = new QuestionCategory();
+            qc.set("name", names[i]);
+            qc.set("content", names[i]+" content");
+            if (QuestionCategory.dao.add(qc)) {
+                logger.info("qc:{}", qc);
+            } else {
+                logger.info("qc:{}", ConstantParas.failure_add);
+            }
         }
     }
 

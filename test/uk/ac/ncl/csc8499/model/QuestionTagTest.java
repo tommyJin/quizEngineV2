@@ -46,20 +46,23 @@ public class QuestionTagTest extends Base{
         }
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void testAdd() throws Exception {
-        QuestionTag qt = new QuestionTag();
-        qt.set("name","tag1");
-        qt.set("content","tag1 content");
-        if (QuestionTag.dao.add(qt)){
-            logger.info("qt:{}",qt);
-        }else {
-            logger.info("qt:{}",ConstantParas.failure_add);
+        String[] names = {"Fill in Multiple Blanks","Fill in the Blank","Spark","Kafka","Big data","SPIN"};
+        for (int i=0;i<names.length;i++) {
+            QuestionTag ql = new QuestionTag();
+            ql.set("name", names[i]);
+            ql.set("content", names[i] + " content");
+            if (QuestionTag.dao.add(ql)) {
+                logger.info("ql:{}", ql);
+            } else {
+                logger.info("ql:{}", ConstantParas.failure_add);
+            }
         }
     }
 
-//    @Ignore
+    @Ignore
     @Test
     public void testUpdate() throws Exception {
         Map<String,Object> filter = new HashMap<>();

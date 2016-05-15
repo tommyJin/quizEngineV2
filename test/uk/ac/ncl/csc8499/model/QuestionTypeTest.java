@@ -47,16 +47,19 @@ public class QuestionTypeTest  extends Base{
         }
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void testAdd() throws Exception {
-        QuestionType qt = new QuestionType();
-        qt.set("name","type1");
-        qt.set("content","type1 content");
-        if (QuestionType.dao.add(qt)){
-            logger.info("qt:{}",qt);
-        }else {
-            logger.info("qt:{}",ConstantParas.failure_add);
+        String[] names = {"Fill in Multiple Blanks","Fill in the Blank","Multiple Answer","Multiple Choice","True Or False","Calculate Numeric"};
+        for (int i=0;i<names.length;i++) {
+            QuestionType ql = new QuestionType();
+            ql.set("name", names[i]);
+            ql.set("content", names[i] + " content");
+            if (QuestionType.dao.add(ql)) {
+                logger.info("ql:{}", ql);
+            } else {
+                logger.info("ql:{}", ConstantParas.failure_add);
+            }
         }
     }
 

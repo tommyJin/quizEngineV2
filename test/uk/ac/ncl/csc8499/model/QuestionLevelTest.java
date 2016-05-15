@@ -46,16 +46,19 @@ public class QuestionLevelTest  extends Base{
         }
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void testAdd() throws Exception {
-        QuestionLevel ql = new QuestionLevel();
-        ql.set("name","level 1");
-        ql.set("content","level 1 content");
-        if (QuestionLevel.dao.add(ql)){
-            logger.info("ql:{}",ql);
-        }else {
-            logger.info("ql:{}",ConstantParas.failure_add);
+        String[] names = {"Easy","Normal","Hard","Survivor"};
+        for (int i=0;i<names.length;i++) {
+            QuestionLevel ql = new QuestionLevel();
+            ql.set("name", names[i]);
+            ql.set("content", names[i] + " content");
+            if (QuestionLevel.dao.add(ql)) {
+                logger.info("ql:{}", ql);
+            } else {
+                logger.info("ql:{}", ConstantParas.failure_add);
+            }
         }
     }
 
@@ -78,7 +81,7 @@ public class QuestionLevelTest  extends Base{
         }
     }
 
-//        @Ignore
+    @Ignore
     @Test
     public void testDelete() throws Exception {
         Map<String,Object> filter = new HashMap<>();

@@ -43,6 +43,9 @@ public class ConstantParas {
     public static final String error_question_type_not_exist = "QuestionType does not exist!";
     public static final String error_question_level_not_exist = "QuestionLevel does not exist!";
     public static final String error_question_choice_not_exist = "QuestionChoice does not exist!";
+    public static final String error_quiz_not_exist = "Quiz does not exist!";
+    public static final String error_quiz_question_not_exist = "QuizQuestion does not exist!";
+    public static final String error_quiz_record_not_exist = "QuizRecord does not exist!";
     public static final String error_wrong_password = "Wrong password!";
     public static final String error_wrong_email_format = "Wrong email format!";
     public static final String error_confirm_password_does_not_match = "Confirm password does not match password!";
