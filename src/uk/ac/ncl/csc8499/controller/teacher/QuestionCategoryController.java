@@ -5,6 +5,7 @@ import com.jfinal.ext.route.ControllerBind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
+import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.QuestionCategory;
 import uk.ac.ncl.csc8499.model.QuestionCategory;
@@ -16,7 +17,7 @@ import java.util.Map;
  * Created by tommy on 2016/5/15.
  */
 @ControllerBind(controllerKey = "/teacher/questioncategory")
-public class QuestionCategoryController extends Controller {
+public class QuestionCategoryController extends BaseController {
     static final Logger logger = LoggerFactory.getLogger(QuestionCategoryController.class);
     static final String tag = "questionlevel";
 

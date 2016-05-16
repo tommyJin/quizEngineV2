@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.FormatValidate;
 import uk.ac.ncl.csc8499.Util.RestResult;
+import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.Question;
 import uk.ac.ncl.csc8499.model.QuestionChoice;
@@ -20,17 +21,23 @@ import java.util.Map;
  * Created by tommy on 2016/5/13.
  */
 @ControllerBind(controllerKey = "/teacher/question")
-public class QuestionController extends Controller {
+public class QuestionController extends BaseController {
     static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
     static final String tag = "question";
 
     public void index(){
-        Integer type = Integer.valueOf(getPara("type").toString().trim());
+        Integer type = Integer.valueOf(getPara("question_type_id").toString().trim());
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
         Map<String,Object> filter = new HashMap<>();
         if (type!= ConstantParas.usertype_null) {
-            filter.put("type",type);
+            filter.put("question_type_id",type);
+        }
+        if (getPara("question_category_id")!=null){
+            filter.put("question_category_id",getParaToLong("question_category_id"));
+        }
+        if (getPara("question_level_id")!=null){
+            filter.put("question_level_id",getParaToLong("question_level_id"));
         }
         filter.put("keyword",keyword);
         filter.put("orderby",orderby);

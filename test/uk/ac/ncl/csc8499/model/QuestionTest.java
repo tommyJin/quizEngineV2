@@ -53,7 +53,7 @@ public class QuestionTest extends Base {
     public void testAdd() throws Exception {
         String[] tags = {"Fill in Multiple Blanks", "Fill in the Blank", "Spark", "Kafka", "Big data", "SPIN"};
         Random r = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 50; i < 80; i++) {
             Question q = new Question();
             q.set("name", "q" + (i + 1));
             q.set("question_level_id", r.nextInt(4)+1);

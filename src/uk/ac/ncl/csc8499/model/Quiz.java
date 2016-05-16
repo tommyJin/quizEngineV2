@@ -30,6 +30,14 @@ public class Quiz extends Model<Quiz> {
             where += " and question_level_id = "+ Integer.parseInt(filter.get("question_level_id").toString());
         }
 
+        if (filter.get("question_category_id")!=null){
+            where += " and question_category_id = "+ Integer.parseInt(filter.get("question_category_id").toString());
+        }
+
+        if (filter.get("creator_id")!=null){
+            where += " and creator_id = "+ Integer.parseInt(filter.get("creator_id").toString());
+        }
+
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }

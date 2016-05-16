@@ -8,6 +8,10 @@ public class ConstantParas {
     public static final int page = 1;
     public static final int size = 20;
 
+    //quiz number
+    public static final int quiz_max_number = 20;
+    public static final int quiz_min_number = 3;
+
     //user type
     public static final int usertype_null = 0;
     public static final int usertype_admin = 1;
@@ -58,4 +62,5 @@ public class ConstantParas {
     public static final String hint_repassword_null= "Confirm password can not be null!";
     public static final String hint_email_null= "Email can not be null!";
     public static final String hint_object_null = "Object is null!";
+    public static final String hint_unknown = "Unknown reason, please retry!";
 }

@@ -3,6 +3,7 @@ package uk.ac.ncl.csc8499.controller.teacher;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
 import uk.ac.ncl.csc8499.Util.RestResult;
+import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.Question;
 import uk.ac.ncl.csc8499.model.QuestionChoice;
@@ -15,7 +16,7 @@ import java.util.Map;
  * Created by tommy on 2016/5/15.
  */
 @ControllerBind(controllerKey = "/teacher/questionchoice")
-public class QuestionChoiceController extends Controller {
+public class QuestionChoiceController extends BaseController {
     public void get(){
         Long id = getPara("question_id")==null?0:getParaToLong("question_id");
         Map<String,Object> filter = new HashMap<>();

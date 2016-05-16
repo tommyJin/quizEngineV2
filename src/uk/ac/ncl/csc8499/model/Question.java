@@ -32,6 +32,14 @@ public class Question extends Model<Question> {
             where += " and question_type_id = "+type;
         }
 
+        if (filter.get("question_level_id")!=null){
+            where += " and question_level_id = "+ Integer.parseInt(filter.get("question_level_id").toString());
+        }
+
+        if (filter.get("question_category_id")!=null){
+            where += " and question_category_id = "+ Integer.parseInt(filter.get("question_category_id").toString());
+        }
+
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }

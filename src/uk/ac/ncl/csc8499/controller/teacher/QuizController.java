@@ -6,46 +6,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
-import uk.ac.ncl.csc8499.model.ConstantParas;
-import uk.ac.ncl.csc8499.model.QuestionLevel;
-import uk.ac.ncl.csc8499.model.QuestionTag;
+import uk.ac.ncl.csc8499.model.*;
+import uk.ac.ncl.csc8499.model.Quiz;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by tommy on 2016/5/15.
+ * Created by tommy on 2016/5/16.
  */
-@ControllerBind(controllerKey = "/teacher/questionlevel")
-public class QuestionLevelController extends BaseController {
-    static final Logger logger = LoggerFactory.getLogger(QuestionLevelController.class);
-    static final String tag = "questionlevel";
+@ControllerBind(controllerKey = "/teacher/quiz")
+public class QuizController extends BaseController {
+    static final Logger logger = LoggerFactory.getLogger(QuizController.class);
+    static final String tag = "quiz";
 
     public void index(){
+        Integer level_id = getPara("level_id")==null?null:Integer.valueOf(getPara("level_id").toString().trim());
+        Integer category_id = getPara("category_id")==null?null:Integer.valueOf(getPara("category_id").toString().trim());
+
+        User currentUser = getCurrentUser();
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
         Map<String,Object> filter = new HashMap<>();
+        if (level_id!= null) {
+            filter.put("question_level_id",level_id);
+        }
+        if (category_id!=null){
+            filter.put("question_category_id",category_id);
+        }
+//        filter.put("creator_id", currentUser.get("id"));
         filter.put("keyword",keyword);
         filter.put("orderby",orderby);
-        renderJson(RestResult.ok(QuestionLevel.dao.query(filter)));
+
+        renderJson(RestResult.ok(Quiz.dao.query(filter)));
     }
 
     public void get(){
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        QuestionLevel q = QuestionLevel.dao.getBy(filter);
+        Quiz q = Quiz.dao.getBy(filter);
         if (q!=null){
             renderJson(RestResult.ok(q));
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_level_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 
     public void add(){
-        QuestionLevel q = getModel(QuestionLevel.class,"paras");//paras.*
+        Quiz q = getModel(Quiz.class,"paras");//paras.*
+        User currentUser = (User) getSessionAttr("login_user");
         if (q!=null){
-            if (QuestionLevel.dao.add(q)){
+            q.set("creator_id",currentUser.get("id"));
+            if (Quiz.dao.add(q)){
                 renderJson(RestResult.ok(ConstantParas.success_add));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
@@ -56,18 +69,18 @@ public class QuestionLevelController extends BaseController {
     }
 
     public void update(){
-        QuestionLevel q = getModel(QuestionLevel.class,"paras");
+        Quiz q = getModel(Quiz.class,"paras");
         Long id = q.get("id")==null?0:Long.parseLong(q.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        if (QuestionLevel.dao.getBy(filter)!=null){
-            if (QuestionLevel.dao.update(q)) {
+        if (Quiz.dao.getBy(filter)!=null){
+            if (Quiz.dao.update(q)) {
                 renderJson(RestResult.ok(ConstantParas.success_update));
             } else {
                 renderJson(RestResult.error(ConstantParas.failure_update));
             }
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_level_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 
@@ -75,15 +88,17 @@ public class QuestionLevelController extends BaseController {
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        QuestionLevel q = QuestionLevel.dao.getBy(filter);
+        Quiz q = Quiz.dao.getBy(filter);
         if (q!=null){
-            if (QuestionLevel.dao.delete(q)){
+            if (Quiz.dao.delete(q)){
                 renderJson(RestResult.ok(ConstantParas.success_delete));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_delete));
             }
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_level_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
+
+
 }

@@ -4,6 +4,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
 import uk.ac.ncl.csc8499.Util.FormatValidate;
 import uk.ac.ncl.csc8499.Util.RestResult;
+import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.User;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * Created by tommy on 2016/5/9.
  */
 @ControllerBind(controllerKey = "/teacher/user")
-public class UserController extends Controller {
+public class UserController extends BaseController {
     public void index(){
         Integer type = Integer.valueOf(getPara("type").toString().trim());
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();

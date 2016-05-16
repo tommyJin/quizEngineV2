@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -22,7 +23,7 @@ public class QuizQuestionTest extends Base{
     static final String tag = "quizQuestionTest";
     Gson gson = new Gson();
 
-//    @Ignore
+    @Ignore
     @Test
     public void testQuery() throws Exception {
         Map<String,Object> filter = new HashMap<>();
@@ -96,6 +97,19 @@ public class QuizQuestionTest extends Base{
             }
         }else {
             logger.info("q:{}", ConstantParas.error_quiz_question_not_exist);
+        }
+    }
+
+    @Test
+    public void testAutoGenerate() throws Exception{
+        Map<String,Object> filter = new HashMap<>();
+        filter.put("id",1);
+        Quiz quiz = Quiz.dao.getBy(filter);
+        List list = QuizQuestion.dao.autoGenerate(quiz,0);
+        if(list.size()>0){
+            logger.info("generated qc list:{}",list);
+        }else {
+            logger.info("generated qc list:{}",ConstantParas.failure_add);
         }
     }
 }
