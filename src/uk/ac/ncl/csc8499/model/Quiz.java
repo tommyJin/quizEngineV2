@@ -56,6 +56,11 @@ public class Quiz extends Model<Quiz> {
         if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
             where += " and name = '"+filter.get("name").toString()+"' ";
         }
+
+        if (filter.get("creator_id")!=null){
+            where += " and creator_id = "+ Integer.parseInt(filter.get("creator_id").toString());
+        }
+
         if (!where.equals(" from "+TableName.quiz+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
             return Quiz.dao.find(select + where).size()>0? Quiz.dao.find(select + where).get(0):null;
         }else {

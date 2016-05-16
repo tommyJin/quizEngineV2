@@ -12,12 +12,12 @@ import java.util.Map;
 public class BaseController extends Controller {
     public User getCurrentUser() {
         Map map = getSessionAttr("login_user");
-        System.out.println(map);
+//        System.out.println(map);
         if (map != null) {
             Map<String,Object> filter = new HashMap<>();
             filter.put("id",map.get("user_id"));
             User user = User.dao.getBy(filter);
-            System.out.println("User in session,user_id="+user.get("id"));
+//            System.out.println("User in session,user_id="+user.get("id"));
             return user;
         }else {
             return null;

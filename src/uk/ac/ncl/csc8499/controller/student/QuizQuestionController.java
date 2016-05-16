@@ -8,6 +8,7 @@ import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.Quiz;
 import uk.ac.ncl.csc8499.model.QuizQuestion;
+import uk.ac.ncl.csc8499.model.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +23,23 @@ public class QuizQuestionController extends BaseController {
     static final String tag = "quizquestion";
 
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
         Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
+
+
         if (quiz_id!=null){
             filter.put("quiz_id",quiz_id);
         }
-
-        filter.put("orderby",orderby);
-
-        renderJson(RestResult.ok(QuizQuestion.dao.query(filter)));
+        User currentUser = getCurrentUser();
+        filter.put("creator_id",currentUser.get("id"));
+        Quiz q = Quiz.dao.getBy(filter);
+        filter.put("orderby", orderby);
+        if (q!=null) {
+            renderJson(RestResult.ok(QuizQuestion.dao.query(filter)));
+        }else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
     }
 
     public void get(){
@@ -51,6 +59,8 @@ public class QuizQuestionController extends BaseController {
         Integer number = getPara("number")==null?0:getParaToInt("number");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
+        User currentUser = getCurrentUser();
+        filter.put("creator_id",currentUser.get("id"));
         Quiz quiz = Quiz.dao.getBy(filter);
         if (quiz!=null){
             List list = QuizQuestion.dao.autoGenerate(quiz,number);

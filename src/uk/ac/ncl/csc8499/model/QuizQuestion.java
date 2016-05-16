@@ -127,11 +127,7 @@ public class QuizQuestion extends Model<QuizQuestion>{
                 filter.put("id",selected.get(i));
                 Question question = Question.dao.getBy(filter);
                 qq.set("mark",question.get("mark"));
-                if (QuizQuestion.dao.add(qq)){
-                    System.out.println(qq+" "+ConstantParas.success_add);
-                }else {
-                    System.out.println(qq+" "+ConstantParas.failure_add);
-                }
+                QuizQuestion.dao.add(qq);
             }
         }
 
