@@ -25,22 +25,24 @@ public class QuizQuestionController extends BaseController {
     static final String tag = "quizquestion";
 
     public void index(){
-        Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
+        Integer quiz_id = getPara("quiz_id")==null?0:getParaToInt("quiz_id");
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
         Map<String,Object> filter = new HashMap<>();
-        if (quiz_id!=null){
-            filter.put("quiz_id",quiz_id);
-        }
+
         User currentUser = getCurrentUser();
         filter.put("creator_id",currentUser.get("id"));
+        filter.put("id",quiz_id);
         logger.info("filter:{}",filter);
         Quiz q = Quiz.dao.getBy(filter);
         logger.info("q:{}",q);
 
-        filter.put("orderby", orderby);
         if (q!=null) {
+            filter.clear();
+            filter.put("quiz_id",quiz_id);
+            filter.put("user_id", currentUser.get("id"));
+            filter.put("orderby", orderby);
             renderJson(RestResult.ok(QuizQuestion.dao.query(filter)));
-        }else {
+        } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
@@ -60,6 +62,8 @@ public class QuizQuestionController extends BaseController {
     public void add(){
         QuizQuestion q = getModel(QuizQuestion.class,"paras");//paras.*
         if (q!=null){
+            User currentUser = getCurrentUser();
+            q.set("user_id",currentUser.get("id"));
             if (QuizQuestion.dao.add(q)){
                 renderJson(RestResult.ok(ConstantParas.success_add));
             }else {

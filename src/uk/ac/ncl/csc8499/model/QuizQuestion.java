@@ -123,6 +123,7 @@ public class QuizQuestion extends Model<QuizQuestion>{
                 QuizQuestion qq = new QuizQuestion();
                 qq.set("quiz_id",quiz_id);
                 qq.set("question_id",selected.get(i));
+                qq.set("user_id",quiz.get("creator_id"));
                 filter.clear();
                 filter.put("id",selected.get(i));
                 Question question = Question.dao.getBy(filter);

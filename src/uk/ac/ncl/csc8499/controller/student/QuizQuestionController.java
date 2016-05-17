@@ -27,15 +27,15 @@ public class QuizQuestionController extends BaseController {
         Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
 
-
-        if (quiz_id!=null){
-            filter.put("quiz_id",quiz_id);
-        }
         User currentUser = getCurrentUser();
         filter.put("creator_id",currentUser.get("id"));
+        filter.put("id",quiz_id);
         Quiz q = Quiz.dao.getBy(filter);
-        filter.put("orderby", orderby);
+
         if (q!=null) {
+            filter.put("orderby", orderby);
+            filter.put("user_id", currentUser.get("id"));
+            filter.put("quiz_id",quiz_id);
             renderJson(RestResult.ok(QuizQuestion.dao.query(filter)));
         }else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
@@ -72,5 +72,9 @@ public class QuizQuestionController extends BaseController {
         }else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
+    }
+
+    public void answer(){
+
     }
 }

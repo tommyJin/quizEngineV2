@@ -47,6 +47,18 @@ public class QuizRecord extends Model<QuizRecord> {
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
 
+        if (filter.get("quiz_id")!=null){
+            where += " and quiz_id = "+Integer.parseInt(filter.get("quiz_id").toString());
+        }
+
+        if (filter.get("user_id")!=null){
+            where += " and user_id = "+Integer.parseInt(filter.get("user_id").toString());
+        }
+
+        if (filter.get("quiz_question_id")!=null){
+            where += " and quiz_question_id = "+Integer.parseInt(filter.get("quiz_question_id").toString());
+        }
+
         if (!where.equals(" from "+TableName.quiz_record+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
             return QuizRecord.dao.find(select + where).size()>0? QuizRecord.dao.find(select + where).get(0):null;
         }else {
