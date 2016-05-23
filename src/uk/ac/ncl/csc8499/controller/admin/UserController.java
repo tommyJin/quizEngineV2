@@ -17,10 +17,14 @@ import java.util.Map;
 @ControllerBind(controllerKey = "/admin/user")
 public class UserController extends BaseController {
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
         Integer type = getPara("type")==null?ConstantParas.usertype_null:Integer.valueOf(getPara("type").toString().trim());
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
         if (type!= ConstantParas.usertype_null) {
             filter.put("type",type);
         }
@@ -49,7 +53,7 @@ public class UserController extends BaseController {
 
         if (user.get("email")!=null && !user.get("email").toString().trim().equals("")){
             String email = user.get("email");
-            if (FormatValidate.emailValidate(email)){
+            if (!FormatValidate.emailValidate(email)){
                 flag = false;
                 errormsg += ConstantParas.error_wrong_email_format+" ";
             }
@@ -60,7 +64,10 @@ public class UserController extends BaseController {
         if (flag) {
             if (User.dao.getBy(filter)==null) {
                 if (User.dao.add(user)) {
-                    renderJson(RestResult.ok(ConstantParas.success_add));
+                    filter.clear();
+                    filter.put("user",user);
+                    filter.put("errmsg",ConstantParas.success_add);
+                    renderJson(RestResult.ok(filter));
                 } else {
                     renderJson(RestResult.error(ConstantParas.failure_add));
                 }
@@ -93,7 +100,7 @@ public class UserController extends BaseController {
             boolean flag = true;
             if (user.get("email")!=null && !user.get("email").toString().trim().equals("")){
                 String email = user.get("email");
-                if (FormatValidate.emailValidate(email)){
+                if (!FormatValidate.emailValidate(email)){
                     flag = false;
                     renderJson(RestResult.error(ConstantParas.error_wrong_email_format));
                 }

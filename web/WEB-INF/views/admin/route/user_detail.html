@@ -1,0 +1,144 @@
+<#include "/layout/admin-header.html">
+    <#include "/layout/admin-side-bar.html">
+
+        <script src="js/api/user.js"></script>
+
+        <!-- content start -->
+        <div class="admin-content">
+
+            <form id="form">
+
+
+            <div class="admin-content-body">
+                <div class="am-cf am-padding am-padding-bottom-0">
+                    <div class="am-fl am-cf">
+                        <strong class="am-text-primary am-text-lg">User</strong> /
+                        <small>detail</small>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="am-tabs am-margin" data-am-tabs>
+                    <ul class="am-tabs-nav am-nav am-nav-tabs">
+                        <li class="am-active"><a href="#tab1">Info</a></li>
+                    </ul>
+
+                    <div class="am-tabs-bd">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">User Type</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="type" name="paras.type" value="${type?if_exists}">
+                                            <option value="2">Teacher</option>
+                                            <option value="3">Student</option>
+                                            <option value="1">Administrator</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Username
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="username" id="username" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Password
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="password" id="password" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Name
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="name" id="name" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Email
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="email" id="email" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="am-margin">
+                    <button type="submit" class="am-btn am-btn-primary am-btn-xs">Submit</button>
+                    <button type="reset" class="am-btn am-btn-primary am-btn-xs">Discard</button>
+                </div>
+            </div>
+
+                <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
+
+            </form>
+
+
+            <footer class="admin-content-footer">
+                <hr>
+            </footer>
+        </div>
+        <!-- content end -->
+
+<script>
+    var id = $("#id").val();
+    var type = $("#type").val();
+    $(document).ready(function(){
+        if(id != null && id.length!=0){
+            getUser(id,type);
+        }
+    });
+
+    $.validator.setDefaults({
+//        debug:true
+    });
+
+    $().ready(function() {
+        $("#form").validate({
+            rules: {
+                name: "required",
+                username: {
+                    required: true,
+                    minlength: 4
+                },
+                password: {
+                    required: true,
+                    minlength: 4
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                type: "required"
+            },
+            submitHandler: function() {
+                id = $("#id").val();
+                if (id != null && id.length!=0) {
+                    updateUser();
+                }else {
+                    addUser();
+                }
+            }
+        });
+    });
+
+
+</script>
+
+        <#include "/layout/admin-footer.html">

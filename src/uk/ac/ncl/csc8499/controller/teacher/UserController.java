@@ -17,10 +17,14 @@ import java.util.Map;
 @ControllerBind(controllerKey = "/teacher/user")
 public class UserController extends BaseController {
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
         Integer type = Integer.valueOf(getPara("type").toString().trim());
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
         if (type!= ConstantParas.usertype_null) {
             filter.put("type",type);
         }
@@ -37,6 +41,32 @@ public class UserController extends BaseController {
         User user = User.dao.getBy(filter);
         if (user!=null){
             renderJson(RestResult.ok(user));
+        }else {
+            renderJson(RestResult.error(ConstantParas.error_username_not_exist));
+        }
+    }
+
+    public void update(){
+        User user = getModel(User.class,"paras");
+        Long id = user.get("id")==null?0:Long.parseLong(user.get("id").toString());
+        Map<String,Object> filter = new HashMap<>();
+        filter.put("id",id);
+        if (User.dao.getBy(filter)!=null){
+            boolean flag = true;
+            if (user.get("email")!=null && !user.get("email").toString().trim().equals("")){
+                String email = user.get("email");
+                if (!FormatValidate.emailValidate(email)){
+                    flag = false;
+                    renderJson(RestResult.error(ConstantParas.error_wrong_email_format));
+                }
+            }
+            if (flag) {
+                if (User.dao.update(user)) {
+                    renderJson(RestResult.ok(ConstantParas.success_update));
+                } else {
+                    renderJson(RestResult.error(ConstantParas.failure_update));
+                }
+            }
         }else {
             renderJson(RestResult.error(ConstantParas.error_username_not_exist));
         }

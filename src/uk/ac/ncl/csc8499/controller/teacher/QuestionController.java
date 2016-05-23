@@ -26,10 +26,15 @@ public class QuestionController extends BaseController {
     static final String tag = "question";
 
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
         Integer type = Integer.valueOf(getPara("question_type_id").toString().trim());
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
+
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
         if (type!= ConstantParas.usertype_null) {
             filter.put("question_type_id",type);
         }

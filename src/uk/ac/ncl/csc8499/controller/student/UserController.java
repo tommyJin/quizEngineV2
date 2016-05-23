@@ -29,7 +29,7 @@ public class UserController extends BaseController {
     }
 
     public void update(){
-        User user = getModel(User.class,"user");
+        User user = getModel(User.class,"paras");
         Long id = user.get("id")==null?0:Long.parseLong(user.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
@@ -37,7 +37,7 @@ public class UserController extends BaseController {
             boolean flag = true;
             if (user.get("email")!=null && !user.get("email").toString().trim().equals("")){
                 String email = user.get("email");
-                if (FormatValidate.emailValidate(email)){
+                if (!FormatValidate.emailValidate(email)){
                     flag = false;
                     renderJson(RestResult.error(ConstantParas.error_wrong_email_format));
                 }

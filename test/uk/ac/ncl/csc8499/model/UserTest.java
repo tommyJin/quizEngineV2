@@ -49,7 +49,7 @@ public class UserTest extends Base {
         logger.info("user:{}", dao.login(username, password));
     }
 
-//    @Ignore
+    @Ignore
     @Test
     public void testGet() throws Exception {
         int id = 1;
@@ -62,20 +62,18 @@ public class UserTest extends Base {
         logger.info("getUserByUsername:{}",dao.getBy(filter));
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void testAdd() throws Exception {
-        User user = new User();
-        user.set("username","user1");
-        user.set("password","user");
-        user.set("name","testuser");
-        user.set("type",ConstantParas.usertype_student);
-        user.set("isDeleted","0");
-        long timestamp = System.currentTimeMillis();
-        user.set("created",timestamp);
-        user.set("modified", timestamp);
-        logger.info("1st addUser:{}", dao.add(user));
-        logger.info("2nd addUser:{}",dao.add(user));
+        for (int i = 0; i < 20; i++) {
+            User user = new User();
+            user.set("username","user"+i);
+            user.set("password","user"+i);
+            user.set("name","testuser"+i);
+            user.set("type",ConstantParas.usertype_student);
+            logger.info("addUser:{}", dao.add(user));
+        }
+
     }
 
     @Ignore

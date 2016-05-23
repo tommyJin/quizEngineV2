@@ -22,9 +22,14 @@ public class QuestionLevelController extends BaseController {
     static final String tag = "questionlevel";
 
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
+
         filter.put("keyword",keyword);
         filter.put("orderby",orderby);
         renderJson(RestResult.ok(QuestionLevel.dao.query(filter)));

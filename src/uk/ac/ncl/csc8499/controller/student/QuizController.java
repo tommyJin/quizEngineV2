@@ -16,12 +16,17 @@ import java.util.Map;
 @ControllerBind(controllerKey = "/student/quiz")
 public class QuizController extends BaseController {
     public void index(){
+        Map<String,Object> filter = new HashMap<>();
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
         Integer level_id = getPara("level_id")==null?null:Integer.valueOf(getPara("level_id").toString().trim());
         Integer category_id = getPara("category_id")==null?null:Integer.valueOf(getPara("category_id").toString().trim());
         User currentUser = getCurrentUser();
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        Map<String,Object> filter = new HashMap<>();
+
         if (level_id!= null) {
             filter.put("question_level_id",level_id);
         }
