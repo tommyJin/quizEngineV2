@@ -19,7 +19,7 @@ public class Config extends JFinalConfig {
     public void configConstant(Constants me) {
         me.setDevMode(true);
         me.setBaseViewPath("/WEB-INF/views");
-        me.setMaxPostSize(102400000);
+//        me.setMaxPostSize(102400000);
         PropKit.use("jdbc.properties");
     }
 
@@ -44,13 +44,13 @@ public class Config extends JFinalConfig {
     @Override
     public void configInterceptor(Interceptors me) {
 //        me.add(new AllInterceptor());
-//        me.add(new LoginInterceptor());
+        me.add(new LoginInterceptor());
         me.add(new SessionInViewInterceptor());
     }
 
     @Override
     public void configHandler(Handlers me) {
-        me.add(new ContextPathHandler("ctx_path"));
+        me.add(new ContextPathHandler("context_path"));
     }
 
     public void main(String[] args){

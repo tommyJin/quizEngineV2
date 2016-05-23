@@ -5,6 +5,7 @@ import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
 import uk.ac.ncl.csc8499.model.User;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,40 +18,83 @@ public class LoginInterceptor implements Interceptor {
         String ck = ai.getControllerKey();
         Controller controller = ai.getController();
 
-        String author = controller.getSessionAttr("author");
+        Map<String,Object> map = controller.getSessionAttr("login_user");
+        User u = null;
+        if (map!=null){
+            Map<String,Object> filter = new HashMap<>();
+            filter.put("username",map.get("username"));
+            filter.put("id",map.get("user_id"));
+            u = User.dao.getBy(filter);
+        }
+
+        String author = controller.getSessionAttr("user_type");
         System.out.println(ai.getControllerKey()+","+author);
         if (author==null||author.equals("")){
             controller.setSessionAttr("author","notlogin");
         }
-        User u = controller.getSessionAttr("login_user");
         if (u!=null){
             System.out.println("oooo");
             ai.getController().setAttr("username",u.get("username").toString());
-            ai.getController().setAttr("author",u.get("author").toString());
+            ai.getController().setAttr("type",u.get("type").toString());
         }
         else {
             System.out.println("xxxx");
         }
-        //判断访问的是否为user打头或者admin打头的方法
-        if (!ck.startsWith("/login") && !ck.startsWith("/register")){
-            if ( u != null ) {
-                //判断登陆用户访问的是自己权限打头的方法
-                if ((ck.startsWith("/admin") && u.getStr("author").equals("admin"))) {
+
+
+        if(ck.startsWith("/teacher")||ck.startsWith("/student")||ck.startsWith("/admin")) {
+            if (u != null ) {
+                String type = u.get("type").toString();
+                if (type.equals("1")){
+                    type = "admin";
+                }else if (type.equals("2")){
+                    type = "teacher";
+                }else if (type.equals("3")){
+                    type = "student";
+                }
+                if ((ck.startsWith("/admin") && type.equals("admin"))) {
                     ai.invoke();//continue
-                } else if ( !ck.startsWith("/admin")){
+                }else if ((ck.startsWith("/teacher") && type.equals("teacher"))) {
+                    ai.invoke();//continue
+                }else if ((ck.startsWith("/student") && type.equals("student"))) {
+                    ai.invoke();//continue
+                }else if ( !ck.startsWith("/admin") && !ck.startsWith("/teacher") && !ck.startsWith("/student")){
                     ai.invoke();
                 } else {
-                    System.out.println("需要重新登录");
-                    ai.getController().redirect("/login");//error redirect
+                    System.out.println("You need to login!");
+                    ai.getController().redirect("/route/login");//error redirect
                 }
+            }else if (u==null && ( ck.startsWith("/admin") || ck.startsWith("/teacher") || ck.startsWith("/student") ) ){
+                ai.getController().redirect("/route/login");
             }else {
-                System.out.println("需要重新登录");
-                ai.getController().redirect("/login");//error redirect
+                ai.getController().redirect("/route/login");
             }
         }
-        else {
-            ai.invoke();
-        }
+        else ai.invoke();
+
+//        if (!ck.startsWith("/route/login") && !ck.startsWith("/route/register")){
+//            if ( u != null ) {
+//
+//                if ((ck.startsWith("/admin") && type.equals("admin"))) {
+//                    ai.invoke();//continue
+//                }else if ((ck.startsWith("/teacher") && type.equals("teacher"))) {
+//                    ai.invoke();//continue
+//                }else if ((ck.startsWith("/student") && type.equals("student"))) {
+//                    ai.invoke();//continue
+//                }else if ( !ck.startsWith("/admin") && !ck.startsWith("/teacher") && !ck.startsWith("/student")){
+//                    ai.invoke();
+//                } else {
+//                    System.out.println("You need to login!");
+//                    ai.getController().redirect("/route/login");//error redirect
+//                }
+//            }else {
+//                System.out.println("You need to login!");
+//                ai.getController().redirect("/route/login");//error redirect
+//            }
+//        }
+//        else {
+//            ai.invoke();
+//        }
 
     }
 }

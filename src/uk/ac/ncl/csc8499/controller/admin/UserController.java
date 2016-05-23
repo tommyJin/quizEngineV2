@@ -17,7 +17,7 @@ import java.util.Map;
 @ControllerBind(controllerKey = "/admin/user")
 public class UserController extends BaseController {
     public void index(){
-        Integer type = Integer.valueOf(getPara("type").toString().trim());
+        Integer type = getPara("type")==null?ConstantParas.usertype_null:Integer.valueOf(getPara("type").toString().trim());
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
         Map<String,Object> filter = new HashMap<>();

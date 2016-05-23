@@ -53,7 +53,16 @@ public class LoginController extends Controller {
 
                     usermap.put("user_id",user.get("id"));
                     usermap.put("username",user.get("username"));
-                    usermap.put("type",user.get("type"));
+                    usermap.put("name",user.get("name"));
+                    Integer type = user.get("type");
+                    usermap.put("type",type);
+                    if (type==1){
+                        usermap.put("user_type","admin");
+                    }else if (type==2){
+                        usermap.put("user_type","teacher");
+                    }else if (type==3){
+                        usermap.put("user_type","student");
+                    }
 
                     setSessionAttr("login_user", usermap);
                     setSessionAttr("user",user);

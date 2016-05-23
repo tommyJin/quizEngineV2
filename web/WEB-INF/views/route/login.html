@@ -1,0 +1,96 @@
+<#include "/layout/login-header.html">
+
+    <div class="header">
+        <div class="am-g">
+            <h1>Quiz Engine</h1>
+
+            <p>Designed for improving your skills</p>
+        </div>
+        <hr/>
+    </div>
+    <div class="am-g">
+        <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+            <h3><a href="route/login"> Login</a></h3>
+            <hr>
+
+            <br>
+            <br>
+
+            <form class="am-form">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" value="">
+                <br>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" value="">
+                <br>
+                <!--<label for="remember-me">
+                  <input id="remember-me" type="checkbox">
+                  Remember
+                </label>-->
+                <div class="am-cf">
+                    <input type="button" name="" value="Submit" class="am-btn am-btn-primary am-btn-sm am-fl"
+                           onclick="login()">
+                    <input type="button" name="" value="Forget?" class="am-btn am-btn-default am-btn-sm am-fr">
+                </div>
+            </form>
+            <hr>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            var flag = true;
+            var username = $.trim($("#username").val());
+            if (username == "") {
+                flag = false;
+                alert("Username can not be blank!");
+                $("#username").focus();
+            }
+            if (flag) {
+                var password = $.trim($("#password").val());
+                if (password == "") {
+                    flag = false;
+                    alert("Password can not be blank!");
+                    $("#password").focus();
+                }
+                if (flag) {
+                    $.ajax({
+                        url: 'session/login',
+                        type: 'POST',
+                        data: {'username': username, 'password': password},
+                        success: function (data) {
+                            alert(data.data.errormsg);
+                            if (data.status == 200) {
+                                var pre_url = getCookie("pre_url");
+                                var current_url = window.location.href;
+//                                alert(pre_url+"  \n "+current_url);
+                                var url="";
+                                if(pre_url!=current_url && pre_url!=""){
+                                    url = pre_url;
+                                }else{
+                                    var user_type = data.data.user.type;
+                                    var type = "";
+                                    if(user_type==1){
+                                        type = "admin";
+                                    }else if(user_type==2){
+                                        type = "teacher";
+                                    }else if(user_type==3){
+                                        type = "student";
+                                    }
+                                    url = type+"/route";
+                                }
+                                location.href=url;
+                            }
+                        },
+                        error: function () {
+                            cb(false);
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+
+
+    </body>
+    </html>
