@@ -100,7 +100,7 @@ function updateUser(){
                 list.map(function (o) {
                     list_list += "<tr id='tr_"+ o.id+"'><td><input type='checkbox' /></td>" +
                         "<td>" + o.id + "</td>" +
-                        "<td><a href='admin/route/user_update' >" + o.username + "</a></td>" +
+                        "<td><a href='admin/route/user_detail?id="+ o.id+"' >" + o.username + "</a></td>" +
                         "<td>" + o.name + "</td>" +
                         "<td class='am-hide-sm-only'>" + userType(o.type) + "</td>" +
                         "<td class='am-hide-sm-only'>" + o.email + "</td>" +
@@ -129,7 +129,7 @@ function updateUser(){
                 $("#pager").append(pager);
             },
             error: function () {
-                alert("something wrong")
+                alert("Ajax error!")
             }
         });
     }

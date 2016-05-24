@@ -51,7 +51,11 @@ public class QuestionLevelController extends BaseController {
         QuestionLevel q = getModel(QuestionLevel.class,"paras");//paras.*
         if (q!=null){
             if (QuestionLevel.dao.add(q)){
-                renderJson(RestResult.ok(ConstantParas.success_add));
+                Map<String,Object> filter = new HashMap<>();
+                filter.clear();
+                filter.put("q",q);
+                filter.put("errmsg",ConstantParas.success_add);
+                renderJson(RestResult.ok(filter));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }

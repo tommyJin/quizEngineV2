@@ -16,8 +16,49 @@ public class RouteController extends BaseController {
         render("question.html");
     }
 
+    public void question_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("question_detail.html");
+    }
+
+    public void category(){
+        render("category.html");
+    }
+
+    public void category_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("category_detail.html");
+    }
+
+    public void tag(){
+        render("tag.html");
+    }
+
+    public void tag_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("tag_detail.html");
+    }
+
+    public void level(){
+        render("level.html");
+    }
+
+    public void level_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("level_detail.html");
+    }
     public void quiz(){
         render("quiz.html");
+    }
+
+    public void quiz_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("quiz_detail.html");
     }
 
     public void user(){

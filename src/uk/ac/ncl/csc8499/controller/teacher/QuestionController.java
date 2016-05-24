@@ -27,7 +27,6 @@ public class QuestionController extends BaseController {
 
     public void index(){
         Map<String,Object> filter = new HashMap<>();
-        Integer type = Integer.valueOf(getPara("question_type_id").toString().trim());
         int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
         int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
         filter.put("page",page);
@@ -35,13 +34,13 @@ public class QuestionController extends BaseController {
 
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        if (type!= ConstantParas.usertype_null) {
-            filter.put("question_type_id",type);
+        if (getPara("question_type_id")!=null && !getPara("question_type_id").toString().equals("0")) {
+            filter.put("question_type_id",getParaToLong("question_type_id"));
         }
-        if (getPara("question_category_id")!=null){
+        if (getPara("question_category_id")!=null && !getPara("question_category_id").toString().equals("0")){
             filter.put("question_category_id",getParaToLong("question_category_id"));
         }
-        if (getPara("question_level_id")!=null){
+        if (getPara("question_level_id")!=null && !getPara("question_level_id").toString().equals("0")){
             filter.put("question_level_id",getParaToLong("question_level_id"));
         }
         filter.put("keyword",keyword);
@@ -66,7 +65,11 @@ public class QuestionController extends BaseController {
         Question q = getModel(Question.class,"paras");//paras.*
         if (q!=null){
             if (Question.dao.add(q)){
-                renderJson(RestResult.ok(ConstantParas.success_add));
+                Map<String,Object> filter = new HashMap<>();
+                filter.clear();
+                filter.put("q",q);
+                filter.put("errmsg",ConstantParas.success_add);
+                renderJson(RestResult.ok(filter));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }

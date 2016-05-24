@@ -65,7 +65,11 @@ public class QuizQuestionController extends BaseController {
             User currentUser = getCurrentUser();
             q.set("user_id",currentUser.get("id"));
             if (QuizQuestion.dao.add(q)){
-                renderJson(RestResult.ok(ConstantParas.success_add));
+                Map<String,Object> filter = new HashMap<>();
+                filter.clear();
+                filter.put("q",q);
+                filter.put("errmsg",ConstantParas.success_add);
+                renderJson(RestResult.ok(filter));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }

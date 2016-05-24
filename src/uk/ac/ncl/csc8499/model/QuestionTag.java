@@ -24,7 +24,7 @@ public class QuestionTag extends Model<QuestionTag> {
 
         if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
             String keyword = filter.get("keyword").toString();
-            where += " and ( name like '%"+keyword+"%' ";
+            where += " and ( name like '%"+keyword+"%') ";
         }
 
         if (filter.get("id")!=null){

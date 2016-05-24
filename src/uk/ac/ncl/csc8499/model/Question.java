@@ -18,18 +18,17 @@ public class Question extends Model<Question> {
     public Page<Question> query(Map<String, Object> filter){
         int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
-        int type = filter.get("type")==null?ConstantParas.questiontype_null:Integer.parseInt(filter.get("type").toString());
 
-        String select = "select * ";
-        String where = "from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String select = "select q.*,ql.name level_name,qt.name type_name,qc.name category_name ";
+        String where = " from "+TableName.question+" q, "+TableName.question_category+" qc, "+TableName.question_type+" qt, "+TableName.question_level+" ql where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.question_category_id = qc.id and q.question_type_id = qt.id and q.question_level_id = ql.id ";
 
         if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
             String keyword = filter.get("keyword").toString();
-            where += " and ( name like '%"+keyword+"%' ) ";
+            where += " and ( q.name like '%"+keyword+"%' ) ";
         }
 
-        if (type!=ConstantParas.questiontype_null){
-            where += " and question_type_id = "+type;
+        if (filter.get("question_type_id")!=null){
+            where += " and question_type_id = "+Integer.parseInt(filter.get("question_type_id").toString());
         }
 
         if (filter.get("question_level_id")!=null){
@@ -41,23 +40,23 @@ public class Question extends Model<Question> {
         }
 
         if (filter.get("id")!=null){
-            where += " and id = "+Integer.parseInt(filter.get("id").toString());
+            where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }
 
-        String order = " order by "+ (filter.get("orderby")==null?"  created desc":filter.get("orderby").toString());
+        String order = " order by "+ (filter.get("orderby")==null?"  q.created desc":filter.get("orderby").toString());
         return Question.dao.paginate(page, size, select, where + order);
     }
 
     public Question getBy(Map<String,Object> filter){
-        String select = "select * ";
-        String where = " from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String select = "select q.*,ql.name level_name,qt.name type_name,qc.name category_name ";
+        String where = " from "+TableName.question+" q, "+TableName.question_category+" qc, "+TableName.question_type+" qt, "+TableName.question_level+" ql where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.question_category_id = qc.id and q.question_type_id = qt.id and q.question_level_id = ql.id ";
         if (filter.get("id")!=null){
-            where += " and id = "+Integer.parseInt(filter.get("id").toString());
+            where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }
         if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
-            where += " and name = '"+filter.get("name").toString()+"' ";
+            where += " and q.name = '"+filter.get("name").toString()+"' ";
         }
-        if (!where.equals(" from "+TableName.question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
+        if (!where.equals(" from "+TableName.question+" q, "+TableName.question_category+" qc, "+TableName.question_type+" qt, "+TableName.question_level+" ql where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.question_category_id = qc.id and q.question_type_id = qt.id and q.question_level_id = ql.id ")){
             return Question.dao.find(select + where).size()>0?Question.dao.find(select + where).get(0):null;
         }else {
             return null;
