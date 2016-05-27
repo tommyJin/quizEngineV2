@@ -1,12 +1,10 @@
 package uk.ac.ncl.csc8499.model.question_type;
 
-import com.google.gson.Gson;
 import com.jfinal.kit.JsonKit;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ncl.csc8499.controller.HelloController;
 import uk.ac.ncl.csc8499.model.Base;
 import uk.ac.ncl.csc8499.model.Question;
 import uk.ac.ncl.csc8499.model.QuestionChoice;
@@ -14,8 +12,6 @@ import uk.ac.ncl.csc8499.model.TableName;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by tommy on 2016/5/13.

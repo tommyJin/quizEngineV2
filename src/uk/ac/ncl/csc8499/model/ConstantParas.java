@@ -8,6 +8,12 @@ public class ConstantParas {
     public static final int page = 1;
     public static final int size = 20;
 
+    //upload info
+    public static final int upload_success = 0;
+    public static final int upload_failed = 1;
+    public static final String upload_failed_wrong_format = "Upload failed! Picture format is invalid!";
+    public static final String upload_failed_unknown = "Upload failed! Please try again!";
+
     //token information
     public static final int token_valid = 200;
     public static final int token_generate_success = 201;

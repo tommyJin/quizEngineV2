@@ -77,6 +77,18 @@
                                     </div>
                                 </div>
 
+                                <div class="am-g am-margin-top-sm">
+                                    <div class="am-u-sm-2 am-text-right">
+                                        Content
+                                    </div>
+                                    <div class="am-u-sm-10">
+                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
+                                    </div>
+                                </div>
+
+                                <button type="button" onclick="addOption()" value="add button">add button</button>
+
+
                             </div>
 
                         </div>
@@ -141,6 +153,32 @@
                 });
             });
 
+            function addOption(){
+                editor.insertHtml('<input type="button" value="add" disabled/>');
+            }
+        </script>
+
+
+        <!--rich text editor-->
+        <script>
+
+            var editor;
+
+            KindEditor.ready(function(K) {
+                editor = K.create('textarea[name="content"]', {
+                    resizeType : 1,
+                    allowPreviewEmoticons : false,
+                    allowFileManager : true,
+                    allowUpload : true,
+                    uploadJson : uploadPath(),
+                    imageUploadJson : uploadPath(),
+                    afterBlur: function(){this.sync();},
+                    items : [
+                        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                        'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                        'insertunorderedlist', '|', 'emoticons', 'image','multiimage', 'link','code']
+                });
+            });
 
         </script>
 

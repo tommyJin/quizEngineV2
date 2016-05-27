@@ -98,6 +98,7 @@
                                     </div>
                                 </div>
 
+
                             </div>
 
                         </div>
@@ -119,6 +120,8 @@
             </footer>
         </div>
         <!-- content end -->
+
+
 
         <script>
             function chooseWay(){
@@ -165,14 +168,40 @@
                     submitHandler: function() {
                         id = $("#id").val();
                         if (id != null && id.length!=0) {
+                            editor.sync();
                             updateQuiz();
                         }else {
+                            editor.sync();
                             addQuiz();
                         }
                     }
                 });
             });
 
+
+        </script>
+
+
+        <!--rich text editor-->
+        <script>
+
+            var editor;
+
+            KindEditor.ready(function(K) {
+                editor = K.create('textarea[name="content"]', {
+                    resizeType : 1,
+                    allowPreviewEmoticons : false,
+                    allowFileManager : true,
+                    allowUpload : true,
+                    uploadJson : uploadPath(),
+                    imageUploadJson : uploadPath(),
+                    afterBlur: function(){this.sync();},
+                    items : [
+                        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                        'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                        'insertunorderedlist', '|', 'emoticons', 'image','multiimage', 'link','code']
+                });
+            });
 
         </script>
 

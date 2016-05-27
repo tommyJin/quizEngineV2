@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>tommy</groupId>
-    <artifactId>jfinal_test</artifactId>
+    <groupId>uk.ac.ncl.csc8499</groupId>
+    <artifactId>quizEngineV2</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>jfinal_test</name>
+    <name>quizEngineV2</name>
 
     <properties>
         <spring.version>4.1.1.RELEASE</spring.version>
@@ -16,6 +16,13 @@
             <groupId>com.jfinal</groupId>
             <artifactId>jfinal</artifactId>
             <version>2.0</version>
+        </dependency>
+
+        <!-- file actions -->
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>cos</artifactId>
+            <version>26Dec2008</version>
         </dependency>
 
         <dependency>
@@ -80,13 +87,13 @@
     </dependencies>
 
     <build>
-        <finalName>jfinal_test</finalName>
+        <finalName>quizEngineV2</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

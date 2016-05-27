@@ -3,13 +3,10 @@ package uk.ac.ncl.csc8499.model;
 import com.jfinal.plugin.activerecord.Page;
 import org.junit.Test;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ncl.csc8499.controller.HelloController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

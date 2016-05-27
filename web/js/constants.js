@@ -12,3 +12,7 @@ function userType(type){
     }
     return user_type;
 }
+
+function uploadPath(){
+    return "/teacher/upload/upload_img";
+}

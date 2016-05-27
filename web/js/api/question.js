@@ -15,7 +15,7 @@ function getQuestion(id) {
             $("#password").val(user.password);
             $("#name").val(user.name);
             $("#email").val(user.email);
-            $("#type option[value='"+user.type+"']").attr("selected",true);
+            $("#type option[value='" + user.type + "']").attr("selected", true);
         },
         error: function () {
             alert("Ajax error!");
@@ -23,52 +23,64 @@ function getQuestion(id) {
     });
 }
 
-function addQuestion(){
+function addQuestion() {
     var username = $.trim($("#username").val());
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
     var type = $("#type").val();
     $.ajax({
-        url:'teacher/question/add',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.username':username,'paras.password':password,'paras.name':name,'paras.email':email,'paras.type':type},
-        success: function(rs){
+        url: 'teacher/question/add',
+        type: 'POST',
+        dataType: 'JSON',
+        data: {
+            'paras.username': username,
+            'paras.password': password,
+            'paras.name': name,
+            'paras.email': email,
+            'paras.type': type
+        },
+        success: function (rs) {
             var code = rs.status;
             var data = rs.data;
-            if(code==200){
+            if (code == 200) {
                 alert(data.errmsg);
                 $("#id").val(data.user.id);
-            }else{
+            } else {
                 alert(data);
             }
 
             //$("#id").val(data.user.id);
         },
-        error: function(){
+        error: function () {
             alert("Ajax error!");
         }
     });
 }
 
-function updateQuestion(){
+function updateQuestion() {
     var id = $.trim($("#id").val());
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
     var type = $("#type").val();
     $.ajax({
-        url:'teacher/question/update',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.id':id,'paras.password':password,'paras.name':name,'paras.email':email,'paras.type':type},
-        success: function(rs){
+        url: 'teacher/question/update',
+        type: 'POST',
+        dataType: 'JSON',
+        data: {
+            'paras.id': id,
+            'paras.password': password,
+            'paras.name': name,
+            'paras.email': email,
+            'paras.type': type
+        },
+        success: function (rs) {
             var code = rs.status;
             var data = rs.data;
             alert(data);
         },
-        error: function(){
+        error: function () {
             alert("Ajax error!");
         }
     });
@@ -82,7 +94,13 @@ function queryQuestion(page) {
     $.ajax({
         url: 'teacher/question',
         dataType: 'json',
-        data: {'keyword': keyword, 'question_type_id': type, 'question_category_id': category, 'question_level_id': level, 'page': page},
+        data: {
+            'keyword': keyword,
+            'question_type_id': type,
+            'question_category_id': category,
+            'question_level_id': level,
+            'page': page
+        },
         type: 'GET',
         success: function (rs) {
             var data = rs.data;
@@ -99,8 +117,8 @@ function queryQuestion(page) {
             var list_list = "";
 
             list.map(function (o) {
-                list_list += "<tr id='tr_"+ o.id+"'><td><input type='checkbox' /></td>" +
-                    "<td><a href='teacher/route/question_detail?id="+ o.id+"' >" + o.name + "</a></td>" +
+                list_list += "<tr id='tr_" + o.id + "'><td><input type='checkbox' /></td>" +
+                    "<td><a href='teacher/route/question_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
                     "<td class='am-hide-sm-only'>" + o.category_name + "</td>" +
                     "<td class='am-hide-sm-only'>" + o.level_name + "</td>" +
                     "<td class='am-hide-sm-only'>" + o.question_tag + "</td>" +
@@ -136,17 +154,19 @@ function queryQuestion(page) {
 }
 
 function deleteQuestion(id) {
-    $.ajax({
-        url: 'teacher/question/delete',
-        type: 'GET',
-        dataType: 'JSON',
-        data: {'id': id},
-        success: function (rs) {
-            alert(rs.data);
-            $("#tr_"+id).remove();
-        },
-        error: function () {
-            alert("error!");
-        }
-    });
+    if (confirm("Delete for sure?")) {
+        $.ajax({
+            url: 'teacher/question/delete',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {'id': id},
+            success: function (rs) {
+                alert(rs.data);
+                $("#tr_" + id).remove();
+            },
+            error: function () {
+                alert("error!");
+            }
+        });
+    }
 }

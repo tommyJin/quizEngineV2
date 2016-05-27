@@ -19,45 +19,45 @@ function getTag(id) {
     });
 }
 
-function addTag(){
+function addTag() {
     var name = $.trim($("#name").val());
     var content = $("#content").val();
     $.ajax({
-        url:'teacher/questiontag/add',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.name':name,'paras.content':content},
-        success: function(rs){
+        url: 'teacher/questiontag/add',
+        type: 'POST',
+        dataType: 'JSON',
+        data: {'paras.name': name, 'paras.content': content},
+        success: function (rs) {
             var code = rs.status;
             var data = rs.data;
-            if(code==200){
+            if (code == 200) {
                 alert(data.errmsg);
                 $("#id").val(data.q.id);
-            }else{
+            } else {
                 alert(data);
             }
         },
-        error: function(){
+        error: function () {
             alert("Ajax error!");
         }
     });
 }
 
-function updateTag(){
+function updateTag() {
     var id = $.trim($("#id").val());
     var name = $.trim($("#name").val());
     var content = $("#content").val();
     $.ajax({
-        url:'teacher/questiontag/update',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.id':id,'paras.name':name,'paras.content':content},
-        success: function(rs){
+        url: 'teacher/questiontag/update',
+        type: 'POST',
+        dataType: 'JSON',
+        data: {'paras.id': id, 'paras.name': name, 'paras.content': content},
+        success: function (rs) {
             var code = rs.status;
             var data = rs.data;
             alert(data);
         },
-        error: function(){
+        error: function () {
             alert("Ajax error!");
         }
     });
@@ -85,9 +85,9 @@ function queryTag(page) {
             var list_list = "";
 
             list.map(function (o) {
-                list_list += "<tr id='tr_"+ o.id+"'><td><input type='checkbox' /></td>" +
+                list_list += "<tr id='tr_" + o.id + "'><td><input type='checkbox' /></td>" +
                     "<td>" + o.id + "</td>" +
-                    "<td><a href='teacher/route/tag_detail?id="+ o.id+"' >" + o.name + "</a></td>" +
+                    "<td><a href='teacher/route/tag_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
                     "<a href='teacher/route/tag_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
@@ -119,17 +119,19 @@ function queryTag(page) {
 }
 
 function deleteTag(id) {
-    $.ajax({
-        url: 'teacher/questiontag/delete',
-        type: 'GET',
-        dataType: 'JSON',
-        data: {'id': id},
-        success: function (rs) {
-            alert(rs.data);
-            $("#tr_"+id).remove();
-        },
-        error: function () {
-            alert("error!");
-        }
-    });
+    if (confirm("Delete for sure?")) {
+        $.ajax({
+            url: 'teacher/questiontag/delete',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {'id': id},
+            success: function (rs) {
+                alert(rs.data);
+                $("#tr_" + id).remove();
+            },
+            error: function () {
+                alert("error!");
+            }
+        });
+    }
 }

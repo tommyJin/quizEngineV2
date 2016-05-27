@@ -146,17 +146,19 @@ function queryLevel(page) {
 }
 
 function deleteLevel(id) {
-    $.ajax({
-        url: 'teacher/questionlevel/delete',
-        type: 'GET',
-        dataType: 'JSON',
-        data: {'id': id},
-        success: function (rs) {
-            alert(rs.data);
-            $("#tr_"+id).remove();
-        },
-        error: function () {
-            alert("error!");
-        }
-    });
+    if (confirm("Delete for sure?")) {
+        $.ajax({
+            url: 'teacher/questionlevel/delete',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {'id': id},
+            success: function (rs) {
+                alert(rs.data);
+                $("#tr_" + id).remove();
+            },
+            error: function () {
+                alert("error!");
+            }
+        });
+    }
 }

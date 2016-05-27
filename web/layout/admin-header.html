@@ -18,9 +18,14 @@
     <link rel="stylesheet" href="assets/css/admin.css">
 
     <script src="js/Cookie.js"></script>
+    <script src="js/api/login.js"></script>
     <script src="js/constants.js"></script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="js/dist/jquery.validate.js"></script>
+
+    <link href="kindeditor/themes/default/default.css" rel="stylesheet" />
+    <script src="kindeditor/kindeditor-all-min.js"></script>
+
     <script>
         var pre_url = document.referrer;
         setCookie("pre_url",pre_url);
@@ -49,9 +54,7 @@
                     <span class="am-icon-users"></span><#if session.login_user?exists>${session["login_user"].name?if_exists}</#if><span class="am-icon-caret-down"></span>
                 </a>
                 <ul class="am-dropdown-content">
-                    <!--<li><a href="#"><span class="am-icon-user"></span> Profile</a></li>-->
-                    <!--<li><a href="#"><span class="am-icon-cog"></span> Setting</a></li>-->
-                    <li><a href="session/logout"><span class="am-icon-power-off"></span> Logout</a></li>
+                    <li><a href='' onclick='logout();return false'><span class="am-icon-power-off"></span> Logout</a></li>
                 </ul>
             </li>
             <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">Full Screen</span></a></li>

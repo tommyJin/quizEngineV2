@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @ControllerBind(controllerKey = "/session")
 public class SessionController extends Controller {
-    static final Logger logger = LoggerFactory.getLogger(HelloController.class);
+    static final Logger logger = LoggerFactory.getLogger(IndexController.class);
     static final String tag = "session";
 
     public void index(){
