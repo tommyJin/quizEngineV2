@@ -8,6 +8,14 @@ public class ConstantParas {
     public static final int page = 1;
     public static final int size = 20;
 
+    //token information
+    public static final int token_valid = 200;
+    public static final int token_generate_success = 201;
+    public static final int token_invalid = 400;
+    public static final int token_generate_failed = 500;
+    public static final String token_invalid_message = "Your login information expired! Please login again!";
+    public static final String token_generate_failed_message = "Failed to login! Please try again!";
+
     //quiz number
     public static final int quiz_max_number = 20;
     public static final int quiz_min_number = 3;

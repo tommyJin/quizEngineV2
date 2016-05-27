@@ -16,4 +16,5 @@ public class TableName {
     public static final String quiz = "quiz";
     public static final String quiz_question = "quiz_question";
     public static final String quiz_record = "quiz_record";
+    public static final String token = "token";
 }

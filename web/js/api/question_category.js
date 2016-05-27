@@ -20,7 +20,7 @@ function getCategory(id) {
     });
 }
 
-function getCategories() {
+function getCategories(showAll) {
     $.ajax({
         url: 'teacher/questioncategory',
         type: 'GET',
@@ -32,7 +32,7 @@ function getCategories() {
             var data = rs.data;
             if(code==200){
                 var list = data.list;
-                var select = "<option  value='0'>All</option>";
+                var select = showAll?"<option  value='0'>All</option>":"";
                 list.map(function(o){
                    select += "<option value='"+ o.id+"'>"+ o.name+"</option>";
                 });

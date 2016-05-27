@@ -65,10 +65,7 @@ public class Base {
                 .addMapping(TableName.quiz, Quiz.class)
                 .addMapping(TableName.quiz_question, QuizQuestion.class)
                 .addMapping(TableName.quiz_record, QuizRecord.class)
-        //                .addMapping("f_content", FContent.class)
-//                .addMapping("f_content_type", FContentType.class)
-//                .addMapping("f_column", FColumn.class)
-//                .addMapping("f_comment", FComment.class)
+                .addMapping(TableName.token, Token.class)
         ;
         activeRecord.start();
     }

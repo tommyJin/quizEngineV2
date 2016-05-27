@@ -10,13 +10,9 @@ function getLevel(id) {
         dataType: 'JSON',
         data: {'id': id},
         success: function (rs) {
-            var questionlevel = rs.data;
-            $("#username").val(user.username);
-            $("#username").attr('disabled', 'disabled');
-            $("#password").val(user.password);
-            $("#name").val(user.name);
-            $("#email").val(user.email);
-            $("#type option[value='"+user.type+"']").attr("selected",true);
+            var level = rs.data;
+            $("#name").val(level.name);
+            $("#content").val(level.content);
         },
         error: function () {
             alert("Ajax error!");
@@ -24,7 +20,52 @@ function getLevel(id) {
     });
 }
 
-function getLevels() {
+function addLevel(){
+    var name = $.trim($("#name").val());
+    var content = $("#content").val();
+    $.ajax({
+        url:'teacher/questionlevel/add',
+        type:'POST',
+        dataType:'JSON',
+        data:{'paras.name':name,'paras.content':content},
+        success: function(rs){
+            var code = rs.status;
+            var data = rs.data;
+            if(code==200){
+                alert(data.errmsg);
+                $("#id").val(data.q.id);
+            }else{
+                alert(data);
+            }
+        },
+        error: function(){
+            alert("Ajax error!");
+        }
+    });
+}
+
+function updateLevel(){
+    var id = $.trim($("#id").val());
+    var name = $.trim($("#name").val());
+    var content = $("#content").val();
+    $.ajax({
+        url:'teacher/questionlevel/update',
+        type:'POST',
+        dataType:'JSON',
+        data:{'paras.id':id,'paras.name':name,'paras.content':content},
+        success: function(rs){
+            var code = rs.status;
+            var data = rs.data;
+            alert(data);
+        },
+        error: function(){
+            alert("Ajax error!");
+        }
+    });
+}
+
+
+function getLevels(showAll) {
     $.ajax({
         url: 'teacher/questionlevel',
         type: 'GET',
@@ -36,7 +77,7 @@ function getLevels() {
             var data = rs.data;
             if(code==200){
                 var list = data.list;
-                var select = "<option value='0'>All</option>";
+                var select = showAll?"<option  value='0'>All</option>":"";
                 list.map(function(o){
                     select += "<option value='"+ o.id+"'>"+ o.name+"</option>";
                 });
@@ -49,63 +90,12 @@ function getLevels() {
     });
 }
 
-function addLevel(){
-    var username = $.trim($("#username").val());
-    var password = $.trim($("#password").val());
-    var name = $.trim($("#name").val());
-    var email = $.trim($("#email").val());
-    var type = $("#type").val();
-    $.ajax({
-        url:'teacher/questionlevel/add',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.username':username,'paras.password':password,'paras.name':name,'paras.email':email,'paras.type':type},
-        success: function(rs){
-            var code = rs.status;
-            var data = rs.data;
-            if(code==200){
-                alert(data.errmsg);
-                $("#id").val(data.user.id);
-            }else{
-                alert(data);
-            }
-
-        },
-        error: function(){
-            alert("Ajax error!");
-        }
-    });
-}
-
-function updateLevel(){
-    var id = $.trim($("#id").val());
-    var password = $.trim($("#password").val());
-    var name = $.trim($("#name").val());
-    var email = $.trim($("#email").val());
-    var type = $("#type").val();
-    $.ajax({
-        url:'teacher/questionlevel/update',
-        type:'POST',
-        dataType:'JSON',
-        data:{'paras.id':id,'paras.password':password,'paras.name':name,'paras.email':email,'paras.type':type},
-        success: function(rs){
-            var code = rs.status;
-            var data = rs.data;
-            alert(data);
-        },
-        error: function(){
-            alert("Ajax error!");
-        }
-    });
-}
-
 function queryLevel(page) {
     var keyword = $.trim($("#keyword").val());
-    var user_type = $("#user_type").val();
     $.ajax({
         url: 'teacher/questionlevel',
         dataType: 'json',
-        data: {'keyword': keyword, 'type': user_type, 'page': page},
+        data: {'keyword': keyword, 'page': page},
         type: 'GET',
         success: function (rs) {
             var data = rs.data;
@@ -124,13 +114,10 @@ function queryLevel(page) {
             list.map(function (o) {
                 list_list += "<tr id='tr_"+ o.id+"'><td><input type='checkbox' /></td>" +
                     "<td>" + o.id + "</td>" +
-                    "<td><a href='teacher/route/questionlevel_detail?id="+ o.id+"' >" + o.username + "</a></td>" +
-                    "<td>" + o.name + "</td>" +
-                    "<td class='am-hide-sm-only'>" + userType(o.type) + "</td>" +
-                    "<td class='am-hide-sm-only'>" + o.email + "</td>" +
+                    "<td><a href='teacher/route/level_detail?id="+ o.id+"' >" + o.name + "</a></td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
-                    "<a href='teacher/route/questionlevel_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
+                    "<a href='teacher/route/level_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
                     "<button type='button' onclick='deleteLevel(" + o.id + ")' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> Delete</button>" +
                     "</div></div></td></tr>";
             });

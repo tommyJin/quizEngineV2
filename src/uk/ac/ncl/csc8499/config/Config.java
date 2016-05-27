@@ -44,6 +44,7 @@ public class Config extends JFinalConfig {
     @Override
     public void configInterceptor(Interceptors me) {
 //        me.add(new AllInterceptor());
+        me.add(new TokenInterceptor());
         me.add(new LoginInterceptor());
         me.add(new SessionInViewInterceptor());
     }

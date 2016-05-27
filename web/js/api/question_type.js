@@ -24,7 +24,7 @@ function getType(id) {
     });
 }
 
-function getTypes() {
+function getTypes(showAll) {
     $.ajax({
         url: 'teacher/questiontype',
         type: 'GET',
@@ -36,7 +36,7 @@ function getTypes() {
             var data = rs.data;
             if(code==200){
                 var list = data.list;
-                var select = "<option  value='0'>All</option>";
+                var select = showAll?"<option  value='0'>All</option>":"";
                 list.map(function(o){
                     select += "<option value='"+ o.id+"'>"+ o.name+"</option>";
                 });

@@ -1,0 +1,105 @@
+<#include "/layout/admin-header.html">
+    <#include "/layout/teacher-side-bar.html">
+
+        <script language="javascript" src="js/api/question_level.js"></script>
+
+        <!-- content start -->
+        <div class="admin-content">
+
+            <form id="form">
+
+
+                <div class="admin-content-body">
+                    <div class="am-cf am-padding am-padding-bottom-0">
+                        <div class="am-fl am-cf">
+                            <strong class="am-text-primary am-text-lg">Question Level</strong> /
+                            <small>detail</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="am-tabs am-margin" data-am-tabs>
+                        <ul class="am-tabs-nav am-nav am-nav-tabs">
+                            <li class="am-active"><a href="#tab1">Info</a></li>
+                        </ul>
+
+                        <div class="am-tabs-bd">
+                            <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Name
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="name" id="name" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top-sm">
+                                    <div class="am-u-sm-2 am-text-right">
+                                        Content
+                                    </div>
+                                    <div class="am-u-sm-10">
+                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="am-margin">
+                        <button type="submit" class="am-btn am-btn-primary am-btn-xs">Submit</button>
+                        <button type="reset" class="am-btn am-btn-primary am-btn-xs">Discard</button>
+                    </div>
+                </div>
+
+                <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
+
+            </form>
+
+
+            <footer class="admin-content-footer">
+                <hr>
+            </footer>
+        </div>
+        <!-- content end -->
+
+        <script>
+            var id = $("#id").val();
+            $(document).ready(function(){
+                if(id != null && id.length!=0){
+                    getLevel(id);
+                }
+            });
+
+            $.validator.setDefaults({
+//        debug:true
+            });
+
+            $().ready(function() {
+                $("#form").validate({
+                    rules: {
+                        name: {
+                            required: true,
+                            minlength: 2
+                        },
+                        content: "required"
+                    },
+                    submitHandler: function() {
+                        id = $("#id").val();
+                        if (id != null && id.length!=0) {
+                            updateLevel();
+                        }else {
+                            addLevel();
+                        }
+                    }
+                });
+            });
+
+
+        </script>
+
+        <#include "/layout/admin-footer.html">

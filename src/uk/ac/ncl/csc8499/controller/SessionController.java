@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by tommy on 2016/5/9.
  */
 @ControllerBind(controllerKey = "/session")
-public class LoginController extends Controller {
+public class SessionController extends Controller {
     static final Logger logger = LoggerFactory.getLogger(HelloController.class);
     static final String tag = "session";
 
@@ -169,4 +169,5 @@ public class LoginController extends Controller {
         removeSessionAttr("login_user");
         renderJson(RestResult.ok(ConstantParas.success_logout));
     }
+
 }

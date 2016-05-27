@@ -1,0 +1,179 @@
+<#include "/layout/admin-header.html">
+    <#include "/layout/teacher-side-bar.html">
+
+        <script language="javascript" src="js/api/quiz_question.js"></script>
+        <script language="javascript" src="js/api/question_category.js"></script>
+        <script language="javascript" src="js/api/question_level.js"></script>
+        <script language="javascript" src="js/api/quiz.js"></script>
+
+        <!-- content start -->
+        <div class="admin-content">
+
+            <form id="form">
+
+
+                <div class="admin-content-body">
+                    <div class="am-cf am-padding am-padding-bottom-0">
+                        <div class="am-fl am-cf">
+                            <strong class="am-text-primary am-text-lg">Quiz</strong> /
+                            <small>detail</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="am-tabs am-margin" data-am-tabs>
+                        <ul class="am-tabs-nav am-nav am-nav-tabs">
+                            <li class="am-active"><a href="#tab1">Info</a></li>
+                        </ul>
+
+                        <div class="am-tabs-bd">
+                            <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Name
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="name" id="name" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Category</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="paras.category">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Level</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="level" name="paras.level">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top-sm">
+                                    <div class="am-u-sm-2 am-text-right">
+                                        Content
+                                    </div>
+                                    <div class="am-u-sm-10">
+                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top" id="creator_div" style="display: none">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Creator
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" id="creator" class="am-input-sm" disabled="disabled">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top" style="display:none" id="way">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">How to generate</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <div class="am-btn-group" data-am-button="">
+                                            <label class="am-btn am-btn-default am-btn-xs am-active" onchange="chooseWay()">
+                                                <input type="radio" name="way" value="1" checked="checked"> Automatically
+                                            </label>
+                                            <label class="am-btn am-btn-default am-btn-xs" onchange="chooseWay()">
+                                                <input type="radio" name="way" value="2"> Manually
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top" id="question_number" style="display: none">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Number of question
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="number" name="number" id="number" class="am-input-sm">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="am-margin">
+                        <button type="submit" class="am-btn am-btn-primary am-btn-xs">Submit</button>
+                        <button type="reset" class="am-btn am-btn-primary am-btn-xs">Discard</button>
+                    </div>
+                </div>
+
+                <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
+
+            </form>
+
+
+            <footer class="admin-content-footer">
+                <hr>
+            </footer>
+        </div>
+        <!-- content end -->
+
+        <script>
+            function chooseWay(){
+                var way = $('input[name="way"]:checked', '#way').val();
+                if(way==1){
+                    $("#question_number").css('display','block');
+                }else{
+                    $("#question_number").css('display','none');
+                }
+            }
+
+            var id = $("#id").val();
+            $(document).ready(function(){
+                getCategories(false);
+                getLevels(false);
+                if(id != null && id.length!=0){
+                    getQuiz(id);
+                    $("#way").css('display','none');
+                    $("#number").css('display','none');
+                    $("#creator_div").css('display','block');
+                }else{
+                    $("#way").css('display','block');
+                    $("#number").css('display','block');
+                    $("#creator_div").css('display','none');
+                }
+                chooseWay();
+            });
+
+            $.validator.setDefaults({
+//        debug:true
+            });
+
+
+
+            $().ready(function() {
+                $("#form").validate({
+                    rules: {
+                        name: {
+                            required: true,
+                            minlength: 2
+                        },
+                        content: "required"
+                    },
+                    submitHandler: function() {
+                        id = $("#id").val();
+                        if (id != null && id.length!=0) {
+                            updateQuiz();
+                        }else {
+                            addQuiz();
+                        }
+                    }
+                });
+            });
+
+
+        </script>
+
+        <#include "/layout/admin-footer.html">

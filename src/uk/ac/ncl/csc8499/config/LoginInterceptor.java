@@ -42,7 +42,7 @@ public class LoginInterceptor implements Interceptor {
         }
 
 
-        if(ck.startsWith("/teacher")||ck.startsWith("/student")||ck.startsWith("/admin")) {
+        if(ck.startsWith("/teacher")||ck.startsWith("/admin")) {
             if (u != null ) {
                 String type = u.get("type").toString();
                 if (type.equals("1")){
@@ -56,45 +56,23 @@ public class LoginInterceptor implements Interceptor {
                     ai.invoke();//continue
                 }else if ((ck.startsWith("/teacher") && type.equals("teacher"))) {
                     ai.invoke();//continue
-                }else if ((ck.startsWith("/student") && type.equals("student"))) {
-                    ai.invoke();//continue
-                }else if ( !ck.startsWith("/admin") && !ck.startsWith("/teacher") && !ck.startsWith("/student")){
+                }
+//                else if ((ck.startsWith("/student") && type.equals("student"))) {
+//                    ai.invoke();//continue
+//                }
+                else if ( !ck.startsWith("/admin") && !ck.startsWith("/teacher")){
                     ai.invoke();
                 } else {
                     System.out.println("You need to login!");
                     ai.getController().redirect("/route/login");//error redirect
                 }
-            }else if (u==null && ( ck.startsWith("/admin") || ck.startsWith("/teacher") || ck.startsWith("/student") ) ){
+            }else if (u==null && ( ck.startsWith("/admin") || ck.startsWith("/teacher")  ) ){
                 ai.getController().redirect("/route/login");
             }else {
                 ai.getController().redirect("/route/login");
             }
         }
         else ai.invoke();
-
-//        if (!ck.startsWith("/route/login") && !ck.startsWith("/route/register")){
-//            if ( u != null ) {
-//
-//                if ((ck.startsWith("/admin") && type.equals("admin"))) {
-//                    ai.invoke();//continue
-//                }else if ((ck.startsWith("/teacher") && type.equals("teacher"))) {
-//                    ai.invoke();//continue
-//                }else if ((ck.startsWith("/student") && type.equals("student"))) {
-//                    ai.invoke();//continue
-//                }else if ( !ck.startsWith("/admin") && !ck.startsWith("/teacher") && !ck.startsWith("/student")){
-//                    ai.invoke();
-//                } else {
-//                    System.out.println("You need to login!");
-//                    ai.getController().redirect("/route/login");//error redirect
-//                }
-//            }else {
-//                System.out.println("You need to login!");
-//                ai.getController().redirect("/route/login");//error redirect
-//            }
-//        }
-//        else {
-//            ai.invoke();
-//        }
 
     }
 }
