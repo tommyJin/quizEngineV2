@@ -11,10 +11,10 @@ function getQuestion(id) {
         success: function (rs) {
             var question = rs.data;
             $("#name").val(question.name);
-            $("#qc_answer").val(question.answer);
+            $("#answer").val(question.answer);
             $("#mark").val(question.mark);
-            content.html(question.content);
-            feedback.html(question.feedback);
+            ke_content.html(question.content);
+            ke_feedback.html(question.feedback);
             $("#tag").val(question.question_tag);
             $("#category option[value='" + question.question_category_id + "']").attr("selected", true);
             $("#level option[value='" + question.question_level_id + "']").attr("selected", true);
@@ -38,37 +38,40 @@ function addQuestion() {
     var tag = $.trim($("#tag").val());
     collect();//collect content of option
     var qc_content = $("#qc_content").val();
-    var answer = $("#qc_answer").val();
-    $.ajax({
-        url: 'teacher/question/add',
-        type: 'POST',
-        dataType: 'JSON',
-        data: {
-            'q.name': name,
-            'q.mark': mark,
-            'q.content': content,
-            'q.feedback': feedback,
-            'q.question_level_id': level,
-            'q.question_type_id': type,
-            'q.question_category_id': category,
-            'q.question_tag':tag,
-            'qc.content': qc_content,
-            'q.answer': answer
-        },
-        success: function (rs) {
-            var code = rs.status;
-            var data = rs.data;
-            if (code == 200) {
-                alert(data.errmsg);
-                $("#id").val(data.q.id);
-            } else {
-                alert(data);
+    var answer = $("#answer").val();
+    var flag = true;
+    if(flag){
+        $.ajax({
+            url: 'teacher/question/add',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                'q.name': name,
+                'q.mark': mark,
+                'q.content': content,
+                'q.feedback': feedback,
+                'q.question_level_id': level,
+                'q.question_type_id': type,
+                'q.question_category_id': category,
+                'q.question_tag':tag,
+                'qc.content': qc_content,
+                'q.answer': answer
+            },
+            success: function (rs) {
+                var code = rs.status;
+                var data = rs.data;
+                if (code == 200) {
+                    alert(data.errmsg);
+                    $("#id").val(data.q.id);
+                } else {
+                    alert(data);
+                }
+            },
+            error: function () {
+                alert("Ajax error!");
             }
-        },
-        error: function () {
-            alert("Ajax error!");
-        }
-    });
+        });
+    }
 }
 
 function updateQuestion() {
@@ -77,13 +80,14 @@ function updateQuestion() {
     var mark = $.trim($("#mark").val());
     var content = $("#content").val();
     var feedback = $("#feedback").val();
+    alert(feedback);
     var level = $("#level").val();
     var type = $("#type").val();
     var category = $("#category").val();
     var tag = $.trim($("#tag").val());
     collect();//collect content of option
     var qc_content = $("#qc_content").val();
-    var answer = $("#qc_answer").val();
+    var answer = $("#answer").val();
     $.ajax({
         url: 'teacher/question/update',
         type: 'POST',

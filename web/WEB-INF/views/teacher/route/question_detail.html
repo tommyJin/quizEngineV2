@@ -38,7 +38,7 @@
                                         Name
                                     </div>
                                     <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="q.name" id="name" class="am-form-field">
+                                        <input type="text" name="name" id="name" class="am-form-field">
                                     </div>
                                 </div>
 
@@ -47,14 +47,14 @@
                                         Mark
                                     </div>
                                     <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="number" name="q.mark" id="mark" class="am-form-field" value="5">
+                                        <input type="number" name="mark" id="mark" class="am-form-field" value="5">
                                     </div>
                                 </div>
 
                                 <div class="am-g am-margin-top">
                                     <div class="am-u-sm-4 am-u-md-2 am-text-right">Category</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="q.question_category_id">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="category">
 
                                         </select>
                                     </div>
@@ -63,16 +63,38 @@
                                 <div class="am-g am-margin-top">
                                     <div class="am-u-sm-4 am-u-md-2 am-text-right">Level</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select data-am-selected="{btnSize: 'sm'}" id="level" name="q.question_level_id">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="level" name="level">
 
                                         </select>
                                     </div>
                                 </div>
 
+
+
+
+                                <div class="am-g am-margin-top-sm">
+                                    <div class="am-u-sm-2 am-text-right">
+                                        Feedback
+                                    </div>
+                                    <div class="am-u-sm-10">
+                                        <textarea id="feedback" name="feedback" rows="10" placeholder="Input feedback here"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Tag
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="tag" id="tag" class="am-form-field" value="">
+                                    </div>
+                                </div>
+
+
                                 <div class="am-g am-margin-top">
                                     <div class="am-u-sm-4 am-u-md-2 am-text-right">Type</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select  data-am-selected="{btnSize: 'sm'}" id="type" name="q.question_type_id" onchange="chooseType()">
+                                        <select  data-am-selected="{btnSize: 'sm'}" id="type" name="type" onchange="chooseType()">
 
                                         </select>
                                     </div>
@@ -83,38 +105,15 @@
                                         Content
                                     </div>
                                     <div class="am-u-sm-10">
-                                        <textarea id="content" name="q.content" rows="10" placeholder="Input content here"></textarea>
+                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
                                     </div>
                                 </div>
-
-                                <div class="am-g am-margin-top-sm">
-                                    <div class="am-u-sm-2 am-text-right">
-                                        Feedback
-                                    </div>
-                                    <div class="am-u-sm-10">
-                                        <textarea id="feedback" name="q.feedback" rows="10" placeholder="Input feedback here"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Tag
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="q.tag" id="tag" class="am-form-field" value="">
-                                    </div>
-                                </div>
-
-
 
                                 <hr/>
 
                                 <div id="questiontype">
 
                                 </div>
-
-                                <button type="button" onclick="addOption()" value="add button">add button</button>
-
 
                             </div>
 
@@ -124,13 +123,13 @@
                     <div class="am-margin">
                         <button type="submit" class="am-btn am-btn-primary am-btn-xs">Submit</button>
                         <button type="reset" class="am-btn am-btn-primary am-btn-xs">Discard</button>
-                        <button type="button" class="am-btn am-btn-primary am-btn-xs" onclick="removeType('TrueFalse')">Remove</button>
                     </div>
                 </div>
 
                 <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
-                <input type="hidden" id="qc_answer"  />
+                <input type="hidden" id="answer"  />
                 <input type="hidden" id="qc_content"  />
+                <input type="hidden" id="blankIndex" value="0"/>
 
             </form>
 
@@ -145,13 +144,13 @@
             var id = $("#id").val();
             var type = $("#type").val();
             $(document).ready(function(){
-
                 getCategories(false);
                 getLevels(false);
-                getTypes(false);
 
                 if(id != null && id.length!=0){
-                    getQuestion(id);
+                    getTypesForQuestion(false,id);
+                }else{
+                    getTypesForQuestion(true,"");
                 }
                 initType();
             });
@@ -172,16 +171,18 @@
                         name: "required",
                         mark: {
                             required: true,
-                            minlength: 5,
                             digits:true
                         },
                         answer: "required",
+                        tag: "required",
                         content: "required",
                         feedback: "feedback"
                     },
                     submitHandler: function() {
                         id = $("#id").val();
                         if (id != null && id.length!=0) {
+                            ke_feedback.sync();
+                            ke_content.sync();
                             updateQuestion();
                         }else {
                             addQuestion();
@@ -190,24 +191,23 @@
                 });
             });
 
-            function addOption(){
-                editor.insertHtml('<input type="button" value="add" disabled/>');
-            }
+
         </script>
 
 
         <!--rich text editor-->
         <script>
 
-            var content;
-            var feedback;
+            var ke_content;
+            var ke_feedback;
 
             KindEditor.ready(function(K) {
-                content = K.create('textarea[name="q.content"]', {
+                ke_content = K.create('textarea[name="content"]', {
                     resizeType : 1,
                     allowPreviewEmoticons : false,
                     allowFileManager : true,
                     allowUpload : true,
+                    filterMode: false,
                     uploadJson : uploadPath(),
                     imageUploadJson : uploadPath(),
                     afterBlur: function(){this.sync();},
@@ -219,7 +219,7 @@
             });
 
             KindEditor.ready(function(K) {
-                feedback = K.create('textarea[name="q.feedback"]', {
+                ke_feedback = K.create('textarea[name="feedback"]', {
                     resizeType : 1,
                     allowPreviewEmoticons : false,
                     allowFileManager : true,

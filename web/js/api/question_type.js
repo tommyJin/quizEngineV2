@@ -49,6 +49,34 @@ function getTypes(showAll) {
     });
 }
 
+function getTypesForQuestion(showAll,id) {
+    $.ajax({
+        url: 'teacher/questiontype',
+        type: 'GET',
+        dataType: 'JSON',
+        data: {},
+        success: function (rs) {
+            $("#type").empty();
+            var code = rs.status;
+            var data = rs.data;
+            if(code==200){
+                var list = data.list;
+                var select = showAll?"<option>Please Choose One</option>":"";
+                list.map(function(o){
+                    select += "<option value='"+ o.id+"'>"+ o.name+"</option>";
+                });
+                $("#type").append(select);
+                if(!showAll){
+                    getQuestion(id);
+                }
+            }
+        },
+        error: function () {
+            alert("Ajax error!");
+        }
+    });
+}
+
 function addType(){
     var username = $.trim($("#username").val());
     var password = $.trim($("#password").val());
