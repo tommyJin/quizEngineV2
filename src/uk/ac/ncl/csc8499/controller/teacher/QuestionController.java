@@ -62,14 +62,20 @@ public class QuestionController extends BaseController {
     }
 
     public void add(){
-        Question q = getModel(Question.class,"paras");//paras.*
+        Question q = getModel(Question.class,"q");//paras.*
+        QuestionChoice qc = getModel(QuestionChoice.class,"qc");//paras.*
+        Map<String,Object> filter = new HashMap<>();
         if (q!=null){
             if (Question.dao.add(q)){
-                Map<String,Object> filter = new HashMap<>();
-                filter.clear();
-                filter.put("q",q);
-                filter.put("errmsg",ConstantParas.success_add);
-                renderJson(RestResult.ok(filter));
+                qc.set("question_id",q.get("id"));
+                if (QuestionChoice.dao.add(qc)){
+                    filter.put("q",q);
+                    filter.put("qc",qc);
+                    filter.put("errmsg",ConstantParas.success_add);
+                    renderJson(RestResult.ok(filter));
+                }else {
+                    renderJson(RestResult.error(ConstantParas.failure_add));
+                }
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }
@@ -79,13 +85,19 @@ public class QuestionController extends BaseController {
     }
 
     public void update(){
-        Question q = getModel(Question.class,"paras");
+        Question q = getModel(Question.class,"q");
+        QuestionChoice qc = getModel(QuestionChoice.class,"qc");//paras.*
         Long id = q.get("id")==null?0:Long.parseLong(q.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
         if (Question.dao.getBy(filter)!=null){
                 if (Question.dao.update(q)) {
-                    renderJson(RestResult.ok(ConstantParas.success_update));
+                    qc.set("id",id);
+                    if (QuestionChoice.dao.update(qc)){
+                        renderJson(RestResult.ok(ConstantParas.success_update));
+                    }else {
+                        renderJson(RestResult.error(ConstantParas.failure_update));
+                    }
                 } else {
                     renderJson(RestResult.error(ConstantParas.failure_update));
                 }

@@ -5,6 +5,9 @@
         <script language="javascript" src="js/api/question_category.js"></script>
         <script language="javascript" src="js/api/question_level.js"></script>
         <script language="javascript" src="js/api/question_type.js"></script>
+        <script language="javascript" src="js/api/question_choice.js"></script>
+
+        <script src="js/questiontype.js"></script>
 
         <!-- content start -->
         <div class="admin-content">
@@ -31,49 +34,47 @@
                             <div class="am-tab-panel am-fade am-in am-active" id="tab1">
 
                                 <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">User Type</div>
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Name
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="q.name" id="name" class="am-form-field">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Mark
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="number" name="q.mark" id="mark" class="am-form-field" value="5">
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Category</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select data-am-selected="{btnSize: 'sm'}" id="type" name="paras.type" value="${type?if_exists}">
-                                            <option value="2">Teacher</option>
-                                            <option value="3">Student</option>
-                                            <option value="1">Administrator</option>
+                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="q.question_category_id">
+
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Username
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="username" id="username" class="am-input-sm">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Level</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="level" name="q.question_level_id">
+
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Password
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="password" id="password" class="am-input-sm">
-                                    </div>
-                                </div>
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Type</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select  data-am-selected="{btnSize: 'sm'}" id="type" name="q.question_type_id" onchange="chooseType()">
 
-                                <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Name
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="name" id="name" class="am-input-sm">
-                                    </div>
-                                </div>
-
-                                <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Email
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="email" id="email" class="am-input-sm">
+                                        </select>
                                     </div>
                                 </div>
 
@@ -82,8 +83,34 @@
                                         Content
                                     </div>
                                     <div class="am-u-sm-10">
-                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
+                                        <textarea id="content" name="q.content" rows="10" placeholder="Input content here"></textarea>
                                     </div>
+                                </div>
+
+                                <div class="am-g am-margin-top-sm">
+                                    <div class="am-u-sm-2 am-text-right">
+                                        Feedback
+                                    </div>
+                                    <div class="am-u-sm-10">
+                                        <textarea id="feedback" name="q.feedback" rows="10" placeholder="Input feedback here"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Tag
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
+                                        <input type="text" name="q.tag" id="tag" class="am-form-field" value="">
+                                    </div>
+                                </div>
+
+
+
+                                <hr/>
+
+                                <div id="questiontype">
+
                                 </div>
 
                                 <button type="button" onclick="addOption()" value="add button">add button</button>
@@ -97,10 +124,13 @@
                     <div class="am-margin">
                         <button type="submit" class="am-btn am-btn-primary am-btn-xs">Submit</button>
                         <button type="reset" class="am-btn am-btn-primary am-btn-xs">Discard</button>
+                        <button type="button" class="am-btn am-btn-primary am-btn-xs" onclick="removeType('TrueFalse')">Remove</button>
                     </div>
                 </div>
 
                 <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
+                <input type="hidden" id="qc_answer"  />
+                <input type="hidden" id="qc_content"  />
 
             </form>
 
@@ -115,10 +145,22 @@
             var id = $("#id").val();
             var type = $("#type").val();
             $(document).ready(function(){
+
+                getCategories(false);
+                getLevels(false);
+                getTypes(false);
+
                 if(id != null && id.length!=0){
-                    getUser(id,type);
+                    getQuestion(id);
                 }
+                initType();
             });
+
+
+            function chooseType(){
+                initType();
+            }
+
 
             $.validator.setDefaults({
 //        debug:true
@@ -128,26 +170,21 @@
                 $("#form").validate({
                     rules: {
                         name: "required",
-                        username: {
+                        mark: {
                             required: true,
-                            minlength: 4
+                            minlength: 5,
+                            digits:true
                         },
-                        password: {
-                            required: true,
-                            minlength: 4
-                        },
-                        email: {
-                            required: true,
-                            email: true
-                        },
-                        type: "required"
+                        answer: "required",
+                        content: "required",
+                        feedback: "feedback"
                     },
                     submitHandler: function() {
                         id = $("#id").val();
                         if (id != null && id.length!=0) {
-                            updateUser();
+                            updateQuestion();
                         }else {
-                            addUser();
+                            addQuestion();
                         }
                     }
                 });
@@ -162,10 +199,27 @@
         <!--rich text editor-->
         <script>
 
-            var editor;
+            var content;
+            var feedback;
 
             KindEditor.ready(function(K) {
-                editor = K.create('textarea[name="content"]', {
+                content = K.create('textarea[name="q.content"]', {
+                    resizeType : 1,
+                    allowPreviewEmoticons : false,
+                    allowFileManager : true,
+                    allowUpload : true,
+                    uploadJson : uploadPath(),
+                    imageUploadJson : uploadPath(),
+                    afterBlur: function(){this.sync();},
+                    items : [
+                        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                        'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                        'insertunorderedlist', '|', 'emoticons', 'image','multiimage', 'link','code']
+                });
+            });
+
+            KindEditor.ready(function(K) {
+                feedback = K.create('textarea[name="q.feedback"]', {
                     resizeType : 1,
                     allowPreviewEmoticons : false,
                     allowFileManager : true,
@@ -181,5 +235,6 @@
             });
 
         </script>
+
 
         <#include "/layout/admin-footer.html">

@@ -4,18 +4,22 @@
 
 function getQuestion(id) {
     $.ajax({
-        url: userType(type) + '/question/get',
+        url: 'teacher/question/get',
         type: 'GET',
         dataType: 'JSON',
         data: {'id': id},
         success: function (rs) {
-            var user = rs.data;
-            $("#username").val(user.username);
-            $("#username").attr('disabled', 'disabled');
-            $("#password").val(user.password);
-            $("#name").val(user.name);
-            $("#email").val(user.email);
-            $("#type option[value='" + user.type + "']").attr("selected", true);
+            var question = rs.data;
+            $("#name").val(question.name);
+            $("#qc_answer").val(question.answer);
+            $("#mark").val(question.mark);
+            content.html(question.content);
+            feedback.html(question.feedback);
+            $("#tag").val(question.question_tag);
+            $("#category option[value='" + question.question_category_id + "']").attr("selected", true);
+            $("#level option[value='" + question.question_level_id + "']").attr("selected", true);
+            $("#type option[value='" + question.question_type_id + "']").attr("selected", true);
+            getQuestionChoice(question.id);
         },
         error: function () {
             alert("Ajax error!");
@@ -24,33 +28,42 @@ function getQuestion(id) {
 }
 
 function addQuestion() {
-    var username = $.trim($("#username").val());
-    var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
-    var email = $.trim($("#email").val());
+    var mark = $.trim($("#mark").val());
+    var content = $("#content").val();
+    var feedback = $("#feedback").val();
+    var level = $("#level").val();
     var type = $("#type").val();
+    var category = $("#category").val();
+    var tag = $.trim($("#tag").val());
+    collect();//collect content of option
+    var qc_content = $("#qc_content").val();
+    var answer = $("#qc_answer").val();
     $.ajax({
         url: 'teacher/question/add',
         type: 'POST',
         dataType: 'JSON',
         data: {
-            'paras.username': username,
-            'paras.password': password,
-            'paras.name': name,
-            'paras.email': email,
-            'paras.type': type
+            'q.name': name,
+            'q.mark': mark,
+            'q.content': content,
+            'q.feedback': feedback,
+            'q.question_level_id': level,
+            'q.question_type_id': type,
+            'q.question_category_id': category,
+            'q.question_tag':tag,
+            'qc.content': qc_content,
+            'q.answer': answer
         },
         success: function (rs) {
             var code = rs.status;
             var data = rs.data;
             if (code == 200) {
                 alert(data.errmsg);
-                $("#id").val(data.user.id);
+                $("#id").val(data.q.id);
             } else {
                 alert(data);
             }
-
-            //$("#id").val(data.user.id);
         },
         error: function () {
             alert("Ajax error!");
@@ -60,20 +73,33 @@ function addQuestion() {
 
 function updateQuestion() {
     var id = $.trim($("#id").val());
-    var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
-    var email = $.trim($("#email").val());
+    var mark = $.trim($("#mark").val());
+    var content = $("#content").val();
+    var feedback = $("#feedback").val();
+    var level = $("#level").val();
     var type = $("#type").val();
+    var category = $("#category").val();
+    var tag = $.trim($("#tag").val());
+    collect();//collect content of option
+    var qc_content = $("#qc_content").val();
+    var answer = $("#qc_answer").val();
     $.ajax({
         url: 'teacher/question/update',
         type: 'POST',
         dataType: 'JSON',
         data: {
-            'paras.id': id,
-            'paras.password': password,
-            'paras.name': name,
-            'paras.email': email,
-            'paras.type': type
+            'q.id':id,
+            'q.name': name,
+            'q.mark': mark,
+            'q.content': content,
+            'q.feedback': feedback,
+            'q.question_level_id': level,
+            'q.question_type_id': type,
+            'q.question_category_id': category,
+            'q.question_tag':tag,
+            'qc.content': qc_content,
+            'q.answer': answer
         },
         success: function (rs) {
             var code = rs.status;
