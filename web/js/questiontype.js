@@ -20,6 +20,9 @@ function initType() {
     } else if (type == "Fill in the Blank") {
         $(div).append(add_blank_button_html);
         fillBlank();
+    } else if (type == "Fill in Multiple Blanks"){
+        $(div).append(add_blank_button_html);
+        fillBlank();
     }
 
 }
@@ -165,6 +168,9 @@ function addBlank() {
     var index = "blank_" + ( Number($("#blankIndex").val()) + 1);
     ke_content.insertHtml('<input type="button" id="' + index + '" value="' + index + '" disabled/>');
     addBlankContent(index, "", "");
+    if($("#type :selected").text()=="Fill in the Blank"){
+        $("#add_blank_button").attr("disabled","disabled");
+    }
 }
 
 function addBlankContent(index, answer, feedback) {
@@ -305,7 +311,6 @@ function addMultipleChoiceContent(index, choice, feedback) {//answer is json obj
     KE.html('#feedback-' + index, feedback);
 }
 
-
 function deleteBlank(index) {
 
 }
@@ -335,13 +340,13 @@ function addKE(ke_id) {
 var add_blank_button_html = '<div class="am-g am-margin-top">' +
     '<div class="am-u-sm-4 am-u-md-2 am-text-right">Add blank</div>' +
     '<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">' +
-    '<input type="button" class="am-btn am-btn-success" value="Add one blank" onclick="addBlank()" />' +
+    '<input type="button" id="add_blank_button" class="am-btn am-btn-success" value="Add one blank" onclick="addBlank()" />' +
     '</div></div>';
 
 var add_choice_button_html = '<div class="am-g am-margin-top">' +
     '<div class="am-u-sm-4 am-u-md-2 am-text-right">Add choice</div>' +
     '<div class="am-u-sm-8 am-u-md-8 am-u-end col-end">' +
-    '<input type="button" class="am-btn am-btn-success" value="Add one choice" onclick="addMultipleChoice()" />' +
+    '<input type="button" id="add_choice_button" class="am-btn am-btn-success" value="Add one choice" onclick="addMultipleChoice()" />' +
     '</div></div>' +
     '<div class="am-g am-margin-top">' +
     '<div class="am-u-sm-4 am-u-md-2 am-text-right">Right Answer</div>' +
