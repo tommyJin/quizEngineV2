@@ -36,7 +36,9 @@ function addQuestion() {
     var type = $("#type").val();
     var category = $("#category").val();
     var tag = $.trim($("#tag").val());
-    collect();//collect content of option
+    if(!collect()){
+        return;
+    }//collect content of option
     var qc_content = $("#qc_content").val();
     var answer = $("#answer").val();
     var flag = true;
@@ -84,7 +86,9 @@ function updateQuestion() {
     var type = $("#type").val();
     var category = $("#category").val();
     var tag = $.trim($("#tag").val());
-    collect();//collect content of option
+    if(!collect()){
+        return;
+    }//collect content of option
     var qc_content = $("#qc_content").val();
     var answer = $("#answer").val();
     $.ajax({
