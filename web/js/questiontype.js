@@ -5,7 +5,7 @@ var div = "#questiontype";
 
 
 function initType() {
-    var type = $("#type").find("option:selected").text();
+    var type = $("#type :selected").text();
     //alert(type);
     $(div).empty();
     if (type == "True Or False") {
@@ -18,7 +18,9 @@ function initType() {
         $(div).append(add_choice_button_html);
         multipleChoice();
     } else if (type == "Fill in the Blank") {
-        $(div).append(add_blank_button_html);
+        if($("#id").val().length<=0){
+            $(div).append(add_blank_button_html);
+        }
         fillBlank();
     } else if (type == "Fill in Multiple Blanks"){
         $(div).append(add_blank_button_html);
@@ -53,11 +55,14 @@ function multipleChoice() {
     if (id != null && id.length != 0 && answer != null && answer.length != 0) {
         var a = $.parseJSON(answer);
         var mc_answer = "";
+        var num = 0;
         for (var i = 0; i < a.length; i++) {
             var tmp_id = a[i].id;
             var tmp_choice = a[i].choice;
             var tmp_feedback = a[i].feedback;
             var tmp_isRight = a[i].isRight;
+            num = a[i].number;
+            $("#choice_number").val(num);//set the number of choice
             if (tmp_id != null && tmp_id.length != 0) {
                 addMultipleChoiceContent(tmp_id, tmp_choice, tmp_feedback);
             }
@@ -103,37 +108,43 @@ function collect() {
         $("#answer").val(answer_str);
     } else if (type == "Multiple Choice") {
         var mc_answer = $("#mc_answer").val();
-
+        var num = $("#choice_number").val();
         if(mc_answer.length<1){
             alert("There must be at least 1 right answer!");
             return false;
         }else{
-            var content = [];
-            var answer = [];
+            if(mc_answer.split(";").length>num){
+                alert("You have set more than 1 answer!");
+                return;
+            }else{
+                var content = [];
+                var answer = [];
 
-            var size = $("#choiceIndex").val();
-            for (var i = 1; i <= size; i++) {
-                var tmp_c_id = "#content-choice_" + i;
-                var tmp_f_id = "#feedback-choice_" + i;
-                var tmp_c_div = $(tmp_c_id);
-                var tmp_f_div = $(tmp_f_id);
+                var size = $("#choiceIndex").val();
+                for (var i = 1; i <= size; i++) {
+                    var tmp_c_id = "#content-choice_" + i;
+                    var tmp_f_id = "#feedback-choice_" + i;
+                    var tmp_c_div = $(tmp_c_id);
+                    var tmp_f_div = $(tmp_f_id);
 
-                var tmp_a = {};
-                var tmp_c = {};
-                tmp_c.id = tmp_c_id.split("-")[1];
-                tmp_c.choice = tmp_c_div.val();
-                tmp_a.id = tmp_c_id.split("-")[1];
-                tmp_a.choice = tmp_c_div.val();
-                tmp_a.feedback = tmp_f_div.val();
-                tmp_a.isRight =  mc_answer.indexOf("choice_"+i) > -1;
-                answer.push(tmp_a);
-                content.push(tmp_c);
+                    var tmp_a = {};
+                    var tmp_c = {};
+                    tmp_c.id = tmp_c_id.split("-")[1];
+                    tmp_c.choice = tmp_c_div.val();
+                    tmp_c.number = num;
+                    tmp_a.id = tmp_c_id.split("-")[1];
+                    tmp_a.choice = tmp_c_div.val();
+                    tmp_a.feedback = tmp_f_div.val();
+                    tmp_a.number = num;
+                    tmp_a.isRight =  mc_answer.indexOf("choice_"+i) > -1;
+                    answer.push(tmp_a);
+                    content.push(tmp_c);
+                }
+                var content_str = JSON.stringify(content);
+                var answer_str = JSON.stringify(answer);
+                $("#answer").val(answer_str);
+                $("#qc_content").val(content_str);
             }
-
-            var content_str = JSON.stringify(content);
-            var answer_str = JSON.stringify(answer);
-            $("#answer").val(answer_str);
-            $("#qc_content").val(content_str);
         }
     } else if (type == "Calculate Numeric" || type == "Fill in the Blank") {
         var content = [];
@@ -249,10 +260,16 @@ function addTrueFalse(data) {
 
 function setRightChoice(index) {
     var answer = $("#mc_answer").val();
+    var num = $("#choice_number").val();
     if (answer == "") {
         $("#mc_answer").val(index);
     } else {
-        $("#mc_answer").val(answer + ";" + index);
+        if(num>1){
+            $("#mc_answer").val(answer + ";" + index);
+        }else{
+            alert("You can only set 1 answer!");
+            return;
+        }
     }
     $("#button-set-" + index).css("display", "none");
     $("#button-cancel-" + index).css("display", "block");
@@ -271,11 +288,12 @@ function cancelRightChoice(index) {
             flag = true;
         }
         if(!flag){
-            alert("There must be at least 1 right answer!");
-        }else{
-            $("#button-set-" + index).css("display", "block");
-            $("#button-cancel-" + index).css("display", "none");
+            answer = "";
         }
+
+        $("#button-set-" + index).css("display", "block");
+        $("#button-cancel-" + index).css("display", "none");
+
         $("#mc_answer").val(answer);
     } else {
         $("#button-set-" + index).css("display", "block");
@@ -352,4 +370,13 @@ var add_choice_button_html = '<div class="am-g am-margin-top">' +
     '<div class="am-u-sm-4 am-u-md-2 am-text-right">Right Answer</div>' +
     '<div class="am-u-sm-8 am-u-md-8 am-u-end col-end">' +
     '<input type="text" class="am-form-field" disabled id="mc_answer"/>' +
-    '</div></div>';
+    '</div></div>'+
+
+    '<div class="am-g am-margin-top">' +
+    '<div class="am-u-sm-4 am-u-md-2 am-text-right">Number Of Answer</div>' +
+    '<div class="am-u-sm-8 am-u-md-10">' +
+    '<select  data-am-selected="{btnSize: \'sm\'}"  id="choice_number" name="qc.answer" >' +
+    '<option value="1">One</option>' +
+    '<option value="2">More Than One</option>' +
+    '</select></div></div>'
+    ;
