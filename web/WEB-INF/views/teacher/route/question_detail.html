@@ -77,7 +77,7 @@
                                         Feedback
                                     </div>
                                     <div class="am-u-sm-10">
-                                        <textarea id="feedback" name="feedback" rows="10" placeholder="Input feedback here"></textarea>
+                                        <textarea id="feedback" class="editor" name="feedback" rows="10" placeholder="Input feedback here"></textarea>
                                     </div>
                                 </div>
 
@@ -105,7 +105,7 @@
                                         Content
                                     </div>
                                     <div class="am-u-sm-10">
-                                        <textarea id="content" name="content" rows="10" placeholder="Input content here"></textarea>
+                                        <textarea id="content" class="editor" name="content" rows="10" placeholder="Input content here"></textarea>
                                     </div>
                                 </div>
 
@@ -181,8 +181,7 @@
                     submitHandler: function() {
                         id = $("#id").val();
                         if (id != null && id.length!=0) {
-                            ke_feedback.sync();
-                            ke_content.sync();
+                            KE.sync(".editor");//sync all KE object by class contain editor
                             updateQuestion();
                         }else {
                             addQuestion();
@@ -197,11 +196,12 @@
 
         <!--rich text editor-->
         <script>
+            var KE = window.KindEditor;
 
             var ke_content;
             var ke_feedback;
 
-            KindEditor.ready(function(K) {
+            KE.ready(function(K) {
                 ke_content = K.create('textarea[name="content"]', {
                     resizeType : 1,
                     allowPreviewEmoticons : false,
@@ -218,7 +218,7 @@
                 });
             });
 
-            KindEditor.ready(function(K) {
+            KE.ready(function(K) {
                 ke_feedback = K.create('textarea[name="feedback"]', {
                     resizeType : 1,
                     allowPreviewEmoticons : false,

@@ -80,7 +80,6 @@ function updateQuestion() {
     var mark = $.trim($("#mark").val());
     var content = $("#content").val();
     var feedback = $("#feedback").val();
-    alert(feedback);
     var level = $("#level").val();
     var type = $("#type").val();
     var category = $("#category").val();
