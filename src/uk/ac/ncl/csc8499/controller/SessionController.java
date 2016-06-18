@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.FormatValidate;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.model.ConstantParas;
+import uk.ac.ncl.csc8499.model.Token;
 import uk.ac.ncl.csc8499.model.User;
 
 import java.util.HashMap;
@@ -77,6 +78,71 @@ public class SessionController extends Controller {
             filter.put("user", user);
             if(flag) {
                 renderJson(RestResult.ok(filter));
+            }else {
+                renderJson(RestResult.error(filter));
+            }
+        }
+    }
+
+    public void student_login(){
+        Map<String, Object> filter = new HashMap<String, Object>();
+        Map<String,Object> usermap = new HashMap<String, Object>();
+
+        String username = getPara("username")==null?null:getPara("username").trim();
+        String password = getPara("password")==null?null:getPara("password").trim();
+        String errormsg = "";
+        boolean flag = true;
+        if (username == null || username.equals("")) {
+            flag = false;
+            errormsg += ConstantParas.hint_username_null+" ";
+        }
+        if (password == null || password.equals("")) {
+            flag = false;
+            errormsg += ConstantParas.hint_password_null+" ";
+        }
+        if (flag) {
+            filter.put("username",username);
+            filter.put("type",ConstantParas.usertype_student);
+            if (User.dao.getBy(filter)==null){
+                flag = false;
+                errormsg += ConstantParas.error_username_not_exist;
+            }
+            User user = new User();
+            if (flag) {
+                user = User.dao.login(username, password);
+                if (user != null) {
+                    errormsg += ConstantParas.success_login;
+
+                    filter.clear();
+                    filter.put("user_id",user.get("id"));
+                    filter.put("username",user.get("username"));
+                    String token = Token.dao.generate(filter);
+
+
+                    usermap.put("id",user.get("id"));
+                    usermap.put("username",user.get("username"));
+                    usermap.put("name",user.get("name"));
+                    Integer type = user.get("type");
+                    usermap.put("type",type);
+                    if (type==1){
+                        usermap.put("user_type","admin");
+                    }else if (type==2){
+                        usermap.put("user_type","teacher");
+                    }else if (type==3){
+                        usermap.put("user_type","student");
+                    }
+                    usermap.put("token",token);
+
+                } else {
+                    flag = false;
+                    errormsg += ConstantParas.error_wrong_password;
+                }
+            }
+
+            filter.clear();
+            filter.put("errormsg", errormsg);
+            if(flag) {
+                renderJson(RestResult.ok(usermap));
             }else {
                 renderJson(RestResult.error(filter));
             }

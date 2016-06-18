@@ -19,11 +19,6 @@ import java.util.*;
  */
 @ControllerBind(controllerKey = "/teacher/upload")
 public class UploadController extends BaseController {
-    public void test(){
-        UploadFile file = getFile("imgFile", "tmp", 1024 * 1024);
-        System.out.println("filename="+file.getFileName());
-        renderJson("aaaa");
-    }
     public void upload_img(){
         User u = getCurrentUser();
         System.out.println("enter upload img");

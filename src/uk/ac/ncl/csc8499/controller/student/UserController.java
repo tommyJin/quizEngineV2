@@ -20,6 +20,7 @@ public class UserController extends BaseController {
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
+        filter.put("type",ConstantParas.usertype_student);
         User user = User.dao.getBy(filter);
         if (user!=null){
             renderJson(RestResult.ok(user));

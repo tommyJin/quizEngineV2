@@ -42,7 +42,8 @@ public class User extends Model<User>{
     }
 
     public User login(String username,String password){
-        List<User> users =  User.dao.find("select * from " + TableName.user + " where username= '" + username + "' and password= '" + password+"' and isDeleted = "+ConstantParas.isDeleted_false+" ");
+        String sql = "select * from " + TableName.user + " where username= '" + username + "' and password= '" + password+"' and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        List<User> users =  User.dao.find(sql);
         return users.size()>0?users.get(0):null;
     }
 
@@ -57,6 +58,9 @@ public class User extends Model<User>{
         }
         if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
             where += " and name = '"+filter.get("name").toString()+"' ";
+        }
+        if (filter.get("type")!=null && !filter.get("type").toString().equals("")){
+            where += " and type = "+filter.get("type").toString()+" ";
         }
         if (filter.get("password")!=null && !filter.get("password").toString().equals("")){
             where += " and password = '"+filter.get("password").toString()+"' ";
