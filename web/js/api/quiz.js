@@ -29,6 +29,7 @@ function addQuiz() {
     var content = $("#content").val();
     var level = $("#level").val();
     var category = $("#category").val();
+    var number = $("#number").val();
     $.ajax({
         url: 'teacher/quiz/add',
         type: 'POST',
@@ -37,7 +38,8 @@ function addQuiz() {
             'paras.name': name,
             'paras.content': content,
             'paras.question_level_id': level,
-            'paras.question_category_id': category
+            'paras.question_category_id': category,
+            'paras.number':number
         },
         success: function (rs) {
             var code = rs.status;
@@ -47,8 +49,7 @@ function addQuiz() {
                 $("#id").val(data.q.id);
                 var way = $("input[name='way']:checked").val();
                 if (way == 1) {
-                    var number = $("#number").val();
-                    addQuizQuestion(data.q.id, number);
+                    addQuizQuestion(data.q.id);
                 }
             } else {
                 alert(data);

@@ -44,16 +44,17 @@ public class QuizTest extends Base{
         }
     }
 
-        @Ignore
+//        @Ignore
     @Test
     public void testAdd() throws Exception {
         Random r = new Random();
-        for (int i=0;i<5;i++) {
+        for (int i=10;i<25;i++) {
             Quiz q = new Quiz();
             q.set("name", "quiz "+(i+1));
             q.set("content", "quiz "+(i+1)+" content");
-            q.set("creator_id",1);
+            q.set("creator_id",4);
             q.set("question_level_id",r.nextInt(4)+1);
+            q.set("question_category_id",r.nextInt(10)+1);
             q.set("mark",5);
             if (Quiz.dao.add(q)) {
                 logger.info("q:{}", q);

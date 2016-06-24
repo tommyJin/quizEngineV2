@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
-import uk.ac.ncl.csc8499.model.ConstantParas;
-import uk.ac.ncl.csc8499.model.Quiz;
-import uk.ac.ncl.csc8499.model.QuizQuestion;
-import uk.ac.ncl.csc8499.model.User;
+import uk.ac.ncl.csc8499.model.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,24 +51,13 @@ public class QuizQuestionController extends BaseController {
         }
     }
 
-    public void autoGenerate(){
-        Long id = getPara("id")==null?0:getParaToLong("id");
-        Integer number = getPara("number")==null?0:getParaToInt("number");
+    public void maxSize(){
         Map<String,Object> filter = new HashMap<>();
-        filter.put("id",id);
-        User currentUser = getCurrentUser();
-        filter.put("creator_id",currentUser.get("id"));
-        Quiz quiz = Quiz.dao.getBy(filter);
-        if (quiz!=null){
-            List list = QuizQuestion.dao.autoGenerate(quiz,number);
-            if(list.size()>0){
-                renderJson(RestResult.ok(list));
-            }else {
-                renderJson(RestResult.error(ConstantParas.failure_add));
-            }
-        }else {
-            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
-        }
+        Long level_id = getPara("level_id")==null?null:getParaToLong("level_id");
+        Long category_id = getPara("category_id")==null?null:getParaToLong("category_id");
+        filter.put("question_level_id",level_id);
+        filter.put("question_category_id",category_id);
+        renderJson(RestResult.ok(Question.dao.query(filter).getList().size()));
     }
 
     public void answer(){

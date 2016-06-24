@@ -102,6 +102,7 @@ public class QuizQuestion extends Model<QuizQuestion>{
         filter.put("question_category_id",category_id);
         List<Question> questions = Question.dao.query(filter).getList();
         int size = questions.size();
+        System.out.println("size="+size+" number="+number+" min_number="+ConstantParas.quiz_min_number);
         if (number < ConstantParas.quiz_min_number) {
             number = r.nextInt(ConstantParas.quiz_max_number - ConstantParas.quiz_min_number) + ConstantParas.quiz_min_number;
         }

@@ -66,6 +66,25 @@ public class Quiz extends Model<Quiz> {
         }
     }
 
+    public Quiz getByForStudent(Map<String,Object> filter){
+        String select = "select * ";
+        String where = " from "+TableName.quiz+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+
+        if (filter.get("creator_id")!=null){
+            where += " and creator_id = "+ Integer.parseInt(filter.get("creator_id").toString());
+        }
+
+        if (filter.get("id")!=null){
+            where += " and id = "+Integer.parseInt(filter.get("id").toString());
+        }
+
+        if (!where.equals(" from "+TableName.quiz+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
+            return Quiz.dao.find(select + where).size()>0? Quiz.dao.find(select + where).get(0):null;
+        }else {
+            return null;
+        }
+    }
+
     public boolean add(Quiz quiz) {
         Map<String, Object> filter = new HashMap<>();
         long timestamp = System.currentTimeMillis();

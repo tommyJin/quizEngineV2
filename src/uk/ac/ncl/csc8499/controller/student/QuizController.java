@@ -80,14 +80,12 @@ public class QuizController extends BaseController {
             if (Quiz.dao.add(q)){
 
                 //auto generate questions
-                List list = QuizQuestion.dao.autoGenerate(q,0);
+                List list = QuizQuestion.dao.autoGenerate(q,q.get("number"));
                 if(list.size()>0){
                     renderJson(RestResult.ok(q));
                 }else {
                     renderJson(RestResult.error(ConstantParas.failure_add));
                 }
-
-
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }
