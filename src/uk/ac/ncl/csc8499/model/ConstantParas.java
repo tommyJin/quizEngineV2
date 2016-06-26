@@ -25,6 +25,8 @@ public class ConstantParas {
     //quiz number
     public static final int quiz_max_number = 20;
     public static final int quiz_min_number = 3;
+    public static final int quiz_remove_answered = 1;
+    public static final int quiz_keep_answered = 2;
 
     //user type
     public static final int usertype_null = 0;

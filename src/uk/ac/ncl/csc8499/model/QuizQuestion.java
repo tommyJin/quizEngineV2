@@ -88,7 +88,7 @@ public class QuizQuestion extends Model<QuizQuestion>{
     /**
     * Generate greater than min questions
     * */
-    public List autoGenerate(Quiz quiz, int number){
+    public List autoGenerate(Quiz quiz){
         boolean flag = true;
         Random r = new Random();
         int mark = 0;
@@ -96,10 +96,18 @@ public class QuizQuestion extends Model<QuizQuestion>{
         Integer quiz_id = quiz.get("id");
         Integer category_id = quiz.get("question_category_id");
         Integer level_id = quiz.get("question_level_id");
+        Integer answered = quiz.get("answered");
+        Integer number = quiz.get("number");
 
         Map<String,Object> filter = new HashMap<>();
         filter.put("question_level_id",level_id);
         filter.put("question_category_id",category_id);
+        filter.put("answered", answered);
+
+        if (answered==ConstantParas.quiz_remove_answered){
+            filter.put("creator_id",quiz.get("creator_id"));
+        }
+
         List<Question> questions = Question.dao.query(filter).getList();
         int size = questions.size();
         System.out.println("size="+size+" number="+number+" min_number="+ConstantParas.quiz_min_number);

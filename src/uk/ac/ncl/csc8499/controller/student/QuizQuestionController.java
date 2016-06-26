@@ -52,11 +52,22 @@ public class QuizQuestionController extends BaseController {
     }
 
     public void maxSize(){
+        Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
+        filter.put("id",id);
+        filter.put("type",ConstantParas.usertype_student);
+        User currentUser = User.dao.getBy(filter);
+        filter.clear();
+        Integer answered = getPara("answered")==null?ConstantParas.quiz_keep_answered:getParaToInt("answered");
         Long level_id = getPara("level_id")==null?null:getParaToLong("level_id");
         Long category_id = getPara("category_id")==null?null:getParaToLong("category_id");
+        filter.put("answered",answered);
         filter.put("question_level_id",level_id);
         filter.put("question_category_id",category_id);
+        if (answered==ConstantParas.quiz_remove_answered){
+            filter.put("creator_id",currentUser.get("id"));
+        }
+        filter.put("size",100000);
         renderJson(RestResult.ok(Question.dao.query(filter).getList().size()));
     }
 

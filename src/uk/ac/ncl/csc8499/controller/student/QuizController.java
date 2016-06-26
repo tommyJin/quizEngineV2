@@ -57,6 +57,7 @@ public class QuizController extends BaseController {
 
     public void add(){
         Quiz q = getModel(Quiz.class,"paras");//paras.*
+//        Integer answered = getPara("answered")==null?2:getParaToInt("answered");//1->remove  2->dont remove
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
@@ -80,7 +81,7 @@ public class QuizController extends BaseController {
             if (Quiz.dao.add(q)){
 
                 //auto generate questions
-                List list = QuizQuestion.dao.autoGenerate(q,q.get("number"));
+                List list = QuizQuestion.dao.autoGenerate(q);
                 if(list.size()>0){
                     renderJson(RestResult.ok(q));
                 }else {

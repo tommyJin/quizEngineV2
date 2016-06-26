@@ -4,6 +4,7 @@ import com.jfinal.ext.plugin.tablebind.TableBind;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,17 @@ public class Question extends Model<Question> {
         if (filter.get("id")!=null){
             where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }
+
+        if (filter.get("answered")!=null){
+            Integer answered = Integer.valueOf(filter.get("answered").toString());
+            if (answered== ConstantParas.quiz_remove_answered){
+                Integer creator_id = Integer.valueOf(filter.get("creator_id").toString());
+                String remove = "select qq.question_id id from "+TableName.quiz_record+" qr,"+TableName.quiz_question+" qq where qr.quiz_question_id=qq.id and qr.user_id="+creator_id;
+                where += " and q.id not in ("+ remove +")";
+            }
+        }
+
+//        System.out.println("sql="+select+where);
 
         String order = " order by "+ (filter.get("orderby")==null?"  q.created desc":filter.get("orderby").toString());
         return Question.dao.paginate(page, size, select, where + order);

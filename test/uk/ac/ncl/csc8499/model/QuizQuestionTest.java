@@ -103,13 +103,16 @@ public class QuizQuestionTest extends Base{
     @Test
     public void testAutoGenerate() throws Exception{
         Map<String,Object> filter = new HashMap<>();
-        filter.put("id",1);
+        filter.put("id",4);
         Quiz quiz = Quiz.dao.getBy(filter);
-        List list = QuizQuestion.dao.autoGenerate(quiz,0);
-        if(list.size()>0){
-            logger.info("generated qc list:{}",list);
-        }else {
-            logger.info("generated qc list:{}",ConstantParas.failure_add);
+        logger.info("quiz={}",quiz);
+        if (quiz!=null){
+            List list = QuizQuestion.dao.autoGenerate(quiz);
+            if(list.size()>0){
+                logger.info("generated qc list:{}",list);
+            }else {
+                logger.info("generated qc list:{}",ConstantParas.failure_add);
+            }
         }
     }
 }

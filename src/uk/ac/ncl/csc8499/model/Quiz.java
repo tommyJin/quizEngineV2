@@ -19,7 +19,7 @@ public class Quiz extends Model<Quiz> {
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
 
         String select = "select q.*,u.name user_name,ql.name level_name,qc.name category_name ";
-        String where = " from "+TableName.quiz+" q,"+TableName.user+" u,"+TableName.question_level+" ql,"+TableName.question_category+" qc  where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.creator_id=u.id and q.question_level_id=ql.id and q.question_category_id=qc.id ";
+        String where = " from "+TableName.quiz+" q left join "+TableName.user+" u on q.creator_id=u.id left join "+TableName.question_level+" ql on q.question_level_id=ql.id left join "+TableName.question_category+" qc on q.question_category_id=qc.id where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" ";
 
         if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
             String keyword = filter.get("keyword").toString();
@@ -49,7 +49,7 @@ public class Quiz extends Model<Quiz> {
 
     public Quiz getBy(Map<String,Object> filter){
         String select = "select q.*,u.name user_name,ql.name level_name,qc.name category_name ";
-        String where = " from "+TableName.quiz+" q,"+TableName.user+" u,"+TableName.question_level+" ql,"+TableName.question_category+" qc  where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.creator_id=u.id and q.question_level_id=ql.id and q.question_category_id=qc.id ";
+        String where = " from "+TableName.quiz+" q left join "+TableName.user+" u on q.creator_id=u.id left join "+TableName.question_level+" ql on q.question_level_id=ql.id left join "+TableName.question_category+" qc on q.question_category_id=qc.id where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" ";
 
         if (filter.get("creator_id")!=null){
             where += " and q.creator_id = "+ Integer.parseInt(filter.get("creator_id").toString());
@@ -58,8 +58,8 @@ public class Quiz extends Model<Quiz> {
         if (filter.get("id")!=null){
             where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }
-
-        if (!where.equals(" from "+TableName.quiz+" q,"+TableName.user+" u,"+TableName.question_level+" ql,"+TableName.question_category+" qc  where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" and q.creator_id=u.id and q.question_level_id=ql.id and q.question_category_id=qc.id ")){
+//        System.out.println("sql="+select+where);
+        if (!where.equals(" from "+TableName.quiz+" q left join "+TableName.user+" u on q.creator_id=u.id left join "+TableName.question_level+" ql on q.question_level_id=ql.id left join "+TableName.question_category+" qc on q.question_category_id=qc.id where 1=1 and q.isDeleted = "+ConstantParas.isDeleted_false+" ")){
             return Quiz.dao.find(select + where).size()>0? Quiz.dao.find(select + where).get(0):null;
         }else {
             return null;

@@ -108,14 +108,13 @@ public class QuizQuestionController extends BaseController {
 
     public void autoGenerate(){
         Long id = getPara("id")==null?0:getParaToLong("id");
-        Integer number = getPara("number")==null?0:getParaToInt("number");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
         User currentUser = getCurrentUser();
         filter.put("creator_id",currentUser.get("id"));
         Quiz quiz = Quiz.dao.getBy(filter);
         if (quiz!=null){
-            List list = QuizQuestion.dao.autoGenerate(quiz,number);
+            List list = QuizQuestion.dao.autoGenerate(quiz);
             if(list.size()>0){
                 renderJson(RestResult.ok(list));
             }else {
