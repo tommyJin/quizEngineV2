@@ -1,6 +1,7 @@
 package uk.ac.ncl.csc8499.controller;
 
 import com.jfinal.core.Controller;
+import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.User;
 
 import java.util.HashMap;
@@ -18,6 +19,18 @@ public class BaseController extends Controller {
             filter.put("id",map.get("user_id"));
             User user = User.dao.getBy(filter);
 //            System.out.println("User in session,user_id="+user.get("id"));
+            return user;
+        }else {
+            return null;
+        }
+    }
+
+    public User getTokenUser(Long user_id) {
+        Map<String,Object> filter = new HashMap<>();
+        filter.put("id",user_id);
+        filter.put("type", ConstantParas.usertype_student);
+        if (filter != null) {
+            User user = User.dao.getBy(filter);
             return user;
         }else {
             return null;

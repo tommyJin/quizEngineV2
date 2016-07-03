@@ -18,22 +18,22 @@ public class QuizQuestion extends Model<QuizQuestion>{
         int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
 
-        String select = "select * ";
-        String where = "from "+TableName.quiz_question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String select = "select qq.quiz_id,qq.id quiz_question_id,q.* ";
+        String where = "from "+TableName.quiz_question+" qq,"+TableName.question+" q where 1=1 and qq.question_id=q.id and qq.isDeleted = "+ConstantParas.isDeleted_false+" ";
 
         if (filter.get("quiz_id")!=null){
-            where += " and quiz_id = "+ Integer.parseInt(filter.get("quiz_id").toString());
+            where += " and qq.quiz_id = "+ Integer.parseInt(filter.get("quiz_id").toString());
         }
 
         if (filter.get("question_id")!=null){
-            where += " and question_id = "+ Integer.parseInt(filter.get("question_id").toString());
+            where += " and qq.question_id = "+ Integer.parseInt(filter.get("question_id").toString());
         }
 
         if (filter.get("id")!=null){
-            where += " and id = "+Integer.parseInt(filter.get("id").toString());
+            where += " and qq.quiz_id = "+Integer.parseInt(filter.get("id").toString());
         }
 
-        String order = " order by "+ (filter.get("orderby")==null?"  created desc":filter.get("orderby").toString());
+        String order = " order by "+ (filter.get("orderby")==null?"  qq.created desc":filter.get("orderby").toString());
         return QuizQuestion.dao.paginate(page, size, select, where + order);
     }
 

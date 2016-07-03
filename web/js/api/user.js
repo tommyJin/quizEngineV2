@@ -24,14 +24,14 @@ function getUser(id, type) {
     });
 }
 
-function addUser() {
+function addUser(type) {
     var username = $.trim($("#username").val());
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
     var type = $("#type").val();
     $.ajax({
-        url: 'admin/user/add',
+        url:userType(type) + '/user/add',
         type: 'POST',
         dataType: 'JSON',
         data: {
@@ -59,14 +59,14 @@ function addUser() {
     });
 }
 
-function updateUser() {
+function updateUser(type) {
     var id = $.trim($("#id").val());
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
     var type = $("#type").val();
     $.ajax({
-        url: 'admin/user/update',
+        url: userType(type) + '/user/update',
         type: 'POST',
         dataType: 'JSON',
         data: {
@@ -87,11 +87,11 @@ function updateUser() {
     });
 }
 
-function queryUser(page) {
+function queryUser(page,type) {
     var keyword = $.trim($("#keyword").val());
     var user_type = $("#user_type").val();
     $.ajax({
-        url: 'admin/user',
+        url: userType(type) + '/user',
         dataType: 'json',
         data: {'keyword': keyword, 'type': user_type, 'page': page},
         type: 'GET',
@@ -146,10 +146,10 @@ function queryUser(page) {
     });
 }
 
-function deleteUser(id) {
+function deleteUser(id,type) {
     if (confirm("Delete for sure?")) {
         $.ajax({
-            url: 'admin/user/delete',
+            url: userType(type) + '/user/delete',
             type: 'GET',
             dataType: 'JSON',
             data: {'id': id},

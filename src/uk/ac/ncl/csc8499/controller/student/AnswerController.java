@@ -2,6 +2,7 @@ package uk.ac.ncl.csc8499.controller.student;
 
 import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
+import com.jfinal.plugin.activerecord.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
@@ -10,6 +11,7 @@ import uk.ac.ncl.csc8499.controller.teacher.QuizRecordController;
 import uk.ac.ncl.csc8499.model.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,11 +23,13 @@ public class AnswerController extends BaseController {
     static final String tag = "quizRecord";
 
     public void index() {
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Integer quiz_id = getPara("quiz_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_id");
+        Integer mark = getPara("mark") == null ? 0 : getParaToInt("mark");
         Integer quiz_question_id = getPara("quiz_question_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_question_id");
-        String input = getPara("answer") == null ? "" : getPara("answer");
+        String answer = getPara("answer") == null ? "" : getPara("answer");
 
-        int user_id = getCurrentUser().get("id");
+        Long user_id = id;
 
         Map<String, Object> filter = new HashMap<>();
         filter.put("id", quiz_question_id);
@@ -36,67 +40,59 @@ public class AnswerController extends BaseController {
         filter.put("user_id", user_id);
         filter.put("quiz_question_id", quiz_question_id);
         QuizRecord quizRecord = QuizRecord.dao.getBy(filter);
-        logger.info("qr:{}",quizRecord);
+        logger.info("qr:{}", quizRecord);
         if (quizRecord == null) {
-            filter.clear();
             if (qq != null) {
-                filter.put("id", qq.get("question_id"));
-                Question q = Question.dao.getBy(filter);
-                String answer = q.get("answer");
-                if (q != null) {
-                    int type = q.get("question_type_id");
-                    filter.put("id", type);
-                    QuestionType qt = QuestionType.dao.getBy(filter);
-
-                    if (qt != null) {
-                        String name = qt.get("name");
-                        int mark = 0;
-
-                        if (input.equals(answer)) {
-                            mark = q.get("mark");
-                        }
-
-                        if (name.equals("Fill in Multiple Blanks")) {
-
-                        }
-                        if (name.equals("Fill in the Blank")) {
-
-                        }
-                        if (name.equals("Multiple Answer")) {
-
-                        }
-                        if (name.equals("Multiple Choice")) {
-
-                        }
-                        if (name.equals("Calculate Numeric")) {
-
-                        }
-
-                        qq.set("mark", Integer.parseInt(qq.get("mark").toString()) + mark);
-                        QuizQuestion.dao.update(qq);
-                        QuizRecord qr = new QuizRecord();
-                        qr.set("quiz_id", quiz_id);
-                        qr.set("user_id", user_id);
-                        qr.set("quiz_question_id", quiz_question_id);
-                        qr.set("answer", answer);
-                        qr.set("mark", mark);
-                        if (QuizRecord.dao.add(qr)) {
-                            renderJson(RestResult.ok(qr));
-                        } else {
-                            renderJson(RestResult.error(ConstantParas.failure_add));
-                        }
-                    } else {
-                        renderJson(RestResult.error(ConstantParas.error_question_type_not_exist));
-                    }
-
+//                qq.set("mark", Integer.parseInt(qq.get("mark").toString()) + mark);
+//                QuizQuestion.dao.update(qq);
+                QuizRecord qr = new QuizRecord();
+                qr.set("quiz_id", quiz_id);
+                qr.set("user_id", user_id);
+                qr.set("quiz_question_id", quiz_question_id);
+                qr.set("answer", answer);
+                qr.set("mark", mark);
+                if (QuizRecord.dao.add(qr)) {
+                    renderJson(RestResult.ok(qr));
                 } else {
-                    renderJson(RestResult.error(ConstantParas.error_question_not_exist));
+                    renderJson(RestResult.error(ConstantParas.failure_add));
                 }
             } else {
                 renderJson(RestResult.error(ConstantParas.error_quiz_question_not_exist));
             }
         } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_record_exist));
+        }
+    }
+
+    public void finish(){
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Integer quiz_id = getPara("quiz_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("id",quiz_id);
+        filter.put("creator_id",id);
+        Quiz quiz = Quiz.dao.getBy(filter);
+        Integer mark = 0;
+        if (quiz!=null){
+            filter.clear();
+            filter.put("user_id",id);
+            filter.put("quiz_id",quiz_id);
+            Page<QuizRecord> qrs = QuizRecord.dao.query(filter);
+            if (qrs!=null && qrs.getList().size()>0){
+                List<QuizRecord> list = qrs.getList();
+                for (int i = 0; i < list.size(); i++) {
+                    mark+= Integer.parseInt(list.get(i).get("mark").toString());
+                }
+                quiz.set("mark",mark);
+                if (Quiz.dao.update(quiz)){
+                    renderJson(RestResult.ok(quiz));
+                }else {
+                    renderJson(RestResult.error(ConstantParas.failure_update));
+                }
+            }else {
+                renderJson(RestResult.error("Please finish all questions first!"));
+            }
+        }else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 

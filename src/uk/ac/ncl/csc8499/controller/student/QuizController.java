@@ -24,7 +24,7 @@ public class QuizController extends BaseController {
         filter.put("size",size);
         Integer level_id = getPara("level_id")==null?null:Integer.valueOf(getPara("level_id").toString().trim());
         Integer category_id = getPara("category_id")==null?null:Integer.valueOf(getPara("category_id").toString().trim());
-        User currentUser = getCurrentUser();
+        User currentUser = getTokenUser(id);
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
 
@@ -60,9 +60,7 @@ public class QuizController extends BaseController {
 //        Integer answered = getPara("answered")==null?2:getParaToInt("answered");//1->remove  2->dont remove
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
-        filter.put("id",id);
-        filter.put("type",ConstantParas.usertype_student);
-        User currentUser = User.dao.getBy(filter);
+        User currentUser = getTokenUser(id);
         if (q!=null){
             q.set("creator_id",currentUser.get("id"));
             if (q.get("name")==null){

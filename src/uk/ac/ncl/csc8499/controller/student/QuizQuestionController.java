@@ -20,17 +20,24 @@ public class QuizQuestionController extends BaseController {
     static final String tag = "quizquestion";
 
     public void index(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
+        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
+        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
+        filter.put("page",page);
+        filter.put("size",size);
 
-        User currentUser = getCurrentUser();
+        User currentUser = getTokenUser(id);
         filter.put("creator_id",currentUser.get("id"));
         filter.put("id",quiz_id);
         Quiz q = Quiz.dao.getBy(filter);
 
         if (q!=null) {
+            filter.clear();
             filter.put("orderby", orderby);
+            filter.put("size",size);
             filter.put("user_id", currentUser.get("id"));
             filter.put("quiz_id",quiz_id);
             renderJson(RestResult.ok(QuizQuestion.dao.query(filter)));
@@ -58,15 +65,17 @@ public class QuizQuestionController extends BaseController {
         filter.put("type",ConstantParas.usertype_student);
         User currentUser = User.dao.getBy(filter);
         filter.clear();
-        Integer answered = getPara("answered")==null?ConstantParas.quiz_keep_answered:getParaToInt("answered");
+        String answered = getPara("answered")==null? String.valueOf(ConstantParas.quiz_keep_answered):getPara("answered");
         Long level_id = getPara("level_id")==null?null:getParaToLong("level_id");
         Long category_id = getPara("category_id")==null?null:getParaToLong("category_id");
-        filter.put("answered",answered);
         filter.put("question_level_id",level_id);
         filter.put("question_category_id",category_id);
-        if (answered==ConstantParas.quiz_remove_answered){
-            filter.put("creator_id",currentUser.get("id"));
+        filter.put("creator_id",currentUser.get("id"));
+        int answer = ConstantParas.quiz_keep_answered;
+        if (answered.equals( String.valueOf(ConstantParas.quiz_remove_answered))){
+            answer = ConstantParas.quiz_remove_answered;
         }
+        filter.put("answered",answer);
         filter.put("size",100000);
         renderJson(RestResult.ok(Question.dao.query(filter).getList().size()));
     }
