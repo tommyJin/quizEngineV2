@@ -24,10 +24,11 @@ public class AnswerController extends BaseController {
 
     public void index() {
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
-        Integer quiz_id = getPara("quiz_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_id");
+        Integer quiz_id = getPara("quiz_id") == null ? 0 : getParaToInt("quiz_id");
         Integer mark = getPara("mark") == null ? 0 : getParaToInt("mark");
-        Integer quiz_question_id = getPara("quiz_question_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_question_id");
+        Integer quiz_question_id = getPara("quiz_question_id") == null ? 0 : getParaToInt("quiz_question_id");
         String answer = getPara("answer") == null ? "" : getPara("answer");
+        Long quiz_record_id = getPara("quiz_record_id") == null ? null : getParaToLong("quiz_record_id");
 
         Long user_id = id;
 
@@ -39,9 +40,10 @@ public class AnswerController extends BaseController {
         filter.put("quiz_id", quiz_id);
         filter.put("user_id", user_id);
         filter.put("quiz_question_id", quiz_question_id);
+        filter.put("id",quiz_record_id);
         QuizRecord quizRecord = QuizRecord.dao.getBy(filter);
         logger.info("qr:{}", quizRecord);
-        if (quizRecord == null) {
+//        if (quizRecord == null) {
             if (qq != null) {
 //                qq.set("mark", Integer.parseInt(qq.get("mark").toString()) + mark);
 //                QuizQuestion.dao.update(qq);
@@ -51,17 +53,29 @@ public class AnswerController extends BaseController {
                 qr.set("quiz_question_id", quiz_question_id);
                 qr.set("answer", answer);
                 qr.set("mark", mark);
-                if (QuizRecord.dao.add(qr)) {
-                    renderJson(RestResult.ok(qr));
-                } else {
-                    renderJson(RestResult.error(ConstantParas.failure_add));
+
+                if (quizRecord ==null){
+                    if (QuizRecord.dao.add(qr)) {
+                        renderJson(RestResult.ok(qr));
+                    } else {
+                        renderJson(RestResult.error(ConstantParas.failure_add));
+                    }
+                }else {
+                    quizRecord.set("answer",answer);
+                    quizRecord.set("mark",mark);
+                    if (QuizRecord.dao.update(quizRecord)) {
+                        renderJson(RestResult.ok(quizRecord));
+                    } else {
+                        renderJson(RestResult.error(ConstantParas.failure_update));
+                    }
                 }
+
             } else {
                 renderJson(RestResult.error(ConstantParas.error_quiz_question_not_exist));
             }
-        } else {
-            renderJson(RestResult.error(ConstantParas.error_quiz_record_exist));
-        }
+//        } else {
+//            renderJson(RestResult.error(ConstantParas.error_quiz_record_exist));
+//        }
     }
 
     public void finish(){

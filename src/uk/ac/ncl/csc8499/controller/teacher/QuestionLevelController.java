@@ -1,6 +1,5 @@
 package uk.ac.ncl.csc8499.controller.teacher;
 
-import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +7,6 @@ import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.QuestionLevel;
-import uk.ac.ncl.csc8499.model.QuestionTag;
 
 import java.util.HashMap;
 import java.util.Map;

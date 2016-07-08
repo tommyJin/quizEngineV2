@@ -10,13 +10,11 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by tommy on 2016/5/15.
  */
-public class QuestionTagTest extends Base{
-    static final Logger logger = LoggerFactory.getLogger(QuestionTag.class);
+public class QuestionTopicTest extends Base{
+    static final Logger logger = LoggerFactory.getLogger(QuestionTopic.class);
     static final String tag = "questionTagTest";
     Gson gson = new Gson();
 
@@ -25,7 +23,7 @@ public class QuestionTagTest extends Base{
     public void testQuery() throws Exception {
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",1);
-        Page<QuestionTag> qt = QuestionTag.dao.query(filter);
+        Page<QuestionTopic> qt = QuestionTopic.dao.query(filter);
         if (qt!=null){
             logger.info("qt:{}",qt);
         }else {
@@ -38,7 +36,7 @@ public class QuestionTagTest extends Base{
     public void testGetBy() throws Exception {
         Map<String,Object> filter = new HashMap<>();
         filter.put("name","java");
-        QuestionTag qt = QuestionTag.dao.getBy(filter);
+        QuestionTopic qt = QuestionTopic.dao.getBy(filter);
         if (qt!=null){
             logger.info("qt:{}",qt);
         }else {
@@ -51,10 +49,10 @@ public class QuestionTagTest extends Base{
     public void testAdd() throws Exception {
         String[] names = {"Fill in Multiple Blanks","Fill in the Blank","Spark","Kafka","Big data","SPIN"};
         for (int i=0;i<names.length;i++) {
-            QuestionTag ql = new QuestionTag();
+            QuestionTopic ql = new QuestionTopic();
             ql.set("name", names[i]);
             ql.set("content", names[i] + " content");
-            if (QuestionTag.dao.add(ql)) {
+            if (QuestionTopic.dao.add(ql)) {
                 logger.info("ql:{}", ql);
             } else {
                 logger.info("ql:{}", ConstantParas.failure_add);
@@ -67,11 +65,11 @@ public class QuestionTagTest extends Base{
     public void testUpdate() throws Exception {
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",4);
-        QuestionTag qt = QuestionTag.dao.getBy(filter);
+        QuestionTopic qt = QuestionTopic.dao.getBy(filter);
         if (qt!=null){
             qt.set("name","tag111");
             qt.set("content","tag1 content1");
-            if (QuestionTag.dao.update(qt)) {
+            if (QuestionTopic.dao.update(qt)) {
                 logger.info("qt:{}", ConstantParas.success_update);
             }else {
                 logger.info("qt:{}",ConstantParas.failure_update);
@@ -86,9 +84,9 @@ public class QuestionTagTest extends Base{
     public void testDelete() throws Exception {
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",4);
-        QuestionTag qt = QuestionTag.dao.getBy(filter);
+        QuestionTopic qt = QuestionTopic.dao.getBy(filter);
         if (qt!=null){
-            if (QuestionTag.dao.delete(qt)) {
+            if (QuestionTopic.dao.delete(qt)) {
                 logger.info("qt :{}", ConstantParas.success_delete);
             }else {
                 logger.info("qt:{}",ConstantParas.failure_delete);

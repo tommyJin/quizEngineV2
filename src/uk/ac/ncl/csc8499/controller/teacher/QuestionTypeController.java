@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
-import uk.ac.ncl.csc8499.model.QuestionTag;
 import uk.ac.ncl.csc8499.model.QuestionType;
 
 import java.util.HashMap;

@@ -1,13 +1,12 @@
 package uk.ac.ncl.csc8499.controller.teacher;
 
-import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
-import uk.ac.ncl.csc8499.model.QuestionTag;
+import uk.ac.ncl.csc8499.model.QuestionTopic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +15,8 @@ import java.util.Map;
  * Created by tommy on 2016/5/15.
  */
 @ControllerBind(controllerKey = "/teacher/questiontag")
-public class QuestionTagController extends BaseController {
-    static final Logger logger = LoggerFactory.getLogger(QuestionTagController.class);
+public class QuestionTopicController extends BaseController {
+    static final Logger logger = LoggerFactory.getLogger(QuestionTopicController.class);
     static final String tag = "questiontag";
 
     public void index(){
@@ -30,14 +29,14 @@ public class QuestionTagController extends BaseController {
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
         filter.put("keyword",keyword);
         filter.put("orderby",orderby);
-        renderJson(RestResult.ok(QuestionTag.dao.query(filter)));
+        renderJson(RestResult.ok(QuestionTopic.dao.query(filter)));
     }
 
     public void get(){
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        QuestionTag q = QuestionTag.dao.getBy(filter);
+        QuestionTopic q = QuestionTopic.dao.getBy(filter);
         if (q!=null){
             renderJson(RestResult.ok(q));
         }else {
@@ -46,9 +45,9 @@ public class QuestionTagController extends BaseController {
     }
 
     public void add(){
-        QuestionTag q = getModel(QuestionTag.class,"paras");//paras.*
+        QuestionTopic q = getModel(QuestionTopic.class,"paras");//paras.*
         if (q!=null){
-            if (QuestionTag.dao.add(q)){
+            if (QuestionTopic.dao.add(q)){
                 Map<String,Object> filter = new HashMap<>();
                 filter.clear();
                 filter.put("q",q);
@@ -63,12 +62,12 @@ public class QuestionTagController extends BaseController {
     }
 
     public void update(){
-        QuestionTag q = getModel(QuestionTag.class,"paras");
+        QuestionTopic q = getModel(QuestionTopic.class,"paras");
         Long id = q.get("id")==null?0:Long.parseLong(q.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        if (QuestionTag.dao.getBy(filter)!=null){
-            if (QuestionTag.dao.update(q)) {
+        if (QuestionTopic.dao.getBy(filter)!=null){
+            if (QuestionTopic.dao.update(q)) {
                 renderJson(RestResult.ok(ConstantParas.success_update));
             } else {
                 renderJson(RestResult.error(ConstantParas.failure_update));
@@ -82,9 +81,9 @@ public class QuestionTagController extends BaseController {
         Long id = getPara("id")==null?0:getParaToLong("id");
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
-        QuestionTag q = QuestionTag.dao.getBy(filter);
+        QuestionTopic q = QuestionTopic.dao.getBy(filter);
         if (q!=null){
-            if (QuestionTag.dao.delete(q)){
+            if (QuestionTopic.dao.delete(q)){
                 renderJson(RestResult.ok(ConstantParas.success_delete));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_delete));

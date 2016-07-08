@@ -10,17 +10,17 @@ import java.util.Map;
 /**
  * Created by tommy on 2016/5/15.
  */
-@TableBind(tableName = TableName.question_tag)
-public class QuestionTag extends Model<QuestionTag> {
+@TableBind(tableName = TableName.question_topic)
+public class QuestionTopic extends Model<QuestionTopic> {
 
-    public static final QuestionTag dao = new QuestionTag();
+    public static final QuestionTopic dao = new QuestionTopic();
 
-    public Page<QuestionTag> query(Map<String, Object> filter){
+    public Page<QuestionTopic> query(Map<String, Object> filter){
         int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
         int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
 
         String select = "select * ";
-        String where = "from "+TableName.question_tag+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = "from "+TableName.question_topic+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
 
         if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
             String keyword = filter.get("keyword").toString();
@@ -32,26 +32,26 @@ public class QuestionTag extends Model<QuestionTag> {
         }
 
         String order = " order by "+ (filter.get("orderby")==null?"  created desc":filter.get("orderby").toString());
-        return QuestionTag.dao.paginate(page, size, select, where + order);
+        return QuestionTopic.dao.paginate(page, size, select, where + order);
     }
 
-    public QuestionTag getBy(Map<String,Object> filter){
+    public QuestionTopic getBy(Map<String,Object> filter){
         String select = "select * ";
-        String where = " from "+TableName.question_tag+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
+        String where = " from "+TableName.question_topic+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
         if (filter.get("name")!=null && !filter.get("name").toString().equals("")){
             where += " and name = '"+filter.get("name").toString()+"') ";
         }
-        if (!where.equals(" from "+TableName.question_tag+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
-            return QuestionTag.dao.find(select + where).size()>0?QuestionTag.dao.find(select + where).get(0):null;
+        if (!where.equals(" from "+TableName.question_topic+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ")){
+            return QuestionTopic.dao.find(select + where).size()>0? QuestionTopic.dao.find(select + where).get(0):null;
         }else {
             return null;
         }
     }
 
-    public boolean add(QuestionTag question) {
+    public boolean add(QuestionTopic question) {
         Map<String, Object> filter = new HashMap<>();
         long timestamp = System.currentTimeMillis();
         question.set("created",timestamp);
@@ -60,7 +60,7 @@ public class QuestionTag extends Model<QuestionTag> {
         return question.save();
     }
 
-    public boolean update(QuestionTag question){
+    public boolean update(QuestionTopic question){
         Map<String, Object> filter = new HashMap<>();
         filter.put("id", question.get("id"));
         if (getBy(filter) != null) {
@@ -71,7 +71,7 @@ public class QuestionTag extends Model<QuestionTag> {
         }
     }
 
-    public boolean delete(QuestionTag question){
+    public boolean delete(QuestionTopic question){
         Map<String, Object> filter = new HashMap<>();
         filter.put("id", question.get("id"));
         if (getBy(filter) != null) {

@@ -58,7 +58,7 @@ public class Base {
         activeRecord.addMapping(TableName.user, User.class)
                 .addMapping(TableName.question, Question.class)
                 .addMapping(TableName.question_choice, QuestionChoice.class)
-                .addMapping(TableName.question_tag, QuestionTag.class)
+                .addMapping(TableName.question_topic, QuestionTopic.class)
                 .addMapping(TableName.question_level, QuestionLevel.class)
                 .addMapping(TableName.question_category, QuestionCategory.class)
                 .addMapping(TableName.question_type, QuestionType.class)

@@ -118,7 +118,6 @@ public class SessionController extends Controller {
                     filter.put("username",user.get("username"));
                     String token = Token.dao.generate(filter);
 
-
                     usermap.put("id",user.get("id"));
                     usermap.put("username",user.get("username"));
                     usermap.put("name",user.get("name"));
