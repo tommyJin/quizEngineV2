@@ -30,6 +30,10 @@ public class QuestionCategory extends Model<QuestionCategory> {
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }
 
+        if (filter.get("user_id")!=null){
+            where += " and id in (SELECT category_id FROM "+TableName.category_user+" where isDeleted = 0 and user_id = "+Integer.parseInt(filter.get("user_id").toString())+" ) ";
+        }
+
         String order = " order by "+ (filter.get("orderby")==null?"  created desc":filter.get("orderby").toString());
         return QuestionCategory.dao.paginate(page, size, select, where + order);
     }

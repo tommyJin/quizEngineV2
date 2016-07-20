@@ -8,13 +8,11 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.FormatValidate;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
-import uk.ac.ncl.csc8499.model.ConstantParas;
-import uk.ac.ncl.csc8499.model.Question;
-import uk.ac.ncl.csc8499.model.QuestionChoice;
-import uk.ac.ncl.csc8499.model.User;
+import uk.ac.ncl.csc8499.model.*;
 import uk.ac.ncl.csc8499.model.question_type.True_false;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,28 +23,35 @@ public class QuestionController extends BaseController {
     static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
     static final String tag = "question";
 
-    public void index(){
-        Map<String,Object> filter = new HashMap<>();
-        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
-        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
-        filter.put("page",page);
-        filter.put("size",size);
+    public void index() {
+        User user = getCurrentUser();
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("user_id", user.get("id"));
+        List<Category_user> cus = Category_user.dao.query(filter);
+        if (cus.size() > 0) {
+            int page = getPara("page") == null ? ConstantParas.page : getParaToInt("page");
+            int size = getPara("size") == null ? ConstantParas.size : getParaToInt("size");
+            filter.put("page", page);
+            filter.put("size", size);
 
-        String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
-        String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
-        if (getPara("question_type_id")!=null && !getPara("question_type_id").toString().equals("0")) {
-            filter.put("question_type_id",getParaToLong("question_type_id"));
-        }
-        if (getPara("question_category_id")!=null && !getPara("question_category_id").toString().equals("0")){
-            filter.put("question_category_id",getParaToLong("question_category_id"));
-        }
-        if (getPara("question_level_id")!=null && !getPara("question_level_id").toString().equals("0")){
-            filter.put("question_level_id",getParaToLong("question_level_id"));
-        }
-        filter.put("keyword",keyword);
-        filter.put("orderby",orderby);
+            String keyword = getPara("keyword") == null ? null : getPara("keyword").trim();
+            String orderby = getPara("orderby") == null ? null : getPara("orderby").trim();
+            if (getPara("question_type_id") != null && !getPara("question_type_id").toString().equals("0")) {
+                filter.put("question_type_id", getParaToLong("question_type_id"));
+            }
+            if (getPara("question_category_id") != null && !getPara("question_category_id").toString().equals("0")) {
+                filter.put("question_category_id", getParaToLong("question_category_id"));
+            }
+            if (getPara("question_level_id") != null && !getPara("question_level_id").toString().equals("0")) {
+                filter.put("question_level_id", getParaToLong("question_level_id"));
+            }
+            filter.put("keyword", keyword);
+            filter.put("orderby", orderby);
 
-        renderJson(RestResult.ok(Question.dao.query(filter)));
+            renderJson(RestResult.ok(Question.dao.query(filter)));
+        }else {
+            renderJson(RestResult.error(null));
+        }
     }
 
     public void get(){

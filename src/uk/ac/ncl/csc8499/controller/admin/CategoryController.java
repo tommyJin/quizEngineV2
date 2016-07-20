@@ -1,15 +1,18 @@
 package uk.ac.ncl.csc8499.controller.admin;
 
 import com.jfinal.ext.route.ControllerBind;
+import com.jfinal.plugin.activerecord.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.controller.teacher.QuestionCategoryController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
+import uk.ac.ncl.csc8499.model.Question;
 import uk.ac.ncl.csc8499.model.QuestionCategory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,4 +98,16 @@ public class CategoryController extends BaseController {
         }
     }
 
+    public void modules(){
+        Integer user_id = (getPara("user_id")==null||getPara("user_id").toString().equals(""))?null:getParaToInt("user_id");
+        Integer category_id = (getPara("category_id")==null||getPara("category_id").toString().equals(""))?null:getParaToInt("category_id");
+        Map<String,Object> filter = new HashMap<>();
+        filter.put("user_id",user_id);
+        filter.put("category_id",category_id);
+        filter.put("page",1);
+        filter.put("size",100000);
+        Page<QuestionCategory> page = QuestionCategory.dao.query(filter);
+        List<QuestionCategory> cates = page.getList();
+        renderJson(RestResult.ok(cates));
+    }
 }

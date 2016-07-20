@@ -64,4 +64,10 @@ public class RouteController extends BaseController {
     public void user(){
         render("user.html");
     }
+
+    public void user_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("user_detail.html");
+    }
 }

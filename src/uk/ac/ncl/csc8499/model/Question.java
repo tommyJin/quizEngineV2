@@ -44,6 +44,10 @@ public class Question extends Model<Question> {
             where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }
 
+        if (filter.get("user_id")!=null){
+            where += " and qc.id in (SELECT category_id FROM "+TableName.category_user+" where isDeleted = 0 and user_id = "+Integer.parseInt(filter.get("user_id").toString())+" ) ";
+        }
+
         if (filter.get("answered")!=null){
             Integer answered = Integer.valueOf(filter.get("answered").toString());
             if (answered== ConstantParas.quiz_remove_answered){

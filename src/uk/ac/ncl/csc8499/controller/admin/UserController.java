@@ -5,10 +5,13 @@ import com.jfinal.ext.route.ControllerBind;
 import uk.ac.ncl.csc8499.Util.FormatValidate;
 import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
+import uk.ac.ncl.csc8499.model.Category_user;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,11 +62,22 @@ public class UserController extends BaseController {
             }
         }
 
+        String categories = (getPara("categories")==null || getPara("categories").toString().length()==0)?"":getPara("categories");
+
         Map<String,Object> filter = new HashMap<>();
         filter.put("username",user.get("username")==null?null:user.get("username").toString().trim());
         if (flag) {
             if (User.dao.getBy(filter)==null) {
                 if (User.dao.add(user)) {
+
+                    String[] category_ids = categories.split(",");
+                    for (int i = 0; i < category_ids.length; i++) {
+                        Category_user cu = new Category_user();
+                        cu.set("user_id",user.get("id"));
+                        cu.set("category_id",category_ids[i]);
+                        Category_user.dao.add(cu);
+                    }
+
                     filter.clear();
                     filter.put("user",user);
                     filter.put("errmsg",ConstantParas.success_add);
@@ -85,7 +99,13 @@ public class UserController extends BaseController {
         filter.put("id",id);
         User user = User.dao.getBy(filter);
         if (user!=null){
-            renderJson(RestResult.ok(user));
+            Map<String,Object> map = new HashMap<>();
+            map.put("user_id",user.get("id"));
+            List<Category_user> cus = Category_user.dao.query(map);
+            map.clear();
+            map.put("user",user);
+            map.put("categories",cus);
+            renderJson(RestResult.ok(map));
         }else {
             renderJson(RestResult.error(ConstantParas.error_username_not_exist));
         }
@@ -93,6 +113,7 @@ public class UserController extends BaseController {
 
     public void update(){
         User user = getModel(User.class,"paras");
+        String categories = (getPara("categories")==null || getPara("categories").toString().length()==0)?"":getPara("categories");
         Long id = user.get("id")==null?0:Long.parseLong(user.get("id").toString());
         Map<String,Object> filter = new HashMap<>();
         filter.put("id",id);
@@ -107,6 +128,31 @@ public class UserController extends BaseController {
             }
             if (flag) {
                 if (User.dao.update(user)) {
+                    List category_idList = new ArrayList<>();
+                    String[] category_ids = categories.split(",");
+                    for (int i = 0; i < category_ids.length; i++) {
+                        category_idList.add(category_ids[i]);
+                    }
+
+                    filter.clear();
+                    filter.put("user_id",user.get("id"));
+                    List<Category_user> cus = Category_user.dao.query(filter);
+                    for (int i = 0; i < cus.size(); i++) {
+                        Category_user pre = cus.get(i);
+                        if (!category_idList.contains(pre.get("category_id").toString())){
+                            Category_user.dao.delete(pre);
+                        }else {
+                            category_idList.remove(pre.get("category_id").toString());
+                        }
+                    }
+
+                    for (int i = 0; i < category_idList.size(); i++) {
+                        Category_user cu = new Category_user();
+                        cu.set("user_id",user.get("id"));
+                        cu.set("category_id",category_idList.get(i));
+                        Category_user.dao.add(cu);
+                    }
+
                     renderJson(RestResult.ok(ConstantParas.success_update));
                 } else {
                     renderJson(RestResult.error(ConstantParas.failure_update));

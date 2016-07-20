@@ -36,8 +36,35 @@ public class User extends Model<User>{
             where += " and type="+type;
         }
 
+        if (filter.get("user_id")!=null){
+            where += " and qc.id in (SELECT category_id FROM "+TableName.category_user+" where isDeleted = 0 and user_id = "+Integer.parseInt(filter.get("user_id").toString())+" ) ";
+        }
+
         String order = " order by "+ (filter.get("orderby")==null?" type asc, created desc":filter.get("orderby").toString());
         System.out.println(select+where+order);
+        return User.dao.paginate(page, size, select, where + order);
+    }
+
+    public Page<User> queryForTeacher(Map<String, Object> filter){
+        int page = filter.get("page")==null?ConstantParas.page:Integer.parseInt(filter.get("page").toString());
+        int size = filter.get("size")==null?ConstantParas.size:Integer.parseInt(filter.get("size").toString());
+
+        String select = "select * ";
+        String where = "from "+TableName.user+" where 1=1 and isDeleted = "
+                +ConstantParas.isDeleted_false+" and type = "+ConstantParas.usertype_student+" and id in (select distinct(user_id) from "+TableName.category_user
+                +" where isDeleted = "+ConstantParas.isDeleted_false+" and category_id in (SELECT category_id FROM "+TableName.category_user
+                +" where isDeleted = "+ConstantParas.isDeleted_false+" and user_id = "+Integer.parseInt(filter.get("user_id").toString())+" ))";
+
+        if (filter.get("keyword")!=null && !filter.get("keyword").toString().equals("")){
+            String keyword = filter.get("keyword").toString();
+            where += " and ( name like '%"+keyword+"%' or username like '%"+keyword+"%' or email like '%"+keyword+"%' ) ";
+        }
+
+        if (filter.get("id")!=null){
+            where += " and id = "+Integer.parseInt(filter.get("id").toString());
+        }
+
+        String order = " order by "+ (filter.get("orderby")==null?" type asc, created desc":filter.get("orderby").toString());
         return User.dao.paginate(page, size, select, where + order);
     }
 

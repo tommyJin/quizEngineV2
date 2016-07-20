@@ -10,13 +10,15 @@ function getUser(id, type) {
         dataType: 'JSON',
         data: {'id': id},
         success: function (rs) {
-            var user = rs.data;
+            var user = rs.data.user;
+            var categories = rs.data.categories;
             $("#username").val(user.username);
             $("#username").attr('disabled', 'disabled');
             $("#password").val(user.password);
             $("#name").val(user.name);
             $("#email").val(user.email);
             $("#type option[value='" + user.type + "']").attr("selected", true);
+            setCheckedCategories(categories);
         },
         error: function () {
             alert("Ajax error!");
@@ -29,7 +31,8 @@ function addUser(type) {
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
-    var type = $("#type").val();
+    var user_type = $("#type").val();
+    var categories = getAllCheckedCategories();//which module does this one belong to
     $.ajax({
         url:userType(type) + '/user/add',
         type: 'POST',
@@ -39,7 +42,8 @@ function addUser(type) {
             'paras.password': password,
             'paras.name': name,
             'paras.email': email,
-            'paras.type': type
+            'paras.type': user_type,
+            'categories':categories
         },
         success: function (rs) {
             var code = rs.status;
@@ -64,7 +68,8 @@ function updateUser(type) {
     var password = $.trim($("#password").val());
     var name = $.trim($("#name").val());
     var email = $.trim($("#email").val());
-    var type = $("#type").val();
+    var user_type = $("#type").val();
+    var categories = getAllCheckedCategories();//which module does this one belong to
     $.ajax({
         url: userType(type) + '/user/update',
         type: 'POST',
@@ -74,7 +79,8 @@ function updateUser(type) {
             'paras.password': password,
             'paras.name': name,
             'paras.email': email,
-            'paras.type': type
+            'paras.type': user_type,
+            'categories':categories
         },
         success: function (rs) {
             var code = rs.status;
@@ -89,7 +95,7 @@ function updateUser(type) {
 
 function queryUser(page,type) {
     var keyword = $.trim($("#keyword").val());
-    var user_type = $("#user_type").val();
+    var user_type = type==1?$("#user_type").val():"";
     $.ajax({
         url: userType(type) + '/user',
         dataType: 'json',
@@ -112,14 +118,14 @@ function queryUser(page,type) {
             list.map(function (o) {
                 list_list += "<tr id='tr_" + o.id + "'><td><input type='checkbox' /></td>" +
                     "<td>" + o.id + "</td>" +
-                    "<td><a href='admin/route/user_detail?id=" + o.id + "' >" + o.username + "</a></td>" +
+                    "<td><a href='"+userType(type)+"/route/user_detail?id=" + o.id + "' >" + o.username + "</a></td>" +
                     "<td>" + o.name + "</td>" +
                     "<td class='am-hide-sm-only'>" + userType(o.type) + "</td>" +
                     "<td class='am-hide-sm-only'>" + o.email + "</td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
-                    "<a href='admin/route/user_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
-                    "<button type='button' onclick='deleteUser(" + o.id + ")' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> Delete</button>" +
+                    "<a href='"+userType(type)+"/route/user_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
+                    "<button type='button' onclick='deleteUser(" + o.id + ","+type+")' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> Delete</button>" +
                     "</div></div></td></tr>";
             });
             $("#list").append(list_list);

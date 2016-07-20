@@ -30,35 +30,40 @@ function addQuiz() {
     var level = $("#level").val();
     var category = $("#category").val();
     var number = $("#number").val();
-    $.ajax({
-        url: 'teacher/quiz/add',
-        type: 'POST',
-        dataType: 'JSON',
-        data: {
-            'paras.name': name,
-            'paras.content': content,
-            'paras.question_level_id': level,
-            'paras.question_category_id': category,
-            'paras.number':number
-        },
-        success: function (rs) {
-            var code = rs.status;
-            var data = rs.data;
-            if (code == 200) {
-                alert(data.errmsg);
-                $("#id").val(data.q.id);
-                var way = $("input[name='way']:checked").val();
-                if (way == 1) {
-                    addQuizQuestion(data.q.id);
+    if (category!=null && category!=0){
+        $.ajax({
+            url: 'teacher/quiz/add',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                'paras.name': name,
+                'paras.content': content,
+                'paras.question_level_id': level,
+                'paras.question_category_id': category,
+                'paras.number':number
+            },
+            success: function (rs) {
+                var code = rs.status;
+                var data = rs.data;
+                if (code == 200) {
+                    alert(data.errmsg);
+                    $("#id").val(data.q.id);
+                    var way = $("input[name='way']:checked").val();
+                    if (way == 1) {
+                        addQuizQuestion(data.q.id);
+                    }
+                } else {
+                    alert(data);
                 }
-            } else {
-                alert(data);
+            },
+            error: function () {
+                alert("Ajax error!");
             }
-        },
-        error: function () {
-            alert("Ajax error!");
-        }
-    });
+        });
+    }else{
+        alert("Module is necessary!");
+    }
+    
 }
 
 function updateQuiz() {

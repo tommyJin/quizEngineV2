@@ -37,6 +37,8 @@ function getCategories(showAll, type) {
                     select += "<option value='" + o.id + "'>" + o.name + "</option>";
                 });
                 $("#category").append(select);
+            }else {
+                $("#category").append("<option  value='0'>No Module Available</option>");
             }
         },
         error: function () {
@@ -161,4 +163,44 @@ function deleteCategory(id) {
             }
         });
     }
+}
+
+
+function getMoudles(user_id,category_id,type){
+    $.ajax({
+        url: userType(type) +'/questioncategory/modules',
+        dataType: 'json',
+        data: {'user_id':user_id,'category_id':category_id},
+        type: 'GET',
+        sync:true,
+        success: function (rs) {
+            var list = rs.data;
+            $("#modules").empty();
+            var list_list = "";
+
+            list.map(function (o) {
+                list_list += "<label  class='am-btn am-btn-default am-btn-xs'> <input id='category_"+o.id+"' type='checkbox' value='"+o.id+"'> "+o.name+" </label>";
+            });
+            $("#modules").append(list_list);
+        },
+        error: function () {
+            alert("Ajax error!")
+        }
+    });
+}
+
+function getAllCheckedCategories(){
+    var ids = "";
+    $("#modules input[type=checkbox]:checked").map(function (o) {
+        ids += $(this).val()+",";
+    });
+    return ids.length>0?ids.substring(0,ids.length-1):ids;
+}
+
+function setCheckedCategories(list) {
+    $.map(list,function (o) {
+        var id = "#category_"+o.category_id;
+        $(id).parent().addClass("am-active");
+        $(id).prop("checked",true);
+    })
 }
