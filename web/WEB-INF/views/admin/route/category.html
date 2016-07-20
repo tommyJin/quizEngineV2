@@ -1,40 +1,35 @@
 <#include "/layout/admin-header.html">
     <#include "/layout/admin-side-bar.html">
-        <script language="javascript" src="js/api/user.js"></script>
+        <script language="javascript" src="js/api/question_category.js"></script>
 
         <!-- content start -->
         <div class="admin-content">
             <div class="admin-content-body">
                 <div class="am-cf am-padding am-padding-bottom-0">
-                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">User Account</strong> / <small>List</small></div>
+                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Module</strong> / <small>List</small></div>
                 </div>
 
                 <hr>
 
                 <div class="am-g">
-                    <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-u-sm-12 am-u-md-2">
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs">
-                                <a href="admin/route/user_add" target="_blank" class="am-btn am-btn-default"><span class="am-icon-plus"></span> Add</a>
-                                <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> Delete</button>
+                                <a href="admin/route/category_detail" target="_blank" class="am-btn am-btn-default"><span class="am-icon-plus"></span> Add</a>
+                                <!--<button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> Delete</button>-->
                             </div>
                         </div>
                     </div>
-                    <div class="am-u-sm-12 am-u-md-3">
+                    <div class="am-u-sm-12 am-u-md-8">
                         <div class="am-form-group">
-                            <select data-am-selected="{btnSize: 'sm'}" id="user_type" onchange="queryUser(1,1)">
-                                <option value="0">All</option>
-                                <option value="1">Administrator</option>
-                                <option value="2">Teacher</option>
-                                <option value="3">Student</option>
-                            </select>
+
                         </div>
                     </div>
                     <div class="am-u-sm-12 am-u-md-3">
                         <div class="am-input-group am-input-group-sm">
                             <input type="text" class="am-form-field" id="keyword" placeholder="Input keyword here">
           <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button" onclick="queryUser(1,1)">Search</button>
+            <button class="am-btn am-btn-default" type="button" onclick="queryCategory(1,1)">Search</button>
           </span>
                         </div>
                     </div>
@@ -46,14 +41,11 @@
                             <table class="am-table am-table-striped am-table-hover table-main" id="tableList">
                                 <thead>
                                 <tr>
-                                    <th class="table-check">
-                                        <input type="checkbox" />
-                                    </th>
+                                    <!--<th class="table-check">-->
+                                        <!--<input type="checkbox" />-->
+                                    <!--</th>-->
                                     <th class="table-id">ID</th>
-                                    <th class="table-title">Username</th>
-                                    <th class="table-type">Name</th>
-                                    <th class="table-author am-hide-sm-only">User Type</th>
-                                    <th class="table-date am-hide-sm-only">Email</th>
+                                    <th class="table-title">Name</th>
                                     <th class="table-set">Actions</th>
                                 </tr>
                                 </thead>
@@ -82,7 +74,7 @@
 
         <script>
             $(document).ready(function(){
-               queryUser(1,1);
+                queryCategory(1,1);
             });
 
             var pageNumber = 1;

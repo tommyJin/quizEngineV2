@@ -29,4 +29,14 @@ public class RouteController extends Controller {
         setAttr("id",id);
         render("user_detail.html");
     }
+
+    public void category(){
+        render("category.html");
+    }
+
+    public void category_detail(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        setAttr("id",id);
+        render("category_detail.html");
+    }
 }

@@ -6,7 +6,7 @@
         <div class="admin-content">
             <div class="admin-content-body">
                 <div class="am-cf am-padding am-padding-bottom-0">
-                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Question Category</strong> / <small>List</small></div>
+                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Module</strong> / <small>List</small></div>
                 </div>
 
                 <hr>
@@ -29,7 +29,7 @@
                         <div class="am-input-group am-input-group-sm">
                             <input type="text" class="am-form-field" id="keyword" placeholder="Input keyword here">
           <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button" onclick="queryCategory()">Search</button>
+            <button class="am-btn am-btn-default" type="button" onclick="queryCategory(1,2)">Search</button>
           </span>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
 
         <script>
             $(document).ready(function(){
-                queryCategory();
+                queryCategory(1,2);
             });
 
             var pageNumber = 1;

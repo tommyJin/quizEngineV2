@@ -127,15 +127,15 @@ function queryUser(page,type) {
             $("#pager").empty();
             var page_list = "";
             for (var i = 1; i <= totalPage; i++) {
-                page_list += "<li class='" + (pageNumber == i ? "am-active" : "") + "'><a href='' onclick='queryUser(" + i + ");return false'>" + i + "</a></li>";
+                page_list += "<li class='" + (pageNumber == i ? "am-active" : "") + "'><a href='' onclick='queryUser(" + i + ","+type+");return false'>" + i + "</a></li>";
             }
 
             var pager = totalRow + " records<div class='am-fr'><ul class='am-pagination'>" +
 
-                "<li class='" + (firstPage ? "am-disabled" : "") + "'><a href='' onclick='queryUser(" + (pageNumber - 1) + ");return false'>pre</a></li>" +
+                "<li class='" + (firstPage ? "am-disabled" : "") + "'><a href='' onclick='queryUser(" + (pageNumber - 1) + ","+type+");return false'>pre</a></li>" +
                 page_list +
 
-                "<li class='" + (lastPage ? "am-disabled" : "") + "'><a href='' onclick='queryUser(" + (pageNumber + 1) + ");return false'>next</a></li>" +
+                "<li class='" + (lastPage ? "am-disabled" : "") + "'><a href='' onclick='queryUser(" + (pageNumber + 1) + ","+type+");return false'>next</a></li>" +
 
                 '</ul></div>';
             $("#pager").append(pager);

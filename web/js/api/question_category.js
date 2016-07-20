@@ -3,9 +3,9 @@
  */
 
 
-function getCategory(id) {
+function getCategory(id, type) {
     $.ajax({
-        url: 'teacher/questioncategory/get',
+        url: userType(type) +'/questioncategory/get',
         type: 'GET',
         dataType: 'JSON',
         data: {'id': id},
@@ -20,9 +20,9 @@ function getCategory(id) {
     });
 }
 
-function getCategories(showAll) {
+function getCategories(showAll, type) {
     $.ajax({
-        url: 'teacher/questioncategory',
+        url: userType(type) +'/questioncategory',
         type: 'GET',
         dataType: 'JSON',
         data: {},
@@ -49,7 +49,7 @@ function addCategory() {
     var name = $.trim($("#name").val());
     var content = $("#content").val();
     $.ajax({
-        url: 'teacher/questioncategory/add',
+        url: 'admin/questioncategory/add',
         type: 'POST',
         dataType: 'JSON',
         data: {'paras.name': name, 'paras.content': content},
@@ -74,7 +74,7 @@ function updateCategory() {
     var name = $.trim($("#name").val());
     var content = $("#content").val();
     $.ajax({
-        url: 'teacher/questioncategory/update',
+        url: 'admin/questioncategory/update',
         type: 'POST',
         dataType: 'JSON',
         data: {'paras.id': id, 'paras.name': name, 'paras.content': content},
@@ -89,10 +89,10 @@ function updateCategory() {
     });
 }
 
-function queryCategory(page) {
+function queryCategory(page,type) {
     var keyword = $.trim($("#keyword").val());
     $.ajax({
-        url: 'teacher/questioncategory',
+        url: userType(type) +'/questioncategory',
         dataType: 'json',
         data: {'keyword': keyword, 'page': page},
         type: 'GET',
@@ -111,12 +111,13 @@ function queryCategory(page) {
             var list_list = "";
 
             list.map(function (o) {
-                list_list += "<tr id='tr_" + o.id + "'><td><input type='checkbox' /></td>" +
+                list_list += "<tr id='tr_" + o.id + "'>" +
+                    // "<td><input type='checkbox' /></td>" +
                     "<td>" + o.id + "</td>" +
-                    "<td><a href='teacher/route/category_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
+                    "<td><a href='"+userType(type) +"/route/category_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
-                    "<a href='teacher/route/category_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
+                    "<a href='"+userType(type) +"/route/category_detail?id=" + o.id + "' target='_blank' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> Modify</a>" +
                     "<button type='button' onclick='deleteCategory(" + o.id + ")' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> Delete</button>" +
                     "</div></div></td></tr>";
             });
@@ -125,15 +126,15 @@ function queryCategory(page) {
             $("#pager").empty();
             var page_list = "";
             for (var i = 1; i <= totalPage; i++) {
-                page_list += "<li class='" + (pageNumber == i ? "am-active" : "") + "'><a href='' onclick='queryCategory(" + i + ");return false'>" + i + "</a></li>";
+                page_list += "<li class='" + (pageNumber == i ? "am-active" : "") + "'><a href='' onclick='queryCategory(" + i + ","+type+");return false'>" + i + "</a></li>";
             }
 
             var pager = totalRow + " records<div class='am-fr'><ul class='am-pagination'>" +
 
-                "<li class='" + (firstPage ? "am-disabled" : "") + "'><a href='' onclick='queryCategory(" + (pageNumber - 1) + ");return false'>pre</a></li>" +
+                "<li class='" + (firstPage ? "am-disabled" : "") + "'><a href='' onclick='queryCategory(" + (pageNumber - 1) + ","+type+");return false'>pre</a></li>" +
                 page_list +
 
-                "<li class='" + (lastPage ? "am-disabled" : "") + "'><a href='' onclick='queryCategory(" + (pageNumber + 1) + ");return false'>next</a></li>" +
+                "<li class='" + (lastPage ? "am-disabled" : "") + "'><a href='' onclick='queryCategory(" + (pageNumber + 1) + ","+type+");return false'>next</a></li>" +
 
                 '</ul></div>';
             $("#pager").append(pager);
@@ -147,7 +148,7 @@ function queryCategory(page) {
 function deleteCategory(id) {
     if (confirm("Delete for sure?")) {
         $.ajax({
-            url: 'teacher/questioncategory/delete',
+            url: 'admin/questioncategory/delete',
             type: 'GET',
             dataType: 'JSON',
             data: {'id': id},

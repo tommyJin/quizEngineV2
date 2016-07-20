@@ -1,5 +1,5 @@
 <#include "/layout/admin-header.html">
-    <#include "/layout/teacher-side-bar.html">
+    <#include "/layout/admin-side-bar.html">
 
         <script language="javascript" src="js/api/question_category.js"></script>
 
@@ -71,7 +71,7 @@
             var id = $("#id").val();
             $(document).ready(function(){
                 if(id != null && id.length!=0){
-                    getCategory(id,2);
+                    getCategory(id,1);
                 }
             });
 

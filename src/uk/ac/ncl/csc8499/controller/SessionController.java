@@ -66,7 +66,7 @@ public class SessionController extends Controller {
                     }
 
                     setSessionAttr("login_user", usermap);
-                    setSessionAttr("user",user);
+                    setSessionAttr("user_type",usermap.get("user_type"));
                 } else {
                     flag = false;
                     errormsg += ConstantParas.error_wrong_password;

@@ -52,8 +52,8 @@ public class LoginInterceptor implements Interceptor {
                 }else if (type.equals("3")){
                     type = "student";
                 }
-                System.out.println("");
                 if ((ck.startsWith("/admin") && type.equals("admin"))) {
+                    System.out.println("admin");
                     ai.invoke();//continue
                 }else if ((ck.startsWith("/teacher") && type.equals("teacher"))) {
                     ai.invoke();//continue

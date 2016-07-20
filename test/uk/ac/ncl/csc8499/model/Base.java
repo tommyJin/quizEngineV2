@@ -66,6 +66,7 @@ public class Base {
                 .addMapping(TableName.quiz_question, QuizQuestion.class)
                 .addMapping(TableName.quiz_record, QuizRecord.class)
                 .addMapping(TableName.token, Token.class)
+                .addMapping(TableName.category_user, Category_user.class)
         ;
         activeRecord.start();
     }
