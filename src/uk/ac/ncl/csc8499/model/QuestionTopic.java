@@ -27,6 +27,10 @@ public class QuestionTopic extends Model<QuestionTopic> {
             where += " and ( name like '%"+keyword+"%') ";
         }
 
+        if (filter.get("category_id")!=null){
+            where += " and category_id = "+Integer.parseInt(filter.get("category_id").toString());
+        }
+
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }

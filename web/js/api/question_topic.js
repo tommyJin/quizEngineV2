@@ -20,6 +20,34 @@ function getTopic(id) {
     });
 }
 
+function getTopics(showAll, category_id) {
+    $.ajax({
+        url: 'teacher/questiontopic',
+        type: 'GET',
+        dataType: 'JSON',
+        data: {'category_id':category_id},
+        async:false,
+        success: function (rs) {
+            $("#topic").empty();
+            var code = rs.status;
+            var data = rs.data;
+            if (code == 200) {
+                var list = data.list;
+                var select = showAll ? "<option  value='0'>All</option>" : "";
+                list.map(function (o) {
+                    select += "<option value='" + o.id + "'>" + o.name + "</option>";
+                });
+                $("#topic").append(select);
+            }else {
+                $("#topic").append("<option  value='0'>No Topic Available</option>");
+            }
+        },
+        error: function () {
+            alert("Ajax error!");
+        }
+    });
+}
+
 function addTopic() {
     var name = $.trim($("#name").val());
     var content = $("#content").val();

@@ -11,10 +11,12 @@ import java.util.Map;
 /**
  * Created by tommy on 2016/5/15.
  */
-@ControllerBind(controllerKey = "/questiontag")
+@ControllerBind(controllerKey = "/questiontopic")
 public class QuestionTopicController extends Controller {
     public void index(){
         Map<String,Object> filter = new HashMap<>();
+        Integer category_id = getPara("category_id")==null?null:getParaToInt("category_id");
+        filter.put("category_id",category_id);
         renderJson(RestResult.ok(QuestionTopic.dao.query(filter).getList()));
     }
 }

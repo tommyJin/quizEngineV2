@@ -15,6 +15,8 @@ import java.util.Map;
 public class QuestionCategoryController extends Controller {
     public void index(){
         Map<String,Object> filter = new HashMap<>();
+        Integer user_id = getPara("id")==null?null:getParaToInt("id");
+        filter.put("user_id",user_id);
         renderJson(RestResult.ok(QuestionCategory.dao.query(filter).getList()));
     }
 }

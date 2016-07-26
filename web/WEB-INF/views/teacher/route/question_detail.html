@@ -6,6 +6,7 @@
         <script language="javascript" src="js/api/question_level.js"></script>
         <script language="javascript" src="js/api/question_type.js"></script>
         <script language="javascript" src="js/api/question_choice.js"></script>
+        <script language="javascript" src="js/api/question_topic.js"></script>
 
         <script src="js/questiontype.js"></script>
 
@@ -54,7 +55,18 @@
                                 <div class="am-g am-margin-top">
                                     <div class="am-u-sm-4 am-u-md-2 am-text-right">Module</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="category">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="category" onchange="chooseCategory()">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                        Topic
+                                    </div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="topic" name="topic">
 
                                         </select>
                                     </div>
@@ -81,14 +93,7 @@
                                     </div>
                                 </div>
 
-                                <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Topic
-                                    </div>
-                                    <div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-                                        <input type="text" name="tag" id="tag" class="am-form-field" value="">
-                                    </div>
-                                </div>
+
 
 
                                 <div class="am-g am-margin-top">
@@ -159,6 +164,10 @@
 
             function chooseType(){
                 initType();
+            }
+
+            function chooseCategory() {
+                getTopics(false,$("#category").val());
             }
 
 
