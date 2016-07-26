@@ -1,12 +1,12 @@
 <#include "/layout/admin-header.html">
     <#include "/layout/teacher-side-bar.html">
-        <script language="javascript" src="js/api/question_tag.js"></script>
+        <script language="javascript" src="js/api/question_topic.js"></script>
 
         <!-- content start -->
         <div class="admin-content">
             <div class="admin-content-body">
                 <div class="am-cf am-padding am-padding-bottom-0">
-                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Question Tag</strong> / <small>List</small></div>
+                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Question Topic</strong> / <small>List</small></div>
                 </div>
 
                 <hr>
@@ -15,7 +15,7 @@
                     <div class="am-u-sm-12 am-u-md-2">
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs">
-                                <a href="teacher/route/tag_detail" target="_blank" class="am-btn am-btn-default"><span class="am-icon-plus"></span> Add</a>
+                                <a href="teacher/route/topic_detail" target="_blank" class="am-btn am-btn-default"><span class="am-icon-plus"></span> Add</a>
                                 <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> Delete</button>
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                         <div class="am-input-group am-input-group-sm">
                             <input type="text" class="am-form-field" id="keyword" placeholder="Input keyword here">
           <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button" onclick="queryTag()">Search</button>
+            <button class="am-btn am-btn-default" type="button" onclick="queryTopic()">Search</button>
           </span>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
 
         <script>
             $(document).ready(function(){
-                queryTag();
+                queryTopic();
             });
 
             var pageNumber = 1;

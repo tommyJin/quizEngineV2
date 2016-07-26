@@ -27,7 +27,7 @@ public class QuestionTopicTest extends Base{
         if (qt!=null){
             logger.info("qt:{}",qt);
         }else {
-            logger.info("qt:{}",ConstantParas.error_question_tag_not_exist);
+            logger.info("qt:{}",ConstantParas.error_question_topic_not_exist);
         }
     }
 
@@ -40,7 +40,7 @@ public class QuestionTopicTest extends Base{
         if (qt!=null){
             logger.info("qt:{}",qt);
         }else {
-            logger.info("qt:{}",ConstantParas.error_question_tag_not_exist);
+            logger.info("qt:{}",ConstantParas.error_question_topic_not_exist);
         }
     }
 
@@ -75,7 +75,7 @@ public class QuestionTopicTest extends Base{
                 logger.info("qt:{}",ConstantParas.failure_update);
             }
         }else {
-            logger.info("qt:{}", ConstantParas.error_question_tag_not_exist);
+            logger.info("qt:{}", ConstantParas.error_question_topic_not_exist);
         }
     }
 
@@ -92,7 +92,7 @@ public class QuestionTopicTest extends Base{
                 logger.info("qt:{}",ConstantParas.failure_delete);
             }
         }else {
-            logger.info("qt:{}", ConstantParas.error_question_tag_not_exist);
+            logger.info("qt:{}", ConstantParas.error_question_topic_not_exist);
         }
     }
 }

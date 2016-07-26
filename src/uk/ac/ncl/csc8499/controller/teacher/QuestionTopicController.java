@@ -14,10 +14,10 @@ import java.util.Map;
 /**
  * Created by tommy on 2016/5/15.
  */
-@ControllerBind(controllerKey = "/teacher/questiontag")
+@ControllerBind(controllerKey = "/teacher/questiontopic")
 public class QuestionTopicController extends BaseController {
     static final Logger logger = LoggerFactory.getLogger(QuestionTopicController.class);
-    static final String tag = "questiontag";
+    static final String topic = "questiontopic";
 
     public void index(){
         Map<String,Object> filter = new HashMap<>();
@@ -40,7 +40,7 @@ public class QuestionTopicController extends BaseController {
         if (q!=null){
             renderJson(RestResult.ok(q));
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_tag_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_question_topic_not_exist));
         }
     }
 
@@ -73,7 +73,7 @@ public class QuestionTopicController extends BaseController {
                 renderJson(RestResult.error(ConstantParas.failure_update));
             }
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_tag_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_question_topic_not_exist));
         }
     }
 
@@ -89,7 +89,7 @@ public class QuestionTopicController extends BaseController {
                 renderJson(RestResult.error(ConstantParas.failure_delete));
             }
         }else {
-            renderJson(RestResult.error(ConstantParas.error_question_tag_not_exist));
+            renderJson(RestResult.error(ConstantParas.error_question_topic_not_exist));
         }
     }
 }

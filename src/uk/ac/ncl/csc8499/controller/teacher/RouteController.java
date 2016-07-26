@@ -32,14 +32,14 @@ public class RouteController extends BaseController {
         render("category_detail.html");
     }
 
-    public void tag(){
-        render("tag.html");
+    public void topic(){
+        render("topic.html");
     }
 
-    public void tag_detail(){
+    public void topic_detail(){
         Long id = getPara("id")==null?null:getParaToLong("id");
         setAttr("id",id);
-        render("tag_detail.html");
+        render("topic_detail.html");
     }
 
     public void level(){

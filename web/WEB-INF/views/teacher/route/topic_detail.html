@@ -1,7 +1,8 @@
 <#include "/layout/admin-header.html">
     <#include "/layout/teacher-side-bar.html">
 
-        <script language="javascript" src="js/api/question_tag.js"></script>
+        <script language="javascript" src="js/api/question_category.js"></script>
+        <script language="javascript" src="js/api/question_topic.js"></script>
 
         <!-- content start -->
         <div class="admin-content">
@@ -12,7 +13,7 @@
                 <div class="admin-content-body">
                     <div class="am-cf am-padding am-padding-bottom-0">
                         <div class="am-fl am-cf">
-                            <strong class="am-text-primary am-text-lg">Question Tag</strong> /
+                            <strong class="am-text-primary am-text-lg">Question Topic</strong> /
                             <small>detail</small>
                         </div>
                     </div>
@@ -26,6 +27,15 @@
 
                         <div class="am-tabs-bd">
                             <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                <div class="am-g am-margin-top">
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Module</div>
+                                    <div class="am-u-sm-8 am-u-md-10">
+                                        <select data-am-selected="{btnSize: 'sm'}" id="category" name="category">
+
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="am-g am-margin-top">
                                     <div class="am-u-sm-4 am-u-md-2 am-text-right">
@@ -70,8 +80,9 @@
         <script>
             var id = $("#id").val();
             $(document).ready(function(){
+                getCategories(false,2);
                 if(id != null && id.length!=0){
-                    getTag(id);
+                    getTopic(id);
                 }
             });
 
@@ -91,9 +102,9 @@
                     submitHandler: function() {
                         id = $("#id").val();
                         if (id != null && id.length!=0) {
-                            updateTag();
+                            updateTopic();
                         }else {
-                            addTag();
+                            addTopic();
                         }
                     }
                 });

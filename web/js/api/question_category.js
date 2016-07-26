@@ -26,6 +26,7 @@ function getCategories(showAll, type) {
         type: 'GET',
         dataType: 'JSON',
         data: {},
+        async:false,
         success: function (rs) {
             $("#category").empty();
             var code = rs.status;
@@ -166,7 +167,7 @@ function deleteCategory(id) {
 }
 
 
-function getMoudles(user_id,category_id,type){
+function getMoudles(user_id,category_id,type,isCheckbox){
     $.ajax({
         url: userType(type) +'/questioncategory/modules',
         dataType: 'json',
@@ -179,7 +180,7 @@ function getMoudles(user_id,category_id,type){
             var list_list = "";
 
             list.map(function (o) {
-                list_list += "<label  class='am-btn am-btn-default am-btn-xs'> <input id='category_"+o.id+"' type='checkbox' value='"+o.id+"'> "+o.name+" </label>";
+                list_list += "<label  class='am-btn am-btn-default am-btn-xs'> <input id='category_"+o.id+"' type='"+(isCheckbox==1?"checkbox":"radio")+"' value='"+o.id+"'> "+o.name+" </label>";
             });
             $("#modules").append(list_list);
         },
