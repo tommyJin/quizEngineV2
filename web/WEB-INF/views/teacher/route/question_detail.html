@@ -62,13 +62,11 @@
                                 </div>
 
                                 <div class="am-g am-margin-top">
-                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                        Topic
-                                    </div>
+                                    <div class="am-u-sm-4 am-u-md-2 am-text-right">Topic</div>
                                     <div class="am-u-sm-8 am-u-md-10">
-                                        <select data-am-selected="{btnSize: 'sm'}" id="topic" name="topic">
+                                        <div class="am-btn-group" data-am-button="" id="topics">
 
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -136,7 +134,7 @@
                 <input type="hidden" id="qc_content"  />
                 <input type="hidden" id="blankIndex" value="0"/>
                 <input type="hidden" id="choiceIndex" value="0"/>
-
+                <input type="hidden" id="previous_topics">
             </form>
 
 
@@ -152,11 +150,11 @@
             $(document).ready(function(){
                 getCategories(false,2);
                 getLevels(false);
-
                 if(id != null && id.length!=0){
                     getTypesForQuestion(false,id);
                 }else{
                     getTypesForQuestion(true,"");
+                    getTopics($("#category").val());
                 }
                 initType();
             });
@@ -167,7 +165,7 @@
             }
 
             function chooseCategory() {
-                getTopics(false,$("#category").val());
+                getTopics($("#category").val());
             }
 
 

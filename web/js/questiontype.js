@@ -209,7 +209,10 @@ function addTrueFalse(data) {
     var false_content = "";
     var false_feedback = "";
     var right = "true";
-    var answer = $.parseJSON(data);
+    var answer = "";
+    if (data.length>0){
+        answer =  $.parseJSON(data);
+    }
     if (answer.true_content != null && answer.feedback_true != null && answer.false_content != null && answer.feedback_false != null && answer.right != null) {
         true_content = answer.true_content;
         true_feedback = answer.feedback_true;

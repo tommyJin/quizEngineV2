@@ -15,11 +15,12 @@ function getQuestion(id) {
             $("#mark").val(question.mark);
             ke_content.html(question.content);
             ke_feedback.html(question.feedback);
-            $("#tag").val(question.question_tag);
             $("#category option[value='" + question.question_category_id + "']").attr("selected", true);
             $("#level option[value='" + question.question_level_id + "']").attr("selected", true);
             $("#type option[value='" + question.question_type_id + "']").attr("selected", true);
             getQuestionChoice(question.id);
+            $("#previous_topics").val(question.question_topic_id);
+            getTopics($("#category").val());
         },
         error: function () {
             alert("Ajax error!");
@@ -35,7 +36,7 @@ function addQuestion() {
     var level = $("#level").val();
     var type = $("#type").val();
     var category = $("#category").val();
-    var tag = $.trim($("#tag").val());
+    var topic = getAllCheckedTopics();
     if(!collect()){
         return;
     }//collect content of option
@@ -55,7 +56,7 @@ function addQuestion() {
                 'q.question_level_id': level,
                 'q.question_type_id': type,
                 'q.question_category_id': category,
-                'q.question_tag':tag,
+                'q.question_topic_id':topic,
                 'qc.content': qc_content,
                 'q.answer': answer
             },
@@ -85,7 +86,7 @@ function updateQuestion() {
     var level = $("#level").val();
     var type = $("#type").val();
     var category = $("#category").val();
-    var tag = $.trim($("#tag").val());
+    var topic = getAllCheckedTopics();
     if(!collect()){
         return;
     }//collect content of option
@@ -104,7 +105,7 @@ function updateQuestion() {
             'q.question_level_id': level,
             'q.question_type_id': type,
             'q.question_category_id': category,
-            'q.question_tag':tag,
+            'q.question_topic_id':topic,
             'qc.content': qc_content,
             'q.answer': answer
         },

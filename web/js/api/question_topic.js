@@ -19,34 +19,34 @@ function getTopic(id) {
         }
     });
 }
-
-function getTopics(showAll, category_id) {
-    $.ajax({
-        url: 'teacher/questiontopic',
-        type: 'GET',
-        dataType: 'JSON',
-        data: {'category_id':category_id},
-        async:false,
-        success: function (rs) {
-            $("#topic").empty();
-            var code = rs.status;
-            var data = rs.data;
-            if (code == 200) {
-                var list = data.list;
-                var select = showAll ? "<option  value='0'>All</option>" : "";
-                list.map(function (o) {
-                    select += "<option value='" + o.id + "'>" + o.name + "</option>";
-                });
-                $("#topic").append(select);
-            }else {
-                $("#topic").append("<option  value='0'>No Topic Available</option>");
-            }
-        },
-        error: function () {
-            alert("Ajax error!");
-        }
-    });
-}
+//
+// function getTopics(showAll, category_id) {
+//     $.ajax({
+//         url: 'teacher/questiontopic',
+//         type: 'GET',
+//         dataType: 'JSON',
+//         data: {'category_id':category_id},
+//         async:false,
+//         success: function (rs) {
+//             $("#topic").empty();
+//             var code = rs.status;
+//             var data = rs.data;
+//             if (code == 200) {
+//                 var list = data.list;
+//                 var select = showAll ? "<option  value='0'>All</option>" : "";
+//                 list.map(function (o) {
+//                     select += "<option value='" + o.id + "'>" + o.name + "</option>";
+//                 });
+//                 $("#topic").append(select);
+//             }else {
+//                 $("#topic").append("<option  value='0'>No Topic Available</option>");
+//             }
+//         },
+//         error: function () {
+//             alert("Ajax error!");
+//         }
+//     });
+// }
 
 function addTopic() {
     var name = $.trim($("#name").val());
@@ -165,4 +165,49 @@ function deleteTopic(id) {
             }
         });
     }
+}
+
+function getTopics(category_id){
+    $.ajax({
+        url: 'teacher/questiontopic',
+        dataType: 'json',
+        data: {'category_id':category_id},
+        type: 'GET',
+        async:false,
+        success: function (rs) {
+            var list = rs.data.list;
+            $("#topics").empty();
+            var list_list = "";
+            var checked = $("#previous_topics").val();//get the stored previous topics
+            var checks = checked.split(",");
+            list.map(function (o) {
+                var flag = false;
+                if (checks.indexOf(o.id+'')>-1){
+                    flag =true;
+                }
+                list_list += "<label  class='am-btn am-btn-default am-btn-xs "+(flag?"am-active":"")+"'> <input id='topic_"+o.id+"' type='checkbox' "+(flag?"checked='checked'":"")+" value='"+o.id+"'> "+o.name+" </label>";
+            });
+            $("#topics").append(list_list);
+        },
+        error: function () {
+            alert("Ajax error!")
+        }
+    });
+}
+
+function getAllCheckedTopics(){
+    var ids = "";
+    $("#topics input[type=checkbox]:checked").map(function (o) {
+        ids += $(this).val()+",";
+    });
+    return ids.length>0?ids.substring(0,ids.length-1):ids;
+}
+
+function setCheckedTopics(topics) {
+    var list = topics.split(",");
+    $.map(list,function (o) {
+        var id = "#topic_"+o;
+        $(id).parent().addClass("am-active");
+        $(id).prop("checked",true);
+    })
 }
