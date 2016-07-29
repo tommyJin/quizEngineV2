@@ -41,6 +41,22 @@ public class QuizQuestion extends Model<QuizQuestion>{
         return QuizQuestion.dao.paginate(page, size, select, where + order);
     }
 
+    public List<QuizQuestion> queryOnlyQuizQuestion(Map<String, Object> filter){
+
+        String select = "select * ";
+        String where = "from "+TableName.quiz_question+" where isDeleted = "+ConstantParas.isDeleted_false+" ";
+
+        if (filter.get("quiz_id")!=null){
+            where += " and quiz_id = "+ Integer.parseInt(filter.get("quiz_id").toString());
+        }
+
+        if (filter.get("id")!=null){
+            where += " and quiz_id = "+Integer.parseInt(filter.get("id").toString());
+        }
+
+        return QuizQuestion.dao.find(select + where);
+    }
+
     public QuizQuestion getBy(Map<String,Object> filter){
         String select = "select * ";
         String where = " from "+TableName.quiz_question+" where 1=1 and isDeleted = "+ConstantParas.isDeleted_false+" ";

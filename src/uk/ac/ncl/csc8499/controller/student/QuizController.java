@@ -96,6 +96,24 @@ public class QuizController extends BaseController {
         }
     }
 
+    public void delete(){
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("creator_id",id);
+        filter.put("id",quiz_id);
+        Quiz q = Quiz.dao.getBy(filter);
+        if (q!=null){
+            if (Quiz.dao.delete(q)){
+                renderJson(RestResult.error(ConstantParas.success_delete));
+            }else {
+                renderJson(RestResult.error(ConstantParas.failure_delete));
+            }
+        }else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
+    }
+
     public void retake() {
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
@@ -108,10 +126,8 @@ public class QuizController extends BaseController {
         if (q != null) {
             filter.clear();
             filter.put("quiz_id", quiz_id);
-            filter.put("page", 0);
-            filter.put("size", 10000);
-            List<QuizQuestion> qq = QuizQuestion.dao.query(filter).getList();
-            if (qq.size() == Integer.parseInt(q.get("number"))) {
+            List<QuizQuestion> qq = QuizQuestion.dao.queryOnlyQuizQuestion(filter);
+            if (qq.size() == Integer.parseInt(q.get("number").toString())) {
 //                Quiz new_q = new Quiz();
 //                new_q.set("name",q.get("name"));
 //                new_q.set("number",q.get("number"));
@@ -124,10 +140,13 @@ public class QuizController extends BaseController {
 //                new_q.set("total_mark",q.get("total_mark"));
 //                new_q.set("mark",0);
                 q.remove("id");
+                q.remove("mark");
                 if (Quiz.dao.add(q)) {
                     int number = 0;
                     for (int i = 0; i < qq.size(); i++) {
                         qq.get(i).remove("id");
+                        qq.get(i).set("quiz_id",q.get("id"));
+                        System.out.println("qq:"+gson.toJson(qq.get(i)));
                         if (QuizQuestion.dao.add(qq.get(i))) {
                             number++;
                         } else {
@@ -135,8 +154,9 @@ public class QuizController extends BaseController {
                         }
                     }
                     if (number == qq.size()) {
-                        renderJson(RestResult.ok(ConstantParas.success_add));
+                        renderJson(RestResult.ok(q));
                     } else {
+                        Quiz.dao.delete(q);
                         renderJson(RestResult.error(ConstantParas.error_quiz_retake_fail));
                     }
                 } else {
