@@ -40,6 +40,19 @@ public class Question extends Model<Question> {
             where += " and question_category_id = "+ Integer.parseInt(filter.get("question_category_id").toString());
         }
 
+        if (filter.get("question_topic_id")!=null){
+            String[] ids = filter.get("question_topic_id").toString().split(",");
+            String topic_id_sql = " and ( ";
+            for (int i = 0; i < ids.length; i++) {
+                if (i!=0){
+                    topic_id_sql += " or ";
+                }
+                topic_id_sql += " ( concat(',',q.question_topic_id,',') like "+("'%,"+ids[i]+",%'")+") ";
+            }
+            topic_id_sql += " )";
+            where += topic_id_sql;
+        }
+
         if (filter.get("id")!=null){
             where += " and q.id = "+Integer.parseInt(filter.get("id").toString());
         }

@@ -1,5 +1,6 @@
 package uk.ac.ncl.csc8499.controller.student;
 
+import com.google.gson.Gson;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.route.ControllerBind;
 import uk.ac.ncl.csc8499.Util.RestResult;
@@ -15,82 +16,139 @@ import java.util.Map;
  */
 @ControllerBind(controllerKey = "/student/quiz")
 public class QuizController extends BaseController {
-    public void index(){
-        Long id = getPara("id")==null?0:getParaToLong("id");
-        Map<String,Object> filter = new HashMap<>();
-        int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
-        int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
-        filter.put("page",page);
-        filter.put("size",size);
-        Integer level_id = getPara("level_id")==null?null:Integer.valueOf(getPara("level_id").toString().trim());
-        Integer category_id = getPara("category_id")==null?null:Integer.valueOf(getPara("category_id").toString().trim());
-        User currentUser = getTokenUser(id);
-        String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
-        String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
+    Gson gson = new Gson();
 
-        if (level_id!= null) {
-            filter.put("question_level_id",level_id);
+    public void index() {
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Map<String, Object> filter = new HashMap<>();
+        int page = getPara("page") == null ? ConstantParas.page : getParaToInt("page");
+        int size = getPara("size") == null ? ConstantParas.size : getParaToInt("size");
+        filter.put("page", page);
+        filter.put("size", size);
+        Integer level_id = getPara("level_id") == null ? null : Integer.valueOf(getPara("level_id").toString().trim());
+        Integer category_id = getPara("category_id") == null ? null : Integer.valueOf(getPara("category_id").toString().trim());
+        User currentUser = getTokenUser(id);
+        String keyword = getPara("keyword") == null ? null : getPara("keyword").trim();
+        String orderby = getPara("orderby") == null ? null : getPara("orderby").trim();
+
+        if (level_id != null) {
+            filter.put("question_level_id", level_id);
         }
-        if (category_id!=null){
-            filter.put("question_category_id",category_id);
+        if (category_id != null) {
+            filter.put("question_category_id", category_id);
         }
-        filter.put("creator_id",id);
-        filter.put("keyword",keyword);
-        filter.put("orderby",orderby);
+        filter.put("creator_id", id);
+        filter.put("keyword", keyword);
+        filter.put("orderby", orderby);
 
         renderJson(RestResult.ok(Quiz.dao.query(filter)));
     }
 
-    public void get(){
-        Long id = getPara("id")==null?0:getParaToLong("id");
-        Long quiz_id = getPara("quiz_id")==null?0:getParaToLong("quiz_id");
-        Map<String,Object> filter = new HashMap<>();
-        filter.put("id",quiz_id);
-        filter.put("creator_id",id);
+    public void get() {
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("id", quiz_id);
+        filter.put("creator_id", id);
         Quiz q = Quiz.dao.getBy(filter);
-        if (q!=null){
+        if (q != null) {
             renderJson(RestResult.ok(q));
-        }else {
+        } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 
-    public void add(){
-        Quiz q = getModel(Quiz.class,"paras");//paras.*
+    public void add() {
+        Quiz q = getModel(Quiz.class, "paras");//paras.*
 //        Integer answered = getPara("answered")==null?2:getParaToInt("answered");//1->remove  2->dont remove
-        Long id = getPara("id")==null?0:getParaToLong("id");
-        Map<String,Object> filter = new HashMap<>();
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        String topic_id = getPara("topic_id");
+        Map<String, Object> filter = new HashMap<>();
         User currentUser = getTokenUser(id);
-        if (q!=null){
-            q.set("creator_id",currentUser.get("id"));
-            if (q.get("name")==null){
+        if (q != null) {
+            q.set("creator_id", currentUser.get("id"));
+            if (q.get("name") == null) {
                 String name = "";
-                filter.put("id",q.get("question_category_id"));
-                name += QuestionCategory.dao.getBy(filter).get("name")+" ";
+                filter.put("id", q.get("question_category_id"));
+                name += QuestionCategory.dao.getBy(filter).get("name") + " ";
                 filter.clear();
-                filter.put("id",q.get("question_level_id"));
-                name += QuestionLevel.dao.getBy(filter).get("name")+" ";
+                filter.put("id", q.get("question_level_id"));
+                name += QuestionLevel.dao.getBy(filter).get("name") + " ";
                 name += currentUser.get("name");
                 q.set("name", name);
             }
-            if (q.get("content")==null){
-                q.set("content","Generated by "+currentUser.get("name"));
+            if (q.get("content") == null) {
+                q.set("content", "Generated by " + currentUser.get("name"));
             }
-            if (Quiz.dao.add(q)){
+            q.set("question_topic_id", topic_id);
+            if (Quiz.dao.add(q)) {
 
                 //auto generate questions
-                List list = QuizQuestion.dao.autoGenerate(q);
-                if(list.size()>0){
-                    renderJson(RestResult.ok(q));
-                }else {
-                    renderJson(RestResult.error(ConstantParas.failure_add));
-                }
-            }else {
+                int total_mark = QuizQuestion.dao.autoGenerate(q);//quiz_question id list
+                q.set("total_mark", total_mark);
+                Quiz.dao.update(q);
+                renderJson(RestResult.ok(q));
+            } else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }
-        }else {
+        } else {
             renderJson(RestResult.error(ConstantParas.hint_object_null));
         }
+    }
+
+    public void retake() {
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+        User currentUser = getTokenUser(id);
+
+        filter.put("id", quiz_id);
+        filter.put("creator_id", id);
+        Quiz q = Quiz.dao.getBy(filter);
+        if (q != null) {
+            filter.clear();
+            filter.put("quiz_id", quiz_id);
+            filter.put("page", 0);
+            filter.put("size", 10000);
+            List<QuizQuestion> qq = QuizQuestion.dao.query(filter).getList();
+            if (qq.size() == Integer.parseInt(q.get("number"))) {
+//                Quiz new_q = new Quiz();
+//                new_q.set("name",q.get("name"));
+//                new_q.set("number",q.get("number"));
+//                new_q.set("answered",q.get("answered"));
+//                new_q.set("content",q.get("content"));
+//                new_q.set("creator_id",id);
+//                new_q.set("question_category_id",q.get("question_category_id"));
+//                new_q.set("question_topic_id",q.get("question_topic_id"));
+//                new_q.set("question_level_id",q.get("question_level_id"));
+//                new_q.set("total_mark",q.get("total_mark"));
+//                new_q.set("mark",0);
+                q.remove("id");
+                if (Quiz.dao.add(q)) {
+                    int number = 0;
+                    for (int i = 0; i < qq.size(); i++) {
+                        qq.get(i).remove("id");
+                        if (QuizQuestion.dao.add(qq.get(i))) {
+                            number++;
+                        } else {
+                            System.out.println("Quiz Question id=" + qq.get(i).get("id") + " create failed!");
+                        }
+                    }
+                    if (number == qq.size()) {
+                        renderJson(RestResult.ok(ConstantParas.success_add));
+                    } else {
+                        renderJson(RestResult.error(ConstantParas.error_quiz_retake_fail));
+                    }
+                } else {
+                    renderJson(RestResult.error(ConstantParas.error_quiz_retake_fail));
+                }
+            } else {
+                renderJson(RestResult.error(ConstantParas.error_quiz_question_not_match));
+            }
+        } else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
+
     }
 
 }

@@ -64,7 +64,9 @@ public class ConstantParas {
     public static final String error_question_level_not_exist = "QuestionLevel does not exist!";
     public static final String error_question_choice_not_exist = "QuestionChoice does not exist!";
     public static final String error_quiz_not_exist = "Quiz does not exist!";
+    public static final String error_quiz_retake_fail = "Quiz retake failed!";
     public static final String error_quiz_question_not_exist = "This question does not exist!";
+    public static final String error_quiz_question_not_match = "The size of this quiz's question does not match the number of the quiz set number !";
     public static final String error_quiz_record_not_exist =  "This question has not been answered!";
     public static final String error_quiz_record_exist = "This question has been answered!";
     public static final String error_wrong_password = "Wrong password!";

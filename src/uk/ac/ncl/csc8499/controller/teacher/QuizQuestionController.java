@@ -114,9 +114,9 @@ public class QuizQuestionController extends BaseController {
         filter.put("creator_id",currentUser.get("id"));
         Quiz quiz = Quiz.dao.getBy(filter);
         if (quiz!=null){
-            List list = QuizQuestion.dao.autoGenerate(quiz);
-            if(list.size()>0){
-                renderJson(RestResult.ok(list));
+            int mark = QuizQuestion.dao.autoGenerate(quiz);
+            if(mark>0){
+                renderJson(RestResult.ok(mark));
             }else {
                 renderJson(RestResult.error(ConstantParas.failure_add));
             }

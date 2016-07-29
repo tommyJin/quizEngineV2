@@ -107,12 +107,8 @@ public class QuizQuestionTest extends Base{
         Quiz quiz = Quiz.dao.getBy(filter);
         logger.info("quiz={}",quiz);
         if (quiz!=null){
-            List list = QuizQuestion.dao.autoGenerate(quiz);
-            if(list.size()>0){
-                logger.info("generated qc list:{}",list);
-            }else {
-                logger.info("generated qc list:{}",ConstantParas.failure_add);
-            }
+            int mark = QuizQuestion.dao.autoGenerate(quiz);
+            logger.info("generated mark:{}",mark);
         }
     }
 }

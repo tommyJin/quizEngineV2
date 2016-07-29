@@ -33,6 +33,10 @@ public class QuizQuestion extends Model<QuizQuestion>{
             where += " and qq.quiz_id = "+Integer.parseInt(filter.get("id").toString());
         }
 
+        if (filter.get("idList")!=null){
+            where += " and qq.id in ( "+filter.get("idList")+" )";
+        }
+
         String order = " order by "+ (filter.get("orderby")==null?"  qq.created desc":filter.get("orderby").toString());
         return QuizQuestion.dao.paginate(page, size, select, where + order);
     }
@@ -88,7 +92,7 @@ public class QuizQuestion extends Model<QuizQuestion>{
     /**
     * Generate greater than min questions
     * */
-    public List autoGenerate(Quiz quiz){
+    public int autoGenerate(Quiz quiz){
         boolean flag = true;
         Random r = new Random();
         int mark = 0;
@@ -137,10 +141,11 @@ public class QuizQuestion extends Model<QuizQuestion>{
                 filter.put("id",selected.get(i));
                 Question question = Question.dao.getBy(filter);
                 qq.set("mark",question.get("mark"));
+                mark += Integer.parseInt(question.get("mark").toString());
                 QuizQuestion.dao.add(qq);
             }
         }
 
-        return selected;
+        return mark;
     }
 }

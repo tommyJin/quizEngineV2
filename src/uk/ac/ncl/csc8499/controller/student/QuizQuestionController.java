@@ -68,8 +68,10 @@ public class QuizQuestionController extends BaseController {
         String answered = getPara("answered")==null? String.valueOf(ConstantParas.quiz_keep_answered):getPara("answered");
         Long level_id = getPara("level_id")==null?null:getParaToLong("level_id");
         Long category_id = getPara("category_id")==null?null:getParaToLong("category_id");
+        String topic_id = getPara("topic_id")==null?null:getPara("topic_id");
         filter.put("question_level_id",level_id);
         filter.put("question_category_id",category_id);
+        filter.put("question_topic_id",topic_id);
         filter.put("creator_id",currentUser.get("id"));
         int answer = ConstantParas.quiz_keep_answered;
         if (answered.equals( String.valueOf(ConstantParas.quiz_remove_answered))){
