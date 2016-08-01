@@ -114,6 +114,24 @@ public class QuizController extends BaseController {
         }
     }
 
+    public void record(){
+        Long id = getPara("id")==null?null:getParaToLong("id");
+        Map<String,Object> filter = new HashMap<>();
+        Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
+        filter.put("creator_id",id);
+        filter.put("id",quiz_id);
+        Quiz q = Quiz.dao.getBy(filter);
+        if (q!=null) {
+            filter.clear();
+            filter.put("user_id", id);
+            filter.put("quiz_id",quiz_id);
+            renderJson(RestResult.ok(QuizRecord.dao.getRecords(filter)));
+        }else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
+
+    }
+
     public void retake() {
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");

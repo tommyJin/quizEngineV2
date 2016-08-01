@@ -112,7 +112,7 @@ function queryQuiz(page) {
                     "<td>" + o.id + "</td>" +
                     "<td><a href='teacher/route/quiz_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
                     "<td>" + o.user_name + "</td>" +
-                    "<td>" + o.level_name + "</td>" +
+                    "<td>" + (o.level_name==null?"All levels":o.level_name ) + "</td>" +
                     "<td>" + o.category_name + "</td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
