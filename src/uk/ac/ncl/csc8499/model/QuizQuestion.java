@@ -105,6 +105,14 @@ public class QuizQuestion extends Model<QuizQuestion>{
         }
     }
 
+    public List<QuizQuestion> quizLevelAnalysis(Long quiz_id,Long user_id){
+        String select = "SELECT qq.id quiz_question_id,q.id question_id,ifnull(qq.mark,0) mark,ifnull(qr.mark,0) student_mark,q.question_topic_id topic_id,ql.id level_id,ql.name level_name FROM quiz_question qq \n" +
+                "left join question q on qq.question_id = q.id left join question_level ql on q.question_level_id = ql.id left join quiz_record qr on qq.id = qr.quiz_question_id ";
+        String where = " where qq.quiz_id = "+quiz_id+" and qq.user_id = "+user_id;
+        return QuizQuestion.dao.find(select+where);
+    }
+
+
     /**
     * Generate greater than min questions
     * */

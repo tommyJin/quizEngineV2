@@ -78,6 +78,20 @@ public class AnswerController extends BaseController {
 //        }
     }
 
+    public void get(){
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Integer quiz_question_id = getPara("quiz_question_id") == null ? 0: getParaToInt("quiz_question_id");
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("quiz_question_id",quiz_question_id);
+        filter.put("user_id",id);
+        QuizRecord qr = QuizRecord.dao.getBy(filter);
+        if (qr!=null){
+            renderJson(RestResult.ok(qr));
+        }else {
+            renderJson(RestResult.error(null));
+        }
+    }
+
     public void finish(){
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Integer quiz_id = getPara("quiz_id") == null ? ConstantParas.questiontype_null : getParaToInt("quiz_id");

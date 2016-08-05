@@ -7,6 +7,7 @@ import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,37 +97,37 @@ public class QuizController extends BaseController {
         }
     }
 
-    public void delete(){
+    public void delete() {
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
         Map<String, Object> filter = new HashMap<>();
-        filter.put("creator_id",id);
-        filter.put("id",quiz_id);
+        filter.put("creator_id", id);
+        filter.put("id", quiz_id);
         Quiz q = Quiz.dao.getBy(filter);
-        if (q!=null){
-            if (Quiz.dao.delete(q)){
+        if (q != null) {
+            if (Quiz.dao.delete(q)) {
                 renderJson(RestResult.error(ConstantParas.success_delete));
-            }else {
+            } else {
                 renderJson(RestResult.error(ConstantParas.failure_delete));
             }
-        }else {
+        } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 
-    public void record(){
-        Long id = getPara("id")==null?null:getParaToLong("id");
-        Map<String,Object> filter = new HashMap<>();
-        Integer quiz_id = getPara("quiz_id")==null?null:getParaToInt("quiz_id");
-        filter.put("creator_id",id);
-        filter.put("id",quiz_id);
+    public void record() {
+        Long id = getPara("id") == null ? null : getParaToLong("id");
+        Map<String, Object> filter = new HashMap<>();
+        Integer quiz_id = getPara("quiz_id") == null ? null : getParaToInt("quiz_id");
+        filter.put("creator_id", id);
+        filter.put("id", quiz_id);
         Quiz q = Quiz.dao.getBy(filter);
-        if (q!=null) {
+        if (q != null) {
             filter.clear();
             filter.put("user_id", id);
-            filter.put("quiz_id",quiz_id);
+            filter.put("quiz_id", quiz_id);
             renderJson(RestResult.ok(QuizRecord.dao.getRecords(filter)));
-        }else {
+        } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
 
@@ -163,8 +164,8 @@ public class QuizController extends BaseController {
                     int number = 0;
                     for (int i = 0; i < qq.size(); i++) {
                         qq.get(i).remove("id");
-                        qq.get(i).set("quiz_id",q.get("id"));
-                        System.out.println("qq:"+gson.toJson(qq.get(i)));
+                        qq.get(i).set("quiz_id", q.get("id"));
+                        System.out.println("qq:" + gson.toJson(qq.get(i)));
                         if (QuizQuestion.dao.add(qq.get(i))) {
                             number++;
                         } else {
@@ -189,4 +190,143 @@ public class QuizController extends BaseController {
 
     }
 
+    public void quizLevelAnalysis() {
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+
+        filter.put("id", quiz_id);
+        filter.put("creator_id", id);
+        Quiz q = Quiz.dao.getBy(filter);
+        filter.clear();
+        if (q != null) {
+            List<QuizQuestion> qq = QuizQuestion.dao.quizLevelAnalysis(quiz_id,id);
+            Double total_mark = 0.00;
+            Double student_mark = 0.00;
+            List<String> topic_idList = new ArrayList<>();
+            List<String> level_idList = new ArrayList<>();
+            List<QuizQuestion> rightList = new ArrayList<>();
+            List<QuizQuestion> wrongList = new ArrayList<>();
+            Map<String,String> levelNameMap = new HashMap<>();
+            String general_feedback = "";
+            for (int i = 0; i < qq.size(); i++) {
+                Double mark = Double.parseDouble(qq.get(i).get("mark").toString());
+                Double student_m = Double.parseDouble(qq.get(i).get("student_mark").toString());
+                total_mark += mark;
+                student_mark += student_m;
+                if (student_m>0){
+                    rightList.add(qq.get(i));
+                }else {
+                    wrongList.add(qq.get(i));
+                }
+                if (!level_idList.contains(qq.get(i).get("level_id"))){
+                    level_idList.add(qq.get(i).get("level_id").toString());
+                    levelNameMap.put(qq.get(i).get("level_id").toString(),qq.get(i).get("level_name"));
+                }
+                String topic_id = qq.get(i).get("topic_id");
+                if (topic_id!=null && topic_id.length()>0){
+                    if (topic_id.contains(",")){
+                        String[] topic_ids = topic_id.split(",");
+                        for (int j = 0; j < topic_ids.length; j++) {
+                            if (!topic_idList.contains(topic_ids[j])){
+                                topic_idList.add(topic_ids[j]);
+                            }
+                        }
+                    }else {
+                        if (!topic_idList.contains(topic_id)){
+                            topic_idList.add(topic_id);
+                        }
+                    }
+                }
+            }
+            System.out.println("total_mark="+total_mark);
+            System.out.println("student_mark="+student_mark);
+            System.out.println("topic_idList="+gson.toJson(topic_idList));
+            System.out.println("level_idList="+gson.toJson(level_idList));
+            System.out.println("levelNameMap="+gson.toJson(levelNameMap));
+            System.out.println("rightList="+gson.toJson(rightList));
+            System.out.println("wrongList="+gson.toJson(wrongList));
+
+            Map<String,Integer> levelWrongMap = new HashMap<>();
+            for (int i = 0; i < level_idList.size(); i++) {
+                levelWrongMap.put(level_idList.get(i),0);
+            }
+            System.out.println("levelWrongMap="+gson.toJson(levelWrongMap));
+//            System.out.println(levelWrongMap.get("5"));
+
+            general_feedback = "For this quiz, you got "+student_mark+" out of "+total_mark+
+                    ". You made "+wrongList.size()+" mistake"+(wrongList.size()>1?"s":"")+" out of "+(wrongList.size()+rightList.size())+" questions, "+judge(student_mark,total_mark)+".";
+
+            String topic_feedback = "";
+            for (int i = 0; i < topic_idList.size(); i++) {
+                filter.clear();
+                filter.put("id",Integer.parseInt(topic_idList.get(i)));
+                QuestionTopic qt = QuestionTopic.dao.getBy(filter);
+
+//                System.out.println("before levelWrongMap="+gson.toJson(levelWrongMap));
+                for (int j = 0; j < wrongList.size(); j++) {
+                    String topic_id = ","+wrongList.get(j).get("topic_id")+",";
+//                    System.out.println("j="+j+" wrong list topic_id="+topic_id+"  "+ !topic_id.equals(",,")+"   topic_idList.get("+i+")="+topic_idList.get(i));
+                    if (!topic_id.equals(",,")){
+                        if (topic_id.contains(","+topic_idList.get(i)+",")){
+                            String level_id = wrongList.get(j).get("level_id").toString();
+//                            System.out.println("level_id="+level_id);
+                            levelWrongMap.put(level_id,levelWrongMap.get(""+level_id+"")+1);//add one to this level wrong
+                        }
+                    }else {
+                        System.out.println("this question topic_id is null");
+                    }
+                }
+//                System.out.println("1 after levelWrongMap="+gson.toJson(levelWrongMap));
+
+                String each_topic_feedback = " For topic "+qt.get("name")+": ";
+                for (Map.Entry<String, Integer> entry : levelWrongMap.entrySet()) {
+//                    System.out.println(entry.getKey()+" = "+entry.getValue()+" >0? "+(entry.getValue()>0));
+                    if (entry.getValue()>0){
+                        each_topic_feedback += entry.getValue()+" mistake"+(entry.getValue()>1?"s":"")+" were made at level "+levelNameMap.get(entry.getKey())+", ";
+                        double score = entry.getValue()/wrongList.size()*100;
+                        if (score>=80.0){
+                            each_topic_feedback += "you do well at this level and you can choose harder level.";
+                        }else if (score>=60 && score<80){
+                            each_topic_feedback += "you can improve your skill by practising this level more.";
+                        }else if (score>=40 && score<60){
+                            each_topic_feedback += "you should practise more to fit in this level,";
+                        }else if (score<40){
+                            each_topic_feedback += "you should choose easier levels to practise and choose this level when you are ready.";
+                        }
+
+//                        System.out.println(topic_feedback);
+                    }
+                    levelWrongMap.put(entry.getKey(),0);
+                }
+                if (!each_topic_feedback.equals(" For topic "+qt.get("name")+": ")) {
+                    topic_feedback += each_topic_feedback;
+                }
+//                System.out.println("2 after levelWrongMap="+gson.toJson(levelWrongMap));
+            }
+//            System.out.println("topic_feedback="+topic_feedback);
+
+            renderJson(RestResult.ok(general_feedback+topic_feedback));
+        } else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
+    }
+
+
+    private String judge(double nmerator ,double denominator){
+        String rs = "";
+        double result = nmerator/denominator*100;
+        if (result>=90){
+            rs = "excellent";
+        }else if (result>=70 && result<90){
+            rs = "good";
+        }else if (result>=50 && result<70){
+            rs = "not bad";
+        }else if (result>=30 && result<50){
+            rs = "bad";
+        }else if (result<30){
+            rs = "very bad";
+        }
+        return rs;
+    }
 }
