@@ -200,119 +200,120 @@ public class QuizController extends BaseController {
         Quiz q = Quiz.dao.getBy(filter);
         filter.clear();
         if (q != null) {
-            List<QuizQuestion> qq = QuizQuestion.dao.quizLevelAnalysis(quiz_id,id);
+            List<QuizQuestion> qq = QuizQuestion.dao.quizLevelAnalysis(quiz_id, id);
             Double total_mark = 0.00;
             Double student_mark = 0.00;
             List<String> topic_idList = new ArrayList<>();
             List<String> level_idList = new ArrayList<>();
             List<QuizQuestion> rightList = new ArrayList<>();
             List<QuizQuestion> wrongList = new ArrayList<>();
-            Map<String,String> levelNameMap = new HashMap<>();
+            Map<String, String> levelNameMap = new HashMap<>();
             String general_feedback = "";
             for (int i = 0; i < qq.size(); i++) {
                 Double mark = Double.parseDouble(qq.get(i).get("mark").toString());
                 Double student_m = Double.parseDouble(qq.get(i).get("student_mark").toString());
                 total_mark += mark;
                 student_mark += student_m;
-                if (student_m>0){
+                if (student_m > 0) {
                     rightList.add(qq.get(i));
-                }else {
+                } else {
                     wrongList.add(qq.get(i));
                 }
-                if (!level_idList.contains(qq.get(i).get("level_id"))){
+                if (!level_idList.contains(qq.get(i).get("level_id"))) {
                     level_idList.add(qq.get(i).get("level_id").toString());
-                    levelNameMap.put(qq.get(i).get("level_id").toString(),qq.get(i).get("level_name"));
+                    levelNameMap.put(qq.get(i).get("level_id").toString(), qq.get(i).get("level_name"));
                 }
                 String topic_id = qq.get(i).get("topic_id");
-                if (topic_id!=null && topic_id.length()>0){
-                    if (topic_id.contains(",")){
+                if (topic_id != null && topic_id.length() > 0) {
+                    if (topic_id.contains(",")) {
                         String[] topic_ids = topic_id.split(",");
                         for (int j = 0; j < topic_ids.length; j++) {
-                            if (!topic_idList.contains(topic_ids[j])){
+                            if (!topic_idList.contains(topic_ids[j])) {
                                 topic_idList.add(topic_ids[j]);
                             }
                         }
-                    }else {
-                        if (!topic_idList.contains(topic_id)){
+                    } else {
+                        if (!topic_idList.contains(topic_id)) {
                             topic_idList.add(topic_id);
                         }
                     }
                 }
             }
-            System.out.println("total_mark="+total_mark);
-            System.out.println("student_mark="+student_mark);
-            System.out.println("topic_idList="+gson.toJson(topic_idList));
-            System.out.println("level_idList="+gson.toJson(level_idList));
-            System.out.println("levelNameMap="+gson.toJson(levelNameMap));
-            System.out.println("rightList="+gson.toJson(rightList));
-            System.out.println("wrongList="+gson.toJson(wrongList));
+            System.out.println("total_mark=" + total_mark);
+            System.out.println("student_mark=" + student_mark);
+            System.out.println("topic_idList=" + gson.toJson(topic_idList));
+            System.out.println("level_idList=" + gson.toJson(level_idList));
+            System.out.println("levelNameMap=" + gson.toJson(levelNameMap));
+            System.out.println("rightList=" + gson.toJson(rightList));
+            System.out.println("wrongList=" + gson.toJson(wrongList));
 
-            Map<String,Integer> levelWrongMap = new HashMap<>();
+            Map<String, Integer> levelWrongMap = new HashMap<>();
             for (int i = 0; i < level_idList.size(); i++) {
-                levelWrongMap.put(level_idList.get(i),0);
+                levelWrongMap.put(level_idList.get(i), 0);
             }
-            System.out.println("levelWrongMap="+gson.toJson(levelWrongMap));
+            System.out.println("levelWrongMap=" + gson.toJson(levelWrongMap));
 //            System.out.println(levelWrongMap.get("5"));
 
-            general_feedback = "For this quiz, you got "+student_mark+" out of "+total_mark+
-                    ". You made "+wrongList.size()+" mistake"+(wrongList.size()>1?"s":"")+" out of "+(wrongList.size()+rightList.size())+" questions, "+judge(student_mark,total_mark)+".";
+            general_feedback = "For this quiz, you got " + student_mark + " out of " + total_mark +
+                    ". You made " + wrongList.size() + " mistake" + (wrongList.size() > 1 ? "s" : "") + " out of " + (wrongList.size() + rightList.size()) + " questions, " + judge(student_mark, total_mark) + ".";
 
             String topic_feedback = "";
             for (int i = 0; i < topic_idList.size(); i++) {
                 filter.clear();
-                filter.put("id",Integer.parseInt(topic_idList.get(i)));
+                filter.put("id", Integer.parseInt(topic_idList.get(i)));
                 QuestionTopic qt = QuestionTopic.dao.getBy(filter);
 
 //                System.out.println("before levelWrongMap="+gson.toJson(levelWrongMap));
                 for (int j = 0; j < wrongList.size(); j++) {
-                    String topic_id = ","+wrongList.get(j).get("topic_id")+",";
+                    String topic_id = "," + wrongList.get(j).get("topic_id") + ",";
 //                    System.out.println("j="+j+" wrong list topic_id="+topic_id+"  "+ !topic_id.equals(",,")+"   topic_idList.get("+i+")="+topic_idList.get(i));
-                    if (!topic_id.equals(",,")){
-                        if (topic_id.contains(","+topic_idList.get(i)+",")){
+                    if (!topic_id.equals(",,")) {
+                        if (topic_id.contains("," + topic_idList.get(i) + ",")) {
                             String level_id = wrongList.get(j).get("level_id").toString();
 //                            System.out.println("level_id="+level_id);
-                            levelWrongMap.put(level_id,levelWrongMap.get(""+level_id+"")+1);//add one to this level wrong
+                            levelWrongMap.put(level_id, levelWrongMap.get("" + level_id + "") + 1);//add one to this level wrong
                         }
-                    }else {
+                    } else {
                         System.out.println("this question topic_id is null");
                     }
                 }
 //                System.out.println("1 after levelWrongMap="+gson.toJson(levelWrongMap));
 
-                String each_topic_feedback = " For topic "+qt.get("name")+": ";
+                String each_topic_feedback = " For topic " + qt.get("name") + ": ";
                 for (Map.Entry<String, Integer> entry : levelWrongMap.entrySet()) {
 //                    System.out.println(entry.getKey()+" = "+entry.getValue()+" >0? "+(entry.getValue()>0));
-                    if (entry.getValue()>0){
-                        each_topic_feedback += entry.getValue()+" mistake"+(entry.getValue()>1?"s":"")+" were made at level "+levelNameMap.get(entry.getKey())+", ";
-                        double score = entry.getValue()/wrongList.size()*100;
-                        if (score>=80.0){
-                            each_topic_feedback += "you do well at this level and you can choose harder level.";
-                        }else if (score>=60 && score<80){
-                            each_topic_feedback += "you can improve your skill by practising this level more.";
-                        }else if (score>=40 && score<60){
-                            each_topic_feedback += "you should practise more to fit in this level,";
-                        }else if (score<40){
+                    if (entry.getValue() > 0) {
+                        each_topic_feedback += entry.getValue() + " mistake" + (entry.getValue() > 1 ? "s" : "") + " were made at level " + levelNameMap.get(entry.getKey()) + ", ";
+                        double score = (double)entry.getValue() / wrongList.size() * 100;
+                        System.out.println("score="+score);
+                        if (score >= 80.0) {
                             each_topic_feedback += "you should choose easier levels to practise and choose this level when you are ready.";
+                        } else if (score >= 60 && score < 80) {
+                            each_topic_feedback += "you should practise more to fit in this level,";
+                        } else if (score >= 40 && score < 60) {
+                            each_topic_feedback += "you can improve your skill by practising this level more.";
+                        } else if (score < 40) {
+                            each_topic_feedback += "you do well at this level and you can choose harder level.";
                         }
 
 //                        System.out.println(topic_feedback);
                     }
-                    levelWrongMap.put(entry.getKey(),0);
+                    levelWrongMap.put(entry.getKey(), 0);
                 }
-                if (!each_topic_feedback.equals(" For topic "+qt.get("name")+": ")) {
+                if (!each_topic_feedback.equals(" For topic " + qt.get("name") + ": ")) {
                     topic_feedback += each_topic_feedback;
                 }
 //                System.out.println("2 after levelWrongMap="+gson.toJson(levelWrongMap));
             }
 //            System.out.println("topic_feedback="+topic_feedback);
 
-            renderJson(RestResult.ok(general_feedback+topic_feedback));
+            renderJson(RestResult.ok(general_feedback + topic_feedback));
         } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
         }
     }
 
-    public void overallFeedback(){
+    public void overallFeedback() {
         Long id = getPara("id") == null ? 0 : getParaToLong("id");
         Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
         Map<String, Object> filter = new HashMap<>();
@@ -323,10 +324,127 @@ public class QuizController extends BaseController {
         filter.clear();
         String overallFeedback = "";
         if (q != null) {
-            filter.put("id",q.get("question_category_id"));
+            filter.put("id", q.get("question_category_id"));
             QuestionCategory qc = QuestionCategory.dao.getBy(filter);
+            System.out.println("qc=" + gson.toJson(qc));
             filter.clear();
+            filter.put("question_category_id", q.get("question_category_id"));
+            filter.put("creator_id", id);
+            filter.put("page", 1);
+            filter.put("size", 10000000);
+            List<Quiz> quizzes = Quiz.dao.query(filter).getList();//find all quizzes
+//            System.out.println("quizzes="+gson.toJson(quizzes));
+            filter.clear();
+            List quiz_ids = new ArrayList();
+            for (int i = 0; i < quizzes.size(); i++) {
+                quiz_ids.add(quizzes.get(i).get("id"));
+            }
+            List<QuizQuestion> qq = QuizQuestion.dao.overallLevelAnalysis(quiz_ids, id);//all quiz questions
+//            System.out.println("qq="+gson.toJson(qq));
 
+            Double total_mark = 0.00;
+            Double student_mark = 0.00;
+            List<String> topic_idList = new ArrayList<>();
+            List<QuizQuestion> rightList = new ArrayList<>();
+            List<QuizQuestion> wrongList = new ArrayList<>();
+            Map<String, String> topicNameMap = new HashMap<>();
+            for (int i = 0; i < qq.size(); i++) {
+                Double mark = Double.parseDouble(qq.get(i).get("mark").toString());
+                Double student_m = Double.parseDouble(qq.get(i).get("student_mark").toString());
+                total_mark += mark;
+                student_mark += student_m;
+                if (student_m > 0) {
+                    rightList.add(qq.get(i));
+                } else {
+                    wrongList.add(qq.get(i));
+                }
+
+                String topic_id = qq.get(i).get("topic_id");
+                if (topic_id != null && topic_id.length() > 0) {
+                    if (topic_id.contains(",")) {
+                        String[] topic_ids = topic_id.split(",");
+                        for (int j = 0; j < topic_ids.length; j++) {
+                            if (!topic_idList.contains(topic_ids[j])) {
+                                topic_idList.add(topic_ids[j]);
+                            }
+                        }
+                    } else {
+                        if (!topic_idList.contains(topic_id)) {
+                            topic_idList.add(topic_id);
+                        }
+                    }
+                }
+            }
+            System.out.println("total_mark=" + total_mark);
+            System.out.println("student_mark=" + student_mark);
+            System.out.println("topic_idList=" + gson.toJson(topic_idList));
+            System.out.println("rightList=" + gson.toJson(rightList));
+            System.out.println("wrongList=" + gson.toJson(wrongList));
+
+            Map<String, Integer> topicWrongMap = new HashMap<>();
+            Map<String, Integer> topicRightMap = new HashMap<>();
+            for (int i = 0; i < topic_idList.size(); i++) {
+                topicWrongMap.put(topic_idList.get(i), 0);
+                topicRightMap.put(topic_idList.get(i), 0);
+            }
+            System.out.println("topicWrongMap=" + gson.toJson(topicWrongMap));
+//            System.out.println(levelWrongMap.get("5"));
+
+            overallFeedback = "Generally speaking, you are " + judge(student_mark, total_mark) + " in this module.";
+
+            for (int i = 0; i < topic_idList.size(); i++) {
+                filter.clear();
+                filter.put("id", Integer.parseInt(topic_idList.get(i)));
+                QuestionTopic qt = QuestionTopic.dao.getBy(filter);
+
+//                System.out.println("before levelWrongMap="+gson.toJson(levelWrongMap));
+                for (int j = 0; j < wrongList.size(); j++) {
+                    String topic_id = "," + wrongList.get(j).get("topic_id") + ",";
+                    if (!topic_id.equals(",,")) {
+                        if (topic_id.contains("," + topic_idList.get(i) + ",")) {
+                            topicWrongMap.put(topic_idList.get(i), topicWrongMap.get("" + topic_idList.get(i) + "") + 1);//add one to this level wrong
+                        }
+                    } else {
+                        System.out.println("this question topic_id is null");
+                    }
+                }
+                System.out.println("1 after topicWrongMap=" + gson.toJson(topicWrongMap));
+
+                for (int j = 0; j < rightList.size(); j++) {
+                    String topic_id = "," + rightList.get(j).get("topic_id") + ",";
+                    if (!topic_id.equals(",,")) {
+                        if (topic_id.contains("," + topic_idList.get(i) + ",")) {
+                            topicRightMap.put(topic_idList.get(i), topicRightMap.get("" + topic_idList.get(i) + "") + 1);//add one to this level wrong
+                        }
+                    } else {
+                        System.out.println("this question topic_id is null");
+                    }
+                }
+                System.out.println("1 after topicRightMap=" + gson.toJson(topicRightMap));
+                String each_topic_feedback = "";
+
+                String topic_name = qt.get("name");
+                System.out.println("id="+topic_idList.get(i)+" "+topic_name+"  wrong value="+topicWrongMap.get(topic_idList.get(i))+"  right value="+topicRightMap.get(topic_idList.get(i)));
+                double score = (double)topicWrongMap.get(topic_idList.get(i)) / (topicWrongMap.get(topic_idList.get(i)) + topicRightMap.get(topic_idList.get(i))) * 100;
+
+                System.out.println(topic_name + " = " + score);
+                if (score >= 80.0) {
+                    each_topic_feedback += "You do quite bad and are supposed to practise more about topic " + topic_name + ".";
+                } else if (score >= 60 && score < 80) {
+                    each_topic_feedback += "You are not good at this topic and you can improve more in topic" + topic_name + ".";
+                } else if (score >= 40 && score < 60) {
+                    each_topic_feedback += "Your score showed that you do not know " + topic_name + " quite well, and it is necessary to do more quizzes.";
+                } else if (score >= 20 && score < 40) {
+                    each_topic_feedback += "You have done a good job in answering " + topic_name + " questions, but you can be better.";
+                } else if (score < 20) {
+                    each_topic_feedback += "You are good at topic " + topic_name + ".";
+                }
+                topicWrongMap.put(topic_idList.get(i), 0);
+                topicRightMap.put(topic_idList.get(i), 0);
+                if (!each_topic_feedback.equals("")) {
+                    overallFeedback += each_topic_feedback;
+                }
+            }
             renderJson(RestResult.ok(overallFeedback));
         } else {
             renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
@@ -334,18 +452,18 @@ public class QuizController extends BaseController {
     }
 
 
-    private String judge(double nmerator ,double denominator){
+    private String judge(double nmerator, double denominator) {
         String rs = "";
-        double result = nmerator/denominator*100;
-        if (result>=90){
+        double result = nmerator / denominator * 100;
+        if (result >= 90) {
             rs = "excellent";
-        }else if (result>=70 && result<90){
+        } else if (result >= 70 && result < 90) {
             rs = "good";
-        }else if (result>=50 && result<70){
+        } else if (result >= 50 && result < 70) {
             rs = "not bad";
-        }else if (result>=30 && result<50){
+        } else if (result >= 30 && result < 50) {
             rs = "bad";
-        }else if (result<30){
+        } else if (result < 30) {
             rs = "very bad";
         }
         return rs;

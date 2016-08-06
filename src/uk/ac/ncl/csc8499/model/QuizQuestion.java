@@ -112,6 +112,24 @@ public class QuizQuestion extends Model<QuizQuestion>{
         return QuizQuestion.dao.find(select+where);
     }
 
+    public List<QuizQuestion> overallLevelAnalysis(List quiz_ids,Long user_id){
+        String select = "select qq.id quiz_question_id,q.id question_id,ifnull(qq.mark,0) mark,ifnull(qr.mark,0) student_mark,q.question_topic_id topic_id FROM quiz_question qq \n" +
+                "left join question q on qq.question_id = q.id \n" +
+                "left join quiz_record qr on qq.id = qr.quiz_question_id ";
+        String where = " where qq.user_id = "+user_id;
+        if (quiz_ids.size()>0){
+            where += " and qq.quiz_id in ( ";
+            for (int i = 0; i < quiz_ids.size(); i++) {
+                where += quiz_ids.get(i);
+                if ( (quiz_ids.size()-1)!=i){
+                    where += ",";
+                }
+            }
+            where += " )";
+        }
+        return QuizQuestion.dao.find(select+where);
+    }
+
 
     /**
     * Generate greater than min questions

@@ -155,7 +155,7 @@ function queryQuestion(page) {
                     "<td><a href='teacher/route/question_detail?id=" + o.id + "' >" + o.name + "</a></td>" +
                     "<td class='am-hide-sm-only'>" + o.category_name + "</td>" +
                     "<td class='am-hide-sm-only'>" + o.level_name + "</td>" +
-                    "<td class='am-hide-sm-only'>" + o.question_tag + "</td>" +
+                    // "<td class='am-hide-sm-only'>" + o.question_tag + "</td>" +
                     "<td class='am-hide-sm-only'>" + o.type_name + "</td>" +
                     "<td><div class='am-btn-toolbar'>" +
                     "<div class='am-btn-group am-btn-group-xs'>" +
