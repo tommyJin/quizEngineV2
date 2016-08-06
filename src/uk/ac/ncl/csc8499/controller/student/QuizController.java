@@ -312,6 +312,27 @@ public class QuizController extends BaseController {
         }
     }
 
+    public void overallFeedback(){
+        Long id = getPara("id") == null ? 0 : getParaToLong("id");
+        Long quiz_id = getPara("quiz_id") == null ? 0 : getParaToLong("quiz_id");
+        Map<String, Object> filter = new HashMap<>();
+
+        filter.put("id", quiz_id);
+        filter.put("creator_id", id);
+        Quiz q = Quiz.dao.getBy(filter);
+        filter.clear();
+        String overallFeedback = "";
+        if (q != null) {
+            filter.put("id",q.get("question_category_id"));
+            QuestionCategory qc = QuestionCategory.dao.getBy(filter);
+            filter.clear();
+
+            renderJson(RestResult.ok(overallFeedback));
+        } else {
+            renderJson(RestResult.error(ConstantParas.error_quiz_not_exist));
+        }
+    }
+
 
     private String judge(double nmerator ,double denominator){
         String rs = "";
