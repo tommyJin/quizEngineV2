@@ -82,7 +82,4 @@ public class QuizQuestionController extends BaseController {
         renderJson(RestResult.ok(Question.dao.query(filter).getList().size()));
     }
 
-    public void answer(){
-
-    }
 }
