@@ -96,10 +96,11 @@ function updateTopic() {
 
 function queryTopic(page) {
     var keyword = $.trim($("#keyword").val());
+    var category_id = $("#category").val();
     $.ajax({
         url: 'teacher/questiontopic',
         dataType: 'json',
-        data: {'keyword': keyword, 'page': page},
+        data: {'keyword': keyword, 'category_id':category_id, 'page': page},
         type: 'GET',
         success: function (rs) {
             var data = rs.data;

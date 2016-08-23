@@ -7,6 +7,7 @@ import uk.ac.ncl.csc8499.Util.RestResult;
 import uk.ac.ncl.csc8499.controller.BaseController;
 import uk.ac.ncl.csc8499.model.ConstantParas;
 import uk.ac.ncl.csc8499.model.QuestionTopic;
+import uk.ac.ncl.csc8499.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +24,12 @@ public class QuestionTopicController extends BaseController {
         Map<String,Object> filter = new HashMap<>();
         int page = getPara("page")==null?ConstantParas.page:getParaToInt("page");
         int size = getPara("size")==null?ConstantParas.size:getParaToInt("size");
-        Integer category_id = getPara("category_id")==null?null:getParaToInt("category_id");
+        Integer category_id = (getPara("category_id")==null || getPara("category_id").toString().equals("0"))?null:getParaToInt("category_id");
         filter.put("page",page);
         filter.put("size",size);
         String keyword = getPara("keyword")==null?null:getPara("keyword").trim();
         String orderby = getPara("orderby")==null?null:getPara("orderby").trim();
+        filter.put("teacher_id",getCurrentUser().get("id"));
         filter.put("keyword",keyword);
         filter.put("orderby",orderby);
         filter.put("category_id",category_id);

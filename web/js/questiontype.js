@@ -14,7 +14,7 @@ function initType() {
         $(div).append(add_blank_button_html);
         //calculateNumeric();
         fillBlank();
-    } else if (type == "Multiple Choice") {
+    } else if (type == "Multiple Choice" || type == "Multiple Answer") {
         $(div).append(add_choice_button_html);
         multipleChoice();
     } else if (type == "Fill in the Blank") {
@@ -106,7 +106,7 @@ function collect() {
         var answer_str = JSON.stringify(answer);
         $("#qc_content").val(content_str);
         $("#answer").val(answer_str);
-    } else if (type == "Multiple Choice") {
+    } else if (type == "Multiple Choice" || type == "Multiple Answer") {
         var mc_answer = $("#mc_answer").val();
         var num = $("#choice_number").val();
         if(mc_answer.length<1){
@@ -146,7 +146,7 @@ function collect() {
                 $("#qc_content").val(content_str);
             }
         }
-    } else if (type == "Calculate Numeric" || type == "Fill in the Blank") {
+    } else if (type == "Calculate Numeric" || type == "Fill in the Blank" || type == "Fill in Multiple Blanks") {
         var content = [];
         var answer = [];
 

@@ -96,6 +96,7 @@
             </div>
 
                 <input type="hidden" id="id" name="id" value="${id?if_exists}"/>
+                <input type="hidden" id="user_id" name="user_id" value="${user_id?if_exists}"/>
 
             </form>
 
@@ -109,7 +110,7 @@
 <script>
     var id = $("#id").val();
     $(document).ready(function(){
-        getMoudles("","",2,1);
+        getMoudles($("#user_id").val(),"",2,1);
         if(id != null && id.length!=0){
             getUser(id,2);
         }

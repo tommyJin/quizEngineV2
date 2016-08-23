@@ -31,6 +31,10 @@ public class QuestionTopic extends Model<QuestionTopic> {
             where += " and category_id = "+Integer.parseInt(filter.get("category_id").toString());
         }
 
+        if (filter.get("teacher_id")!=null){
+            where += " and category_id in (select category_id from category_user where user_id = "+filter.get("teacher_id")+" ) ";
+        }
+
         if (filter.get("id")!=null){
             where += " and id = "+Integer.parseInt(filter.get("id").toString());
         }

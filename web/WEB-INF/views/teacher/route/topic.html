@@ -1,6 +1,7 @@
 <#include "/layout/admin-header.html">
     <#include "/layout/teacher-side-bar.html">
         <script language="javascript" src="js/api/question_topic.js"></script>
+        <script language="javascript" src="js/api/question_category.js"></script>
 
         <!-- content start -->
         <div class="admin-content">
@@ -22,7 +23,10 @@
                     </div>
                     <div class="am-u-sm-12 am-u-md-8">
                         <div class="am-form-group">
+                            <select data-am-selected="{btnSize: 'sm'}" id="category" onchange="queryTopic()">
+                                <option value="0">All</option>
 
+                            </select>
                         </div>
                     </div>
                     <div class="am-u-sm-12 am-u-md-3">
@@ -75,6 +79,7 @@
         <script>
             $(document).ready(function(){
                 queryTopic();
+                getCategories(true,2);
             });
 
             var pageNumber = 1;
